@@ -1,4 +1,4 @@
-﻿Build started 10/11/2013 16:36:32.
+﻿Build started 10/11/2013 20:43:47.
 Project "E:\Work\Ruben\Programs\SuperProjects\RushEngine\RushEngine\RushEngine.vcxproj" on node 2 (Build target(s)).
 ClCompile:
   C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\libs\Box2D /I..\libs\SDL\include /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
@@ -11,4 +11,4 @@ Done Building Project "E:\Work\Ruben\Programs\SuperProjects\RushEngine\RushEngin
 
 Build succeeded.
 
-Time Elapsed 00:00:07.20
+Time Elapsed 00:00:09.70
