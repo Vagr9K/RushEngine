@@ -87,6 +87,7 @@
     <ClInclude Include="Eventing.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="ObjModel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
