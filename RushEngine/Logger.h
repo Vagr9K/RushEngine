@@ -1,6 +1,7 @@
 #include <fstream>
 #include <ctime>
 #include <string>
+#include <iostream>
 using namespace std;
 
 class Logger
@@ -31,6 +32,9 @@ public:
 		Log << endl;
 		Log << endl;
 		Log.close();
+
+		throw new string("Error type: " + Type + "/n " + Error);
+
 
 	}
 	
