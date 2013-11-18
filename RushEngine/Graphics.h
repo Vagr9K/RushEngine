@@ -9,7 +9,7 @@
 
 #include <iostream>
 #include <vector>
-
+#include <assert.h>
 
 using namespace std;
 
@@ -21,8 +21,10 @@ private:
 	bool IsReady = false; 
 	SDL_Window* main = NULL;
 	SDL_Renderer *Render = NULL;
-	vector<SDL_Surface*> PreLoadedSurf;
-	vector<string> PreLoadedPaths;
+	vector<SDL_Surface*> PreLoadedSurfCPU;
+	vector<SDL_Texture*> PreLoadedTextGPU;
+	vector<string> PreLoadedPathsCPU;
+	vector<string> PreLoadedPathsGPU;
 	GEEventing* EvSys;
 	SDL_Surface* TEMP;
 public:
@@ -99,19 +101,10 @@ public:
 
 	void BlackInit()
 	{
-		
-		SDL_Rect rectData;
-		rectData.h = Height;
-		rectData.w = Width;
-		rectData.x = 0;
-		rectData.y = 0;
-		SDL_Surface* TEMP = Loader("images/BlackInit.png");
-		SDL_Texture* Texture = SDL_CreateTextureFromSurface(Render, TEMP);
+		SDL_Texture* Texture = LoaderGPU("images/BlackInit.png");
 		SDL_RenderClear(Render);
 		SDL_RenderCopy(Render, Texture, NULL, NULL);
 		SDL_RenderPresent(Render);
-		SDL_FreeSurface(TEMP);
-		SDL_DestroyTexture(Texture);
 		
 	}
 
@@ -127,42 +120,111 @@ public:
 		
 		return Temp1;
 	}
-	void PreLoader(string PathToIMG)
+	void PreLoaderCPU(string PathToIMG)
 	{
-		PreLoadedPaths.push_back(PathToIMG);
-		PreLoadedSurf.push_back(IMGLoad(PathToIMG));
+		PreLoadedPathsCPU.push_back(PathToIMG);
+		PreLoadedSurfCPU.push_back(IMGLoad(PathToIMG));
 	}
 
-	SDL_Surface* AngleTransform(SDL_Surface* Source, float Angle)
+	void PreLoaderGPU(string PathToIMG)
 	{
-		//Transformation goes here!
-		//OpenGL problems start here!
+		PreLoadedPathsGPU.push_back(PathToIMG);
+		PreLoadedTextGPU.push_back(SDL_CreateTextureFromSurface(Render, IMGLoad(PathToIMG)));
 	}
 
 
 
-	SDL_Surface* Loader(string Path)
+
+	SDL_Surface* LoaderCPU(string Path)
 	{
 		SDL_Surface* Temp = NULL;
 		bool SurfPresent = false;
-		for (unsigned int i = 0; i < PreLoadedPaths.size(); i++)
+		for (unsigned int i = 0; i < PreLoadedPathsCPU.size(); i++)
 		{
-			if (PreLoadedPaths[i] == Path)
+			if (PreLoadedPathsCPU[i] == Path)
 			{
-				Temp = PreLoadedSurf[i];
+				Temp = PreLoadedSurfCPU[i];
+				SurfPresent = true;
 				break;
 			}
 		}
 		if (SurfPresent==false)
 
 		{
-			PreLoadedSurf.push_back(IMGLoad(Path));
-			PreLoadedPaths.push_back(Path);
-			Temp = PreLoadedSurf.back();
+			PreLoadedSurfCPU.push_back(IMGLoad(Path));
+			PreLoadedPathsCPU.push_back(Path);
+			Temp = PreLoadedSurfCPU.back();
 		}
 		return Temp;
 	}
 
+	SDL_Texture* LoaderGPU(string Path)
+	{
+		SDL_Texture* Temp = NULL;
+		bool TextPresent = false;
+		for (unsigned int i = 0; i < PreLoadedPathsGPU.size(); i++)
+		{
+			if (PreLoadedPathsGPU[i] == Path)
+			{
+				Temp = PreLoadedTextGPU[i];
+				TextPresent = true;
+				break;
+			}
+		}
+		if (TextPresent == false)
+
+		{
+			PreLoadedTextGPU.push_back(SDL_CreateTextureFromSurface(Render, IMGLoad(Path)));
+			PreLoadedPathsGPU.push_back(Path);
+			Temp = PreLoadedTextGPU.back();
+		}
+		return Temp;
+	}
+	//Define function of power of 2 check for OpenGl texture creation compatibility
+#define ISPWR2(n) !(n&(n-1))
+	bool DrawImageGPUSingle(int X, int Y, int H, int W, float Angle, string Path) //Experimental function, may be removed later.
+	{
+		SDL_Surface* Image = LoaderCPU(Path);
+ //Must be power of 2!! (2,4,8,16,32,64,128,256...)
+		if (ISPWR2(Image->h) || ISPWR2(Image->w))
+		{
+			EvSys->OnGraphicsError("Image: "+Path+"\n" + "Width or Height is not power of 2.");
+			return false;
+		}
+		 Uint8 Colours = Image->format->BytesPerPixel;
+		 GLuint Format;
+		 if (Colours==4)
+		 {
+			 Format = GL_RGBA;
+		 } 
+		 else if (Colours==3)
+		 {
+			 Format = GL_RGB;
+		 }
+		 else
+		 {
+			 EvSys->OnGraphicsError("Image: " + Path + "\n" + "Format is not recognized.");
+			 return false;
+		 }
+
+		 GLuint Texture;
+		 glGenTextures(1, &Texture);
+		 glBindTexture(GL_TEXTURE_2D, Texture);
+		 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		 glTexImage2D(GL_TEXTURE_2D, 0, Format, Image->w, Image->h, 0, Format, GL_UNSIGNED_BYTE, Image->pixels);
+
+		 glClear(GL_COLOR_BUFFER_BIT);
+		 glTranslatef(X, Y, 0);
+		 glRotatef(Angle, 0.0, 0.0, 1.0);
+		 glBindTexture(GL_TEXTURE_2D, Texture);
+		 //Non-OpenGL ES code!. Must be replaced.
+		 glBegin(GL_QUADS);
+
+		//Unfinished function!!!!!!!!
+
+
+	}
 
 };
 
