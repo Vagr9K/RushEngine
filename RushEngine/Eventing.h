@@ -42,7 +42,7 @@ public:
 		Log.close();
 
 
-		assert(("Error type: " + Type + "/n " + Error, true));
+		
 
 
 	}
