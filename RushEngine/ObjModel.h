@@ -2,10 +2,18 @@
 #include <vector>
 using namespace std;
 #include "Box2D.h"
-
+struct ObjLocContainer
+{
+	int InDB;
+	int InObj;
+};
 
 class MainObj 
 {
+	
+	
+
+
 public:
 	
 
@@ -13,14 +21,6 @@ public:
 
 
 
-class MinObj 
-{
-public:
-
-
-
-
-};
 
 struct IMG
 {
@@ -58,4 +58,49 @@ public:
 	}
 	
 };
+struct IMGDynamic
+{
 
+public:
+	int *x, *y, *w, *h;
+	double* Angle;
+	string Source;
+	IMGDynamic(int* pX, int* pY, int* pW, int* pH, double* pAngle, string Source)
+	{
+		x = pX;
+		y = pY;
+		w = pW;
+		h = pH;
+		Angle = Angle;
+		this->Source = Source;
+	}
+
+};
+
+struct TXTDynamic
+{
+
+public:
+	int *x, *y, *w, *h;
+	double* Angle;
+	string Content;
+	TXTDynamic(int* pX, int* pY, int* pW, int* pH, double* pAngle, string Content)
+	{
+		x = pX;
+		y = pY;
+		w = pW;
+		h = pH;
+		Angle = Angle;
+		this->Content = Content;
+	}
+
+};
+
+
+struct LayerHolder
+{
+public:
+	vector<IMG*> IMGs;
+	vector<TXT*> TXTs;
+
+};
