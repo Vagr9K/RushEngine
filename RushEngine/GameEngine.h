@@ -1,6 +1,6 @@
 #include "Graphics.h"
-
-
+#include "Objects.h"
+#include "Physics.h"
 
 
 class GameEngine
@@ -8,11 +8,25 @@ class GameEngine
 private:
 	string GameName, Title;
 	int h, w, LayerNumber;
-	Graphics* MainUnitG;
+	
 	string Errors;
 	GEEventing EvSys;
 
 public:
+	PhysicsEngine* Physics;
+	ObjectsEngine* Objects;
+	GraphicsEngine* Graphics;
+
+	void InitPhysics()
+	{
+		Physics = new PhysicsEngine;
+	}
+
+	void InitObjects(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackGroundLayerCount)
+	{
+		Objects = new ObjectsEngine(InterfaceLayerCount, SpecialLayerCount, WorldCount, BackGroundLayerCount);
+	}
+
 	GameEngine(string GameName)
 	{ 
 		this->GameName = GameName;
@@ -23,9 +37,9 @@ public:
 		this->w = Width;
 		this->LayerNumber = LayerNumber;
 		this->Title = Title;
-		MainUnitG = new Graphics;
-		MainUnitG->Init(Width, Height, LayerNumber, Title, &EvSys);
-		return MainUnitG->Start();
+		Graphics = new GraphicsEngine;
+		Graphics->Init(Width, Height, LayerNumber, Title, &EvSys);
+		return Graphics->Start();
 
 	}
 
@@ -33,20 +47,59 @@ public:
 
 	bool StopGraphics()
 	{
-		return MainUnitG->Stop();
+		return Graphics->Stop();
 	}
 
 	void DelayGraphics(int Milliseconds)
 	{
-		MainUnitG->DelayGraphics(Milliseconds);
+		Graphics->DelayGraphics(Milliseconds);
 	}
 	void BlackInitGraphics()
 	{
-		MainUnitG->BlackInit();
+		Graphics->BlackInit();
 	}
 	GEEventing getEventSystem()
 	{
 		return EvSys;
 	}
 
+};
+
+class OPSTester
+{
+	time_t startFPS, endFPS;
+	bool FPSStarted = false;
+	double FPSTestTime;
+	int Frames = 0;
+	GEEventing event;
+public:
+	void TestOPS(double TestTime)
+	{
+		if (FPSStarted == false)
+		{
+
+			time(&startFPS);
+			FPSStarted = true;
+			FPSTestTime = TestTime;
+			Frames = 1;
+		}
+		else
+		{
+
+			time(&endFPS);
+			double DiffTime = difftime(endFPS, startFPS);
+			if (DiffTime >= FPSTestTime)
+			{
+				double FPSActual = Frames/DiffTime;
+				std::ostringstream ToString;
+				ToString << FPSActual;
+				event.OPSLog(ToString.str());
+				FPSStarted = false;
+			}
+			else
+			{
+				Frames++;
+			}
+		}
+	}
 };
