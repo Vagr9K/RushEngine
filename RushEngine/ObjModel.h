@@ -2,25 +2,6 @@
 #include <vector>
 using namespace std;
 #include "Box2D.h"
-struct ObjLocContainer
-{
-	int InDB;
-	int InObj;
-};
-
-class MainObj 
-{
-	
-	
-
-
-public:
-	
-
-};
-
-
-
 
 struct IMG
 {
@@ -97,10 +78,11 @@ public:
 };
 
 
-struct LayerHolder
+struct LayerElement
 {
 public:
-	vector<IMG*> IMGs;
-	vector<TXT*> TXTs;
+	IMG* Image;
+	TXT* Text;
 
 };
+
