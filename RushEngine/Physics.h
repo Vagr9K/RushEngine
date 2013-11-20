@@ -2,12 +2,12 @@
 #include <vector>
 using namespace std;
 
-class Physics
+class PhysicsEngine
 {
 private:
 	vector<b2World*> PhysicsWorlds;
 public:
-	Physics()
+	PhysicsEngine()
 	{
 		
 	}
