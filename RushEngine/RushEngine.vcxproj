@@ -55,6 +55,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\libs\Box2D;..\libs\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -77,12 +78,15 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <BrowseInformation>true</BrowseInformation>
+      <AdditionalIncludeDirectories>..\libs\Box2D;..\libs\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\libs\SDL\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -92,11 +96,12 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Data.h" />
+    <ClInclude Include="Objects.h" />
     <ClInclude Include="Eventing.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="ObjModel.h" />
+    <ClInclude Include="Physics.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
