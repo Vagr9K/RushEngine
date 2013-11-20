@@ -1,4 +1,8 @@
-
+#include <iostream>
+#include <vector>
+#include <assert.h>
+#include <ctime>
+#include <sstream>
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -7,18 +11,17 @@
 #include "Eventing.h"
 
 
-#include <iostream>
-#include <vector>
-#include <assert.h>
-
 using namespace std;
 
-class Graphics
+class GraphicsEngine
 {
+
+	
 private:
 	int Width, Height, LayerNumber;
 	char Title;
 	bool IsReady = false; 
+	bool IsStarted = false;
 	SDL_Window* main = NULL;
 	SDL_Renderer *Render = NULL;
 	vector<SDL_Surface*> PreLoadedSurfCPU;
@@ -27,9 +30,13 @@ private:
 	vector<string> PreLoadedPathsGPU;
 	GEEventing* EvSys;
 	SDL_Surface* TEMP;
+	
 public:
-	Graphics(){}
-	Graphics(int Width, int Height, int LayerNumber,string Title, GEEventing* EvVar)
+	
+	
+	
+	GraphicsEngine(){}
+	GraphicsEngine(int Width, int Height, int LayerNumber,string Title, GEEventing* EvVar)
 	{
 		this->Width = Width;
 		this->Height = Height;
@@ -82,7 +89,7 @@ public:
 		}
 
 
-
+		IsStarted = true;
 		return true;
 	}
 
@@ -92,6 +99,7 @@ public:
 		SDL_DestroyWindow(main);
 		IMG_Quit();
 		SDL_Quit();
+		IsStarted = false;
 		return true;
 	}
 	void DelayGraphics(int Milliseconds)
