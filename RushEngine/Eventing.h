@@ -1,4 +1,3 @@
-
 #include <fstream>
 #include <ios>
 #include <cstdlib>
@@ -9,12 +8,11 @@ using namespace std;
 
 
 
-
 class GEEventing
 {
 
 public:
-	void LogError(string Type, string Error)
+	void LogData(string Type, string Data)
 	{
 
 		time_t TmNow = time(0);
@@ -24,8 +22,6 @@ public:
 
 
 		Log << "\n";
-		Log << "\n";
-
 		Log << TimeNow.tm_mday;
 		Log << "-" + (TimeNow.tm_mon + 1);
 		Log << "-" + (TimeNow.tm_year + 1990);
@@ -33,11 +29,10 @@ public:
 		Log << "-" + TimeNow.tm_min;
 
 		Log << "\n";
-		Log << "Error Type : ";
+		Log << "Data Type : ";
 		Log << Type.c_str();
 		Log << "\n";
-		Log << Error.c_str();
-		Log << "\n";
+		Log << Data.c_str();
 		Log << "\n";
 		Log.close();
 
@@ -48,9 +43,12 @@ public:
 	}
 	void OnGraphicsError(string Error)
 	{
-		LogError("Graphics Error", Error);
+		LogData("Graphics Error", Error);
 	}
-
+	void OPSLog(string OPS)
+	{
+		LogData("OPS log.", OPS);
+	}
 };
 
 
