@@ -13,12 +13,16 @@ public:
 	}
 	void AddWorld(b2World* NewWorld)
 	{
+		if (NewWorld==NULL)
+		{
+			throw "NewWorld is NULL.";
+		}
 		PhysicsWorlds.push_back(NewWorld);
 	}
 
-	vector<b2World*> GetWorlds()
+	vector<b2World*>* GetWorlds()
 	{
-		return PhysicsWorlds;
+		return &PhysicsWorlds;
 	}
 
 
