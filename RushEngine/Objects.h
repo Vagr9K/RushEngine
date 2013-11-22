@@ -3,47 +3,6 @@
 
 #include "ObjModel.h"
 
-
-
-
-
-class ObjectsEngine
-{
-
-	int InterfaceLayerCount;
-	int WorldCount;
-	int BackgroundLayerCount;
-	int SpecialLayerCount;
-
-
-	
-public:
-	vector<LayerElement*>* GrLayers;
-	
-	
-public:
-	ObjectsEngine(int InterfaceLayerCount,int SpecialLayerCount ,int WorldCount, int BackGroundLayerCount)
-	{
-		this->InterfaceLayerCount = InterfaceLayerCount;
-		this->WorldCount = WorldCount;
-		this->BackgroundLayerCount = BackGroundLayerCount;
-		this->SpecialLayerCount = SpecialLayerCount;
-		GrLayers = new vector<LayerElement*>[InterfaceLayerCount + SpecialLayerCount + WorldCount + BackGroundLayerCount];
-		
-
-		
-
-	}
-	vector<LayerElement*>* GetLayers()
-	{
-		return GrLayers;
-	}
-
-
-
-};
-
-
 class ObjDBManager
 {
 private:
@@ -58,6 +17,19 @@ public:
 
 	ObjDBManager(vector<LayerElement*>* Source)
 	{
+		this->Source = Source;
+	}
+	~ObjDBManager()
+	{
+		delete StoreForDelete;
+		delete StoreForAdd;
+		delete Source;
+
+	}
+	void SetSource(vector<LayerElement*>* Source)
+	{
+		CleanStore();
+		Init();
 		this->Source = Source;
 	}
 	void Init()
@@ -143,3 +115,53 @@ public:
 	}
 
 };
+
+
+class ObjectsEngine
+{
+
+	int InterfaceLayerCount;
+	int WorldCount;
+	int BackgroundLayerCount;
+	int SpecialLayerCount;
+
+
+	
+public:
+	vector<LayerElement*>* GrLayers;
+
+	vector<ObjDBManager*> *ManagerDB; 
+	
+	
+public:
+	ObjectsEngine(int InterfaceLayerCount,int SpecialLayerCount ,int WorldCount, int BackgroundLayerCount)
+	{
+
+		this->InterfaceLayerCount = InterfaceLayerCount;
+		this->WorldCount = WorldCount;
+		this->BackgroundLayerCount = BackgroundLayerCount;
+		this->SpecialLayerCount = SpecialLayerCount;
+		GrLayers = new vector<LayerElement*>[InterfaceLayerCount + SpecialLayerCount + WorldCount + BackgroundLayerCount];
+		ObjDBManager* DBPointer;
+		for (int i = 0; i <InterfaceLayerCount + SpecialLayerCount + WorldCount + BackgroundLayerCount; i++)
+		{
+			DBPointer = new ObjDBManager(&GrLayers[i]);
+			ManagerDB->push_back(DBPointer);
+		}
+
+		
+
+	}
+	vector<LayerElement*>* GetLayers()
+	{
+		return GrLayers;
+	}
+
+	int GetCount()
+	{
+		return InterfaceLayerCount + SpecialLayerCount + WorldCount + BackgroundLayerCount;
+	}
+
+};
+
+
