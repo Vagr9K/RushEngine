@@ -96,9 +96,10 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameEngine.h" />
     <ClInclude Include="Objects.h" />
     <ClInclude Include="Eventing.h" />
-    <ClInclude Include="GameEngine.h" />
+    <ClInclude Include="GameEngineRAW.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="ObjModel.h" />
     <ClInclude Include="Physics.h" />
