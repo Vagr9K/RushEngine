@@ -1,105 +1,213 @@
-#include "Graphics.h"
-#include "Objects.h"
-#include "Physics.h"
+#include "GameEngineRAW.h"
 
 
-class GameEngine
+
+
+
+
+class MainObj
 {
+	GameEngine* mainEngine = NULL;
+	ObjDBManager *DatabaseManager = NULL;
+	PhysicsEngine *ObjPhysics=NULL;
+	b2World *ObjWorld=NULL;
+	int PhysicsWorldIndex;
+	int ObjectsIndex;
+	bool ObjElementInDB = false;
+
+
 private:
-	string GameName, Title;
-	int h, w, LayerNumber;
-	
-	string Errors;
-	GEEventing EvSys;
+	void CleanObject(void *Obj)
+	{
+		delete Obj;
+		Obj = NULL;
+	}
+
+	void NULLifyAll()
+	{
+		mainEngine = NULL;
+		DatabaseManager = NULL;
+		ObjPhysics = NULL;
+		ObjWorld = NULL;
+		BodyDefinition = NULL;
+		FixtureDefinition = NULL;
+		Body = NULL;
+		Fixture = NULL;
+		ObjElement = NULL;
+		Image = NULL;
+		Text = NULL;
+	}
+public:
+	b2BodyDef* BodyDefinition = NULL;
+	b2FixtureDef* FixtureDefinition = NULL;
+	b2Body* Body=NULL;
+	b2Fixture* Fixture = NULL;
+	LayerElement *ObjElement=NULL;
+	IMG *Image=NULL;
+	TXT *Text=NULL;
+
+
+
 
 public:
-	PhysicsEngine* Physics;
-	ObjectsEngine* Objects;
-	GraphicsEngine* Graphics;
-
-	void InitPhysics()
+	MainObj(GameEngine* Engine, int PhysicsWorldIndex, int ObjectsIndex)
 	{
-		Physics = new PhysicsEngine;
+		mainEngine = Engine;
+		this->ObjectsIndex = ObjectsIndex;
+		this->PhysicsWorldIndex = PhysicsWorldIndex;
+		DatabaseManager = mainEngine->Objects->ManagerDB->at(ObjectsIndex);
+		ObjPhysics = mainEngine->Physics;
+		ObjWorld = ObjPhysics->GetWorlds()->at(PhysicsWorldIndex);
 	}
-
-	void InitObjects(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackGroundLayerCount)
+	~MainObj()
 	{
-		Objects = new ObjectsEngine(InterfaceLayerCount, SpecialLayerCount, WorldCount, BackGroundLayerCount);
-	}
-
-	GameEngine(string GameName)
-	{ 
-		this->GameName = GameName;
-	}
-	bool StartGraphics(int Width, int Height, int LayerNumber, string Title)
-	{
-		this->h = Height;
-		this->w = Width;
-		this->LayerNumber = LayerNumber;
-		this->Title = Title;
-		Graphics = new GraphicsEngine;
-		Graphics->Init(Width, Height, LayerNumber, Title, &EvSys);
-		return Graphics->Start();
+		DeleteObjElement();
+		DatabaseManager->PushChanges();
+		DestroyFixture();
+		DestroyBody();
 
 	}
-
-
-
-	bool StopGraphics()
+	ObjDBManager *GetDBManager()
 	{
-		return Graphics->Stop();
+		return DatabaseManager;
+	}
+	PhysicsEngine *GetPhysics()
+	{
+		return ObjPhysics;
+	}
+	b2World *GetObjWorld()
+	{
+		return ObjWorld;
 	}
 
-	void DelayGraphics(int Milliseconds)
+	void CreateBody()
 	{
-		Graphics->DelayGraphics(Milliseconds);
-	}
-	void BlackInitGraphics()
-	{
-		Graphics->BlackInit();
-	}
-	GEEventing getEventSystem()
-	{
-		return EvSys;
-	}
-
-};
-
-class OPSTester
-{
-	time_t startFPS, endFPS;
-	bool FPSStarted = false;
-	double FPSTestTime;
-	int Frames = 0;
-	GEEventing event;
-public:
-	void TestOPS(double TestTime)
-	{
-		if (FPSStarted == false)
+		if (BodyDefinition==NULL)
 		{
+			throw "Body definition not initialized.";
+		}
+		Body = ObjPhysics->GetWorlds()->at(PhysicsWorldIndex)->CreateBody(BodyDefinition);
+	}
 
-			time(&startFPS);
-			FPSStarted = true;
-			FPSTestTime = TestTime;
-			Frames = 1;
+	void DestroyBody()
+	{
+		if (Body == NULL)
+		{
+			throw "Body not initialized.";
+		}
+		ObjPhysics->GetWorlds()->at(PhysicsWorldIndex)->DestroyBody(Body);
+		Body = NULL;
+	}
+	void CreateFixture()
+	{
+		if (Body==NULL)
+		{
+			throw "Body not initialized.";
+		}
+		if (FixtureDefinition == NULL)
+		{
+			throw "Fixture definition not initialized.";
+		}
+		Fixture = Body->CreateFixture(FixtureDefinition);
+
+	}
+
+	void DestroyFixture()
+	{
+		
+		if (Fixture == NULL)
+		{
+			throw "Fixture not initialized.";
+		}
+		Body->DestroyFixture(Fixture);
+		Fixture = NULL;
+
+	}
+	void InitObjElement()
+	{
+		if (ObjElement!=NULL)
+		{
+			throw "ObjElement already initialized.";
+		}
+		ObjElement = new LayerElement;
+		Image = ObjElement->Image;
+		Text = ObjElement->Text;
+	}
+
+	void AddObjElementToManager()
+	{
+		if (ObjElement==NULL)
+		{
+			InitObjElement();
+		}
+		DatabaseManager->AddToCreate(ObjElement);
+		ObjElementInDB = true;
+	}
+
+	void DeleteObjElementFromManager()
+	{
+		if (ObjElement == NULL)
+		{
+			throw "ObjElement is not initialized.";
+		}
+		DatabaseManager->AddToDelete(ObjElement);
+		ObjElementInDB = false;
+	}
+	void PushManagerChanges()
+	{
+		DatabaseManager->PushChanges();
+	}
+
+	void DeleteObjElement()
+	{
+		if (ObjElementInDB==true)
+		{
+			DeleteObjElementFromManager();
+			ObjElementInDB = false;
+			CleanObject(ObjElement);
+			Image = NULL;
+			Text = NULL;
 		}
 		else
 		{
-
-			time(&endFPS);
-			double DiffTime = difftime(endFPS, startFPS);
-			if (DiffTime >= FPSTestTime)
-			{
-				double FPSActual = Frames/DiffTime;
-				std::ostringstream ToString;
-				ToString << FPSActual;
-				event.OPSLog(ToString.str());
-				FPSStarted = false;
-			}
-			else
-			{
-				Frames++;
-			}
+			CleanObject(ObjElement);
+			Image = NULL;
+			Text = NULL;
 		}
 	}
+
+	void AddImage(IMG *Image)
+	{
+		if (Image==NULL)
+			throw "IMG pointer is NULL.";
+		if (ObjElement == NULL)
+			throw "ObjElement is NULL";
+		ObjElement->Image = Image;
+	}
+
+	void AddText(TXT *Text)
+	{
+		if (Text == NULL)
+			throw "TXT pointer is NULL.";
+		if (ObjElement == NULL)
+			throw "ObjElement is NULL";
+		ObjElement->Text = Text;
+	}
+
+	void DeleteImage()
+	{
+		if (ObjElement->Image == NULL)
+			throw "IMG pointer is NULL.";
+		delete Image;
+		Image = NULL;
+	}
+
+	void DeleteText()
+	{
+		if (ObjElement->Text == NULL)
+			throw "TXT pointer is NULL.";
+		delete Text;
+		Text = NULL;
+	}
+	
 };
