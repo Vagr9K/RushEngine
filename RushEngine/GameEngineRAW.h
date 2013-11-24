@@ -6,7 +6,7 @@
 class GameEngine
 {
 private:
-	string GameName, Title;
+	string Title;
 	int h, w, LayerNumber;
 	
 	string Errors;
@@ -27,9 +27,9 @@ public:
 		Objects = new ObjectsEngine(InterfaceLayerCount, SpecialLayerCount, WorldCount, BackGroundLayerCount);
 	}
 
-	GameEngine(string GameName)
+	GameEngine()
 	{ 
-		this->GameName = GameName;
+		
 	}
 	bool StartGraphics(int Width, int Height, int LayerNumber, string Title)
 	{
