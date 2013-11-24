@@ -5,7 +5,7 @@
 
 
 
-class MainObj
+class Object
 {
 	GameEngine* mainEngine = NULL;
 	ObjDBManager *DatabaseManager = NULL;
@@ -45,12 +45,12 @@ public:
 	LayerElement *ObjElement=NULL;
 	IMG *Image=NULL;
 	TXT *Text=NULL;
-
+	bool InstantPush = false;
 
 
 
 public:
-	MainObj(GameEngine* Engine, int PhysicsWorldIndex, int ObjectsIndex)
+	Object(GameEngine* Engine, int PhysicsWorldIndex, int ObjectsIndex)
 	{
 		mainEngine = Engine;
 		this->ObjectsIndex = ObjectsIndex;
@@ -59,10 +59,13 @@ public:
 		ObjPhysics = mainEngine->Physics;
 		ObjWorld = ObjPhysics->GetWorlds()->at(PhysicsWorldIndex);
 	}
-	~MainObj()
+	~Object()
 	{
 		DeleteObjElement();
-		DatabaseManager->PushChanges();
+		if (InstantPush == true)
+		{
+			DatabaseManager->PushChanges();
+		}
 		DestroyFixture();
 		DestroyBody();
 
@@ -210,4 +213,32 @@ public:
 		Text = NULL;
 	}
 	
+};
+
+class ObjectContainer
+{
+	private:
+		vector<Object*> Objs;
+
+
+
+public:
+	ObjectContainer()
+	{
+
+	}
+
+	void AddObject(Object* Obj)
+	{
+		Objs.push_back(Obj);
+	}
+	vector<Object*>* GetObjs()
+	{
+		return &Objs;
+	}
+	void DeleteAll()
+	{
+		Objs.erase(Objs.begin(), Objs.end());
+	}
+
 };
