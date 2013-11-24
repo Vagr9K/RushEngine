@@ -12,7 +12,7 @@ class GEEventing
 {
 
 public:
-	void LogData(string Type, string Data)
+	void LogData(string Type, string Data, bool Throw)
 	{
 
 		time_t TmNow = time(0);
@@ -35,7 +35,10 @@ public:
 		Log << Data.c_str();
 		Log << "\n";
 		Log.close();
-
+		if (Throw==true)
+		{
+			throw Data;
+		}
 
 		
 
@@ -43,11 +46,11 @@ public:
 	}
 	void OnGraphicsError(string Error)
 	{
-		LogData("Graphics Error", Error);
+		LogData("Graphics Error", Error, true);
 	}
 	void OPSLog(string OPS)
 	{
-		LogData("OPS log.", OPS);
+		LogData("OPS log.", OPS, false);
 	}
 };
 
