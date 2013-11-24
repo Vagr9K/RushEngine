@@ -1,39 +1,68 @@
-#include "GameEngineRAW.h"
+#include "GameEngine.h"
 
 
 
 int main(int argc, char** argv)
 {
-	GameEngine mainEngine("Name");
-	 bool a = mainEngine.StartGraphics(450, 500, 4, "Dead Zone");
-	 mainEngine.InitObjects(12, 12, 12, 12);
-	 mainEngine.InitPhysics();
-	 LayerElement* b;
-	 for (int i = 0; i < 100000; i++)
-	 {
-		 b = new LayerElement;
-		 b->Image = new IMG(12, 12, 12, 12, 12.12, "Source");
-		 b->Text = new TXT(1, 2, 3, 4, 5, "String");
-		 mainEngine.Objects->GrLayers[0].push_back(b);
-		 b = NULL;
-	 }
-	 SDL_Event e;
-	 OPSTester OPS;
+	b2Vec2 Gravity(0,10.0);
+	
+	b2World MainWorld(Gravity);
+	GameEngine* mainEngine = new GameEngine;
+	mainEngine->StartGraphics(300, 400, 10, "Title");
+	mainEngine->InitObjects(1, 0, 1, 0);
+	mainEngine->InitPhysics();
+	mainEngine->Physics->AddWorld(&MainWorld);
+	IMG* Image;
+	TXT* Text;
+	b2Filter* Filter;
+	Object* Obj;
+
+	for (int i = 0; i < 1000;i++)
+	{
+		Image = new IMG(10, 10, 10, 10, 32.5, "imageasdhasyfdisafgsuadfkuvakdf.png");
+		Text = new TXT(12, 12, 12, 12, 12, "faksdgfuagkfaadfsadfadadufguuyfhukalsy.jpg");
+		Filter = new b2Filter;
+		Filter->categoryBits = 12;
+
+		Obj = new Object(mainEngine, 0,1);
+		Obj->AddImage(Image);
+		Obj->AddText(Text);
+		Obj->BodyDefinition = new b2BodyDef;
+		Obj->BodyDefinition->active = true;
+		Obj->BodyDefinition->allowSleep = true;
+		Obj->BodyDefinition->angle = 32.9;
+		Obj->BodyDefinition->angularDamping = 12;
+		Obj->BodyDefinition->awake = true;
+		Obj->BodyDefinition->bullet = true;
+		Obj->BodyDefinition->type = b2_dynamicBody;
+		Obj->CreateBody();
+		Obj->AddObjElementToManager();
+		Obj->FixtureDefinition->density = 12.4;
+		Obj->FixtureDefinition->filter = *Filter;
+		Obj->FixtureDefinition->friction = 12;
+		Obj->FixtureDefinition->isSensor = false;
+		Obj->FixtureDefinition->restitution = 12;
+		Obj->CreateFixture();
+		Obj->AddObjElementToManager();
+		Obj->PushManagerChanges();
+
+	}
+
+	SDL_Event e;
 	 bool Die = false;
 	 while (Die == false)
 	 {
-		 
+		 mainEngine->Graphics->BlackInit();
 		 if(SDL_PollEvent(&e) != 0) 
 		 if (e.type==SDL_QUIT)
 		 {
 			 Die = true;
 			
 		 }
-		 
-		 mainEngine.BlackInitGraphics();
-		 OPS.TestOPS(10);
+		 mainEngine->BlackInitGraphics();
+		
 	 }
-	mainEngine.StopGraphics();
+	 mainEngine->StopGraphics();
 	
 	return 0;
 }
