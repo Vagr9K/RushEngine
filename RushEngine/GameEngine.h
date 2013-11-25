@@ -55,7 +55,7 @@ public:
 		mainEngine = Engine;
 		this->ObjectsIndex = ObjectsIndex;
 		this->PhysicsWorldIndex = PhysicsWorldIndex;
-		DatabaseManager = mainEngine->Objects->ManagerDB->at(ObjectsIndex);
+		DatabaseManager = mainEngine->Objects->ManagerDB.at(ObjectsIndex);
 		ObjPhysics = mainEngine->Physics;
 		ObjWorld = ObjPhysics->GetWorlds()->at(PhysicsWorldIndex);
 	}
@@ -135,6 +135,14 @@ public:
 		ObjElement = new LayerElement;
 		Image = ObjElement->Image;
 		Text = ObjElement->Text;
+	}
+
+	void InitFixtureDefinition()
+	{
+		if (FixtureDefinition==NULL)
+		{
+			FixtureDefinition = new b2FixtureDef;
+		}
 	}
 
 	void AddObjElementToManager()

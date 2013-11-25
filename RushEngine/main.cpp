@@ -12,6 +12,7 @@ int main(int argc, char** argv)
 	mainEngine->InitObjects(1, 0, 1, 0);
 	mainEngine->InitPhysics();
 	mainEngine->Physics->AddWorld(&MainWorld);
+	
 	IMG* Image;
 	TXT* Text;
 	b2Filter* Filter;
@@ -23,25 +24,32 @@ int main(int argc, char** argv)
 		Text = new TXT(12, 12, 12, 12, 12, "faksdgfuagkfaadfsadfadadufguuyfhukalsy.jpg");
 		Filter = new b2Filter;
 		Filter->categoryBits = 12;
+		b2PolygonShape Pol;
+		Pol.SetAsBox(12.7f, 12.7f);
+
+
 
 		Obj = new Object(mainEngine, 0,1);
+		Obj->InitObjElement();
 		Obj->AddImage(Image);
 		Obj->AddText(Text);
 		Obj->BodyDefinition = new b2BodyDef;
 		Obj->BodyDefinition->active = true;
 		Obj->BodyDefinition->allowSleep = true;
-		Obj->BodyDefinition->angle = 32.9;
-		Obj->BodyDefinition->angularDamping = 12;
+		Obj->BodyDefinition->angle = 32.9f;
+		Obj->BodyDefinition->angularDamping = 12.0f;
 		Obj->BodyDefinition->awake = true;
 		Obj->BodyDefinition->bullet = true;
 		Obj->BodyDefinition->type = b2_dynamicBody;
 		Obj->CreateBody();
 		Obj->AddObjElementToManager();
-		Obj->FixtureDefinition->density = 12.4;
+		Obj->InitFixtureDefinition();
+		Obj->FixtureDefinition->density = 12.4f;
 		Obj->FixtureDefinition->filter = *Filter;
 		Obj->FixtureDefinition->friction = 12;
 		Obj->FixtureDefinition->isSensor = false;
-		Obj->FixtureDefinition->restitution = 12;
+		Obj->FixtureDefinition->restitution = 12.0f;
+		Obj->FixtureDefinition->shape = &Pol;
 		Obj->CreateFixture();
 		Obj->AddObjElementToManager();
 		Obj->PushManagerChanges();
