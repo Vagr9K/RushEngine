@@ -128,9 +128,9 @@ class ObjectsEngine
 
 	
 public:
-	vector<LayerElement*>* GrLayers;
+	vector<vector<LayerElement*>*> GrLayers;
 
-	vector<ObjDBManager*> *ManagerDB; 
+	vector<ObjDBManager*> ManagerDB; 
 	
 	
 public:
@@ -141,18 +141,17 @@ public:
 		this->WorldCount = WorldCount;
 		this->BackgroundLayerCount = BackgroundLayerCount;
 		this->SpecialLayerCount = SpecialLayerCount;
-		GrLayers = new vector<LayerElement*>[InterfaceLayerCount + SpecialLayerCount + WorldCount + BackgroundLayerCount];
-		ObjDBManager* DBPointer;
+		
 		for (int i = 0; i <InterfaceLayerCount + SpecialLayerCount + WorldCount + BackgroundLayerCount; i++)
 		{
-			DBPointer = new ObjDBManager(&GrLayers[i]);
-			ManagerDB->push_back(DBPointer);
+			GrLayers.push_back(new vector<LayerElement*>);
+			ManagerDB.push_back(new ObjDBManager(GrLayers.at(i)));
 		}
 
 		
 
 	}
-	vector<LayerElement*>* GetLayers()
+	vector<vector<LayerElement*>*> GetLayers()
 	{
 		return GrLayers;
 	}
