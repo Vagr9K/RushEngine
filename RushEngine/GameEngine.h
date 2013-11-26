@@ -14,7 +14,7 @@ class Object
 	int PhysicsWorldIndex;
 	int ObjectsIndex;
 	bool ObjElementInDB = false;
-
+	EventingEngine* EventingEngine;
 
 private:
 	void CleanObject(void *Obj)
@@ -58,6 +58,7 @@ public:
 		DatabaseManager = mainEngine->Objects->ManagerDB.at(ObjectsIndex);
 		ObjPhysics = mainEngine->Physics;
 		ObjWorld = ObjPhysics->GetWorlds()->at(PhysicsWorldIndex);
+		EventingEngine = Engine->getEventingEngine();
 	}
 	~Object()
 	{
@@ -88,6 +89,7 @@ public:
 		if (BodyDefinition==NULL)
 		{
 			throw "Body definition not initialized.";
+			EventingEngine->ObjectsError("Body definition not initialized.");
 		}
 		Body = ObjPhysics->GetWorlds()->at(PhysicsWorldIndex)->CreateBody(BodyDefinition);
 	}
@@ -97,6 +99,7 @@ public:
 		if (Body == NULL)
 		{
 			throw "Body not initialized.";
+			EventingEngine->ObjectsError("Body not initialized.");
 		}
 		ObjPhysics->GetWorlds()->at(PhysicsWorldIndex)->DestroyBody(Body);
 		Body = NULL;
@@ -106,10 +109,12 @@ public:
 		if (Body==NULL)
 		{
 			throw "Body not initialized.";
+			EventingEngine->ObjectsError("Body not initialized.");
 		}
 		if (FixtureDefinition == NULL)
 		{
 			throw "Fixture definition not initialized.";
+			EventingEngine->ObjectsError("Fixture definition not initialized.");
 		}
 		Fixture = Body->CreateFixture(FixtureDefinition);
 
@@ -121,6 +126,7 @@ public:
 		if (Fixture == NULL)
 		{
 			throw "Fixture not initialized.";
+			EventingEngine->ObjectsError("Fixture not initialized.");
 		}
 		Body->DestroyFixture(Fixture);
 		Fixture = NULL;
@@ -131,6 +137,7 @@ public:
 		if (ObjElement!=NULL)
 		{
 			throw "ObjElement already initialized.";
+			EventingEngine->ObjectsError("ObjElement already initialized.");
 		}
 		ObjElement = new LayerElement;
 		Image = ObjElement->Image;
@@ -192,23 +199,35 @@ public:
 		if (Image==NULL)
 			throw "IMG pointer is NULL.";
 		if (ObjElement == NULL)
+		{
 			throw "ObjElement is NULL";
+			EventingEngine->ObjectsError("ObjElement is NULL");
+		}
 		ObjElement->Image = Image;
 	}
 
 	void AddText(TXT *Text)
 	{
 		if (Text == NULL)
+		{
 			throw "TXT pointer is NULL.";
+			EventingEngine->ObjectsError("TXT pointer is NULL.");
+		}
 		if (ObjElement == NULL)
+		{
 			throw "ObjElement is NULL";
+			EventingEngine->ObjectsError("ObjElement is NULL");
+		}
 		ObjElement->Text = Text;
 	}
 
 	void DeleteImage()
 	{
 		if (ObjElement->Image == NULL)
-			throw "IMG pointer is NULL.";
+		{
+			throw "IMG pointer is NULL."; 
+			EventingEngine->ObjectsError("IMG pointer is NULL.");
+		}
 		delete Image;
 		Image = NULL;
 	}
@@ -216,7 +235,10 @@ public:
 	void DeleteText()
 	{
 		if (ObjElement->Text == NULL)
+		{
 			throw "TXT pointer is NULL.";
+			EventingEngine->ObjectsError("TXT pointer is NULL.");
+		}
 		delete Text;
 		Text = NULL;
 	}
