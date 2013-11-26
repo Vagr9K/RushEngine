@@ -17,7 +17,7 @@ int main(int argc, char** argv)
 	TXT* Text;
 	b2Filter* Filter;
 	Object* Obj;
-
+	mainEngine->getEventingEngine()->LogData("Test", "Just Testing", false);
 	for (int i = 0; i < 1000;i++)
 	{
 		Image = new IMG(10, 10, 10, 10, 32.5, "imageasdhasyfdisafgsuadfkuvakdf.png");
@@ -59,7 +59,7 @@ int main(int argc, char** argv)
 	mainEngine->Objects->ManagerDB[1]->PushChanges();
 	SDL_Event e;
 	 bool Die = false;
-	//while (Die == false)
+	while (Die == false)
 	 {
 		 mainEngine->Graphics->BlackInit();
 		 if(SDL_PollEvent(&e) != 0) 
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 			 Die = true;
 			
 		 }
-		 mainEngine->BlackInitGraphics();
+		 mainEngine->Graphics->BlackInit();
 		
 	 }
 	 mainEngine->StopGraphics();
