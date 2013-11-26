@@ -11,6 +11,7 @@ private:
 	vector<LayerElement*>* StoreForAdd;
 	int AddCount = 0;
 	int DeleteCount = 0;
+	int OptObjCount = 0;
 	bool Inited = false;
 
 public:
@@ -19,12 +20,25 @@ public:
 	{
 		this->Source = Source;
 	}
+	ObjDBManager(vector<LayerElement*>* Source, int OptimalObjectCount)
+	{
+		this->Source = Source;
+		this->OptObjCount = OptimalObjectCount;
+	}
 	~ObjDBManager()
 	{
 		delete StoreForDelete;
 		delete StoreForAdd;
 		delete Source;
 
+	}
+	void SetOptimalObjectCount(int OptimalObjectCount)
+	{
+		this->OptObjCount = OptimalObjectCount;
+	}
+	int GetOptimalObjectCount()
+	{
+		return OptObjCount;
 	}
 	void SetSource(vector<LayerElement*>* Source)
 	{
@@ -35,7 +49,11 @@ public:
 	void Init()
 	{
 		StoreForAdd = new vector<LayerElement*>;
+		StoreForAdd->reserve(OptObjCount);
 		StoreForDelete = new vector<LayerElement*>;
+		StoreForDelete->reserve(OptObjCount);
+
+		Inited = true;
 
 	}
 	void AddToDelete(LayerElement* DeleteElement)
@@ -107,7 +125,7 @@ public:
 	{
 		AddCount = 0;
 		DeleteCount = 0;
-		bool Inited = false;
+		Inited = false;
 		delete StoreForAdd;
 		StoreForAdd = NULL;
 		delete StoreForDelete;
@@ -131,7 +149,7 @@ public:
 	vector<vector<LayerElement*>*> GrLayers;
 
 	vector<ObjDBManager*> ManagerDB; 
-	
+	int OptObjCount = 0;
 	
 public:
 	ObjectsEngine(int InterfaceLayerCount,int SpecialLayerCount ,int WorldCount, int BackgroundLayerCount)
@@ -149,6 +167,24 @@ public:
 		}
 
 		
+
+	}
+	ObjectsEngine(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackgroundLayerCount, int OptimalObjectsCount)
+	{
+
+		this->InterfaceLayerCount = InterfaceLayerCount;
+		this->WorldCount = WorldCount;
+		this->BackgroundLayerCount = BackgroundLayerCount;
+		this->SpecialLayerCount = SpecialLayerCount;
+		this->OptObjCount = OptimalObjectsCount;
+
+		for (int i = 0; i < InterfaceLayerCount + SpecialLayerCount + WorldCount + BackgroundLayerCount; i++)
+		{
+			GrLayers.push_back(new vector<LayerElement*>);
+			ManagerDB.push_back(new ObjDBManager(GrLayers.at(i), OptimalObjectsCount));
+		}
+
+
 
 	}
 	vector<vector<LayerElement*>*> GetLayers()
