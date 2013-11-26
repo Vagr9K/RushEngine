@@ -10,7 +10,7 @@ private:
 	int h, w, LayerNumber;
 	
 	string Errors;
-	GEEventing EvSys;
+	EventingEngine EventEngine;
 
 public:
 	PhysicsEngine* Physics;
@@ -42,29 +42,19 @@ public:
 		this->LayerNumber = LayerNumber;
 		this->Title = Title;
 		Graphics = new GraphicsEngine;
-		Graphics->Init(Width, Height, LayerNumber, Title, &EvSys);
+		Graphics->Init(Width, Height, LayerNumber, Title, &EventEngine);
 		return Graphics->Start();
 
 	}
-
-
 
 	bool StopGraphics()
 	{
 		return Graphics->Stop();
 	}
 
-	void DelayGraphics(int Milliseconds)
+	EventingEngine* getEventingEngine()
 	{
-		Graphics->DelayGraphics(Milliseconds);
-	}
-	void BlackInitGraphics()
-	{
-		Graphics->BlackInit();
-	}
-	GEEventing getEventSystem()
-	{
-		return EvSys;
+		return &EventEngine;
 	}
 
 };
@@ -75,7 +65,7 @@ class OPSTester
 	bool FPSStarted = false;
 	double FPSTestTime;
 	int Frames = 0;
-	GEEventing event;
+	EventingEngine event;
 public:
 	void TestOPS(double TestTime)
 	{
