@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 	b2World MainWorld(Gravity);
 	GameEngine* mainEngine = new GameEngine;
 	mainEngine->StartGraphics(300, 400, 10, "Title");
-	mainEngine->InitObjects(1, 0, 1, 0);
+	mainEngine->InitObjects(1, 0, 1, 0, 1001);
 	mainEngine->InitPhysics();
 	mainEngine->Physics->AddWorld(&MainWorld);
 	
@@ -52,13 +52,14 @@ int main(int argc, char** argv)
 		Obj->FixtureDefinition->shape = &Pol;
 		Obj->CreateFixture();
 		Obj->AddObjElementToManager();
-		Obj->PushManagerChanges();
+		
+		mainEngine->Graphics->PreLoadCPU("images/BlackInit.png", false);
 
 	}
-
+	mainEngine->Objects->ManagerDB[1]->PushChanges();
 	SDL_Event e;
 	 bool Die = false;
-	 while (Die == false)
+	//while (Die == false)
 	 {
 		 mainEngine->Graphics->BlackInit();
 		 if(SDL_PollEvent(&e) != 0) 
