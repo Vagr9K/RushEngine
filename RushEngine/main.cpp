@@ -1,6 +1,6 @@
 #include "GameEngine.h"
-
-
+#include <cstdlib>
+#include <ctime>
 
 int main(int argc, char** argv)
 {
@@ -8,70 +8,95 @@ int main(int argc, char** argv)
 	
 	b2World MainWorld(Gravity);
 	GameEngine* mainEngine = new GameEngine;
-	mainEngine->StartGraphics(300, 400, 10, "Title");
-	mainEngine->InitObjects(1, 0, 1, 0, 1001);
-	mainEngine->InitPhysics();
-	mainEngine->Physics->AddWorld(&MainWorld);
+	mainEngine->InitGraphics(680, 900, 2, "Title");
+	mainEngine->Graphics->Start();
+	mainEngine->Graphics->InitGPU();
+	WindowInfo Info = mainEngine->Graphics->getWindowSize();
 	
-	IMG* Image;
-	TXT* Text;
-	b2Filter* Filter;
-	Object* Obj;
-	mainEngine->getEventingEngine()->LogData("Test", "Just Testing", false);
-	for (int i = 0; i < 1000;i++)
-	{
-		Image = new IMG(10, 10, 10, 10, 32.5, "imageasdhasyfdisafgsuadfkuvakdf.png");
-		Text = new TXT(12, 12, 12, 12, 12, "faksdgfuagkfaadfsadfadadufguuyfhukalsy.jpg");
-		Filter = new b2Filter;
-		Filter->categoryBits = 12;
-		b2PolygonShape Pol;
-		Pol.SetAsBox(12.7f, 12.7f);
-
-
-
-		Obj = new Object(mainEngine, 0,1);
-		Obj->InitObjElement();
-		Obj->AddImage(Image);
-		Obj->AddText(Text);
-		Obj->BodyDefinition = new b2BodyDef;
-		Obj->BodyDefinition->active = true;
-		Obj->BodyDefinition->allowSleep = true;
-		Obj->BodyDefinition->angle = 32.9f;
-		Obj->BodyDefinition->angularDamping = 12.0f;
-		Obj->BodyDefinition->awake = true;
-		Obj->BodyDefinition->bullet = true;
-		Obj->BodyDefinition->type = b2_dynamicBody;
-		Obj->CreateBody();
-		Obj->AddObjElementToManager();
-		Obj->InitFixtureDefinition();
-		Obj->FixtureDefinition->density = 12.4f;
-		Obj->FixtureDefinition->filter = *Filter;
-		Obj->FixtureDefinition->friction = 12;
-		Obj->FixtureDefinition->isSensor = false;
-		Obj->FixtureDefinition->restitution = 12.0f;
-		Obj->FixtureDefinition->shape = &Pol;
-		Obj->CreateFixture();
-		Obj->AddObjElementToManager();
-		
-		mainEngine->Graphics->PreLoadCPU("images/BlackInit.png", false);
-
-	}
-	mainEngine->Objects->ManagerDB[1]->PushChanges();
 	SDL_Event e;
+	int Oldx = 12;
+	double NewX = rand()%Info.Width+0;
+	double NewX2 = 0;
+	int Oldy = 12;
+	double NewY = rand() % Info.Height+0;
+	double NewY2 =0;
+	int Direct;
+
+	int StartTime = GetTickCount();
+	int Now = GetTickCount();
+	int Delta=0;
+	const int FPS = 60;
 	 bool Die = false;
 	while (Die == false)
 	 {
-		 mainEngine->Graphics->BlackInit();
-		 if(SDL_PollEvent(&e) != 0) 
-		 if (e.type==SDL_QUIT)
-		 {
-			 Die = true;
-			
-		 }
-		 mainEngine->Graphics->BlackInit();
+		Now = GetTickCount();
+		Delta = Now - StartTime;
+		if (Delta>=(1/FPS*1000))
+		{
+			StartTime = GetTickCount();
+			if (SDL_PollEvent(&e) != 0)
+			if (e.type == SDL_QUIT)
+			{
+				Die = true;
+
+			}
+
+
+
+			mainEngine->Graphics->DrawerGPU->StartBuffer();
+			mainEngine->Graphics->DrawerGPU->AddToBuffer(static_cast<int>(NewX2), static_cast<int>(NewY2), 30, 30, "images/BlackInit.png");
+			mainEngine->Graphics->DrawerGPU->AddToBuffer(static_cast<int>(NewX), static_cast<int>(NewY), 12, 12, "images/BlackInit.png");
+			mainEngine->Graphics->DrawerGPU->PushBuffer();
+			Direct = rand() % 10000;
+			Direct -= 5000;
+			NewX += Direct/1000;
+			Direct = rand() % 20;
+			Direct -= 10;
+			NewX2 += Direct / 10;
+			Direct = rand() % 10000;
+			Direct -= 5000;
+			NewY += Direct/1000;
+			Direct = rand() % 20;
+			Direct -= 10;
+			NewY2 += Direct / 10;
+			if (NewX > Info.Width)
+			{
+				NewX = 0;
+			}
+			if (NewX<0)
+			{
+				NewX = Info.Width;
+			}
+			if (NewY > Info.Height)
+			{
+				NewY = 0;
+			}
+			if (NewY<0)
+			{
+				NewY = Info.Height;
+			}
+
+			if (NewX2 > Info.Width)
+			{
+				NewX2 = 0;
+			}
+			if (NewX2<0)
+			{
+				NewX2 = Info.Width;
+			}
+			if (NewY2 > Info.Height)
+			{
+				NewY2 = 0;
+			}
+			if (NewY2 < 0)
+			{
+				NewY2 = Info.Height;
+			}
+		}
 		
 	 }
-	 mainEngine->StopGraphics();
+
+	 mainEngine->DeleteGraphics();
 	
 	return 0;
 }
