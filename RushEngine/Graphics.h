@@ -13,226 +13,485 @@
 
 using namespace std;
 
-class GraphicsEngine
+class GraphicsManager
 {
 
-	
-private:
-	int Width, Height, LayerNumber;
-	char Title;
-	bool IsReady = false; 
-	bool IsStarted = false;
-	SDL_Window* main = NULL;
-	SDL_Renderer *Render = NULL;
-	vector<SDL_Surface*> PreLoadedSurfCPU;
-	vector<SDL_Texture*> PreLoadedTextGPU;
-	vector<string> PreLoadedPathsCPU;
-	vector<string> PreLoadedPathsGPU;
-	GEEventing* EvSys;
-	SDL_Surface* TEMP;
-	
+	vector<SDL_Surface*>* PreLoadedSurfCPU=NULL;
+	vector<SDL_Texture*>* PreLoadedTextGPU=NULL;
+	vector<string>* PreLoadedPathsCPU=NULL;
+	vector<string>* PreLoadedPathsGPU=NULL;
+	EventingEngine* EventEngine=NULL;
+	SDL_Renderer* Renderer=NULL;
+
+
 public:
-	
-	
-	
-	GraphicsEngine(){}
-	GraphicsEngine(int Width, int Height, int LayerNumber,string Title, GEEventing* EvVar)
+	GraphicsManager(EventingEngine *EventEngine, SDL_Renderer* Renderer, 
+		vector<SDL_Surface*>* PreLoadedSurfCPU, vector<SDL_Texture*>* PreLoadedTextGPU, 
+		vector<string>* PreLoadedPathsCPU, vector<string>* PreLoadedPathsGPU)
 	{
-		this->Width = Width;
-		this->Height = Height;
-		this->LayerNumber = LayerNumber;
-		this->Title = *(Title.c_str());
-		this->IsReady = true;
-		this->EvSys = EvVar;
+		this->EventEngine = EventEngine;
+		this->Renderer = Renderer;
+		this->PreLoadedPathsCPU = PreLoadedPathsCPU;
+		this->PreLoadedPathsGPU = PreLoadedPathsGPU;
+		this->PreLoadedSurfCPU = PreLoadedSurfCPU;
+		this->PreLoadedTextGPU = PreLoadedTextGPU;
 	}
-	void Init(int Width, int Height, int LayerNumber, string Title, GEEventing* EvVar)
+	GraphicsManager(EventingEngine *EventEngine, SDL_Renderer* Renderer)
 	{
-		this->Width = Width;
-		this->Height = Height;
-		this->LayerNumber = LayerNumber;
-		this->Title = *(Title.c_str());
-		this->EvSys = EvVar;
-		this->IsReady = true;
+		this->EventEngine = EventEngine;
+		this->Renderer = Renderer;
+		InitPreloaders();
 	}
-	
-	bool Start()
+
+	void InitPreloaders()
 	{
-		if (IsReady==false)
+		if (PreLoadedPathsCPU !=NULL)
 		{
-			return false;
-		} 
-	
-		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-		{
-			EvSys->OnGraphicsError(SDL_GetError());
-			return false;
+			delete[] PreLoadedPathsCPU;
 		}
-		main = SDL_CreateWindow(&Title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_SHOWN);
-		if (main==NULL)
+		if (PreLoadedPathsGPU != NULL)
 		{
-			EvSys->OnGraphicsError(SDL_GetError());
-			return false;
+			delete[] PreLoadedPathsGPU;
 		}
-		Render = SDL_CreateRenderer(main, -1, SDL_RENDERER_ACCELERATED);
-		if (Render==NULL)
+		if (PreLoadedSurfCPU != NULL)
 		{
-			EvSys->OnGraphicsError(SDL_GetError());
-			return false;
+			delete[] PreLoadedSurfCPU;
 		}
-
-		int IMGFlags = IMG_INIT_PNG;
-		int InitStat = IMG_Init(IMGFlags);
-		if (InitStat != IMGFlags)
+		if (PreLoadedTextGPU != NULL)
 		{
-			EvSys->OnGraphicsError(IMG_GetError());
-			return false;
+			delete[] PreLoadedTextGPU;
 		}
-
-
-		IsStarted = true;
-		return true;
+		this->PreLoadedPathsCPU = new vector<string>;
+		this->PreLoadedPathsGPU = new vector<string>;
+		this->PreLoadedSurfCPU = new vector <SDL_Surface*>;
+		this->PreLoadedTextGPU = new vector<SDL_Texture*>;
 	}
-
-	bool Stop()
-	{
-		SDL_DestroyRenderer(Render);
-		SDL_DestroyWindow(main);
-		IMG_Quit();
-		SDL_Quit();
-		IsStarted = false;
-		return true;
-	}
-	void DelayGraphics(int Milliseconds)
-	{
-		SDL_Delay(Milliseconds);
-	}
-
-	void BlackInit()
-	{
-		SDL_Texture* Texture = LoaderGPU("images/BlackInit.png");
-		SDL_RenderClear(Render);
-		SDL_RenderCopy(Render, Texture, NULL, NULL);
-		SDL_RenderPresent(Render);
-		
-	}
-
-
-	inline SDL_Surface* IMGLoad(string Path)
-	{
-		SDL_Surface* Temp1 = IMG_Load(Path.c_str());
-		if (Temp1==NULL)
-		{
-			EvSys->OnGraphicsError(IMG_GetError());
-		}
-		
-		
-		return Temp1;
-	}
-	void PreLoaderCPU(string PathToIMG)
-	{
-		PreLoadedPathsCPU.push_back(PathToIMG);
-		PreLoadedSurfCPU.push_back(IMGLoad(PathToIMG));
-	}
-
-	void PreLoaderGPU(string PathToIMG)
-	{
-		PreLoadedPathsGPU.push_back(PathToIMG);
-		PreLoadedTextGPU.push_back(SDL_CreateTextureFromSurface(Render, IMGLoad(PathToIMG)));
-	}
-
-
-
-
+	
 	SDL_Surface* LoaderCPU(string Path)
 	{
 		SDL_Surface* Temp = NULL;
 		bool SurfPresent = false;
-		for (unsigned int i = 0; i < PreLoadedPathsCPU.size(); i++)
+		for (unsigned int i = 0; i < PreLoadedPathsCPU->size(); i++)
 		{
-			if (PreLoadedPathsCPU[i] == Path)
+			if (PreLoadedPathsCPU->at(i) == Path)
 			{
-				Temp = PreLoadedSurfCPU[i];
+				Temp = PreLoadedSurfCPU->at(i);
 				SurfPresent = true;
 				break;
 			}
 		}
-		if (SurfPresent==false)
+		if (SurfPresent == false)
 
 		{
-			PreLoadedSurfCPU.push_back(IMGLoad(Path));
-			PreLoadedPathsCPU.push_back(Path);
-			Temp = PreLoadedSurfCPU.back();
+			PreLoadedSurfCPU->push_back(IMGLoad(Path));
+			PreLoadedPathsCPU->push_back(Path);
+			Temp = PreLoadedSurfCPU->back();
 		}
 		return Temp;
 	}
+	
+	bool PreLoadCPU(string Path, bool CheckExistance = true)
+	{
+		if (CheckExistance == true)
+		{
+			for (unsigned int i = 0; i < PreLoadedPathsCPU->size(); i++)
+			{
+				if (PreLoadedPathsCPU->at(i) == Path)
+				{
+					return true;
+				}
+			}
+		}
+		PreLoadedSurfCPU->push_back(IMGLoad(Path));
+		return true;
+	}
+	void ClearPreLoadCPU(double PartToClear)
+	{
+		unsigned int Size = PreLoadedPathsCPU->size();
+		int Count =static_cast<int>(Size*PartToClear);
 
+
+		PreLoadedSurfCPU->erase(PreLoadedSurfCPU->begin(), PreLoadedSurfCPU->begin() + Count);
+		PreLoadedPathsCPU->erase(PreLoadedPathsCPU->begin(), PreLoadedPathsCPU->begin() + Count);
+	}
+
+	
+
+
+
+	SDL_Surface* IMGLoad(string Path)
+	{
+		SDL_Surface* Surface = IMG_Load(Path.c_str());
+		if (Surface == NULL)
+		{
+			EventEngine->GraphicsError(IMG_GetError());
+		}
+
+
+		return Surface;
+	}
 	SDL_Texture* LoaderGPU(string Path)
 	{
 		SDL_Texture* Temp = NULL;
 		bool TextPresent = false;
-		for (unsigned int i = 0; i < PreLoadedPathsGPU.size(); i++)
+		for (unsigned int i = 0; i < PreLoadedPathsGPU->size(); i++)
 		{
-			if (PreLoadedPathsGPU[i] == Path)
+			if (PreLoadedPathsGPU->at(i) == Path)
 			{
-				Temp = PreLoadedTextGPU[i];
+				Temp = PreLoadedTextGPU->at(i);
 				TextPresent = true;
 				break;
 			}
 		}
 		if (TextPresent == false)
-
+	
 		{
-			PreLoadedTextGPU.push_back(SDL_CreateTextureFromSurface(Render, IMGLoad(Path)));
-			PreLoadedPathsGPU.push_back(Path);
-			Temp = PreLoadedTextGPU.back();
+			PreLoadedTextGPU->push_back(SDL_CreateTextureFromSurface(Renderer, IMGLoad(Path)));
+			PreLoadedPathsGPU->push_back(Path);
+			Temp = PreLoadedTextGPU->back();
 		}
 		return Temp;
 	}
-	//Define function of power of 2 check for OpenGl texture creation compatibility
-#define ISPWR2(n) !(n&(n-1))
-	bool DrawImageGPUSingle(int X, int Y, int H, int W, float Angle, string Path) //Experimental function, may be removed later.
+	void PreLoadGPU(string Path, bool CheckExistance = true)
 	{
-		SDL_Surface* Image = LoaderCPU(Path);
- //Must be power of 2!! (2,4,8,16,32,64,128,256...)
-		if (ISPWR2(Image->h) || ISPWR2(Image->w))
+		bool Exists = false;
+		if (CheckExistance == true)
 		{
-			EvSys->OnGraphicsError("Image: "+Path+"\n" + "Width or Height is not power of 2.");
-			return false;
+			for (unsigned int i = 0; i < PreLoadedPathsGPU->size(); i++)
+			{
+				if (PreLoadedPathsGPU->at(i) == Path)
+				{
+					Exists = true;
+					break;
+				}
+			}
 		}
-		 Uint8 Colours = Image->format->BytesPerPixel;
-		 GLuint Format;
-		 if (Colours==4)
-		 {
-			 Format = GL_RGBA;
-		 } 
-		 else if (Colours==3)
-		 {
-			 Format = GL_RGB;
-		 }
-		 else
-		 {
-			 EvSys->OnGraphicsError("Image: " + Path + "\n" + "Format is not recognized.");
-			 return false;
-		 }
+		if (Exists == false)
+		{
+			PreLoadedTextGPU->push_back(SDL_CreateTextureFromSurface(Renderer, IMGLoad(Path)));
+		}
+		
+	}
+	void ClearPreLoadGPU(double PartToClear)
+	{
+		unsigned int Size = PreLoadedPathsGPU->size();
+		int Count = static_cast<int>(Size*PartToClear);
 
-		 GLuint Texture;
-		 glGenTextures(1, &Texture);
-		 glBindTexture(GL_TEXTURE_2D, Texture);
-		 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		 glTexImage2D(GL_TEXTURE_2D, 0, Format, Image->w, Image->h, 0, Format, GL_UNSIGNED_BYTE, Image->pixels);
 
-		 glClear(GL_COLOR_BUFFER_BIT);
-		 glTranslatef(X, Y, 0);
-		 glRotatef(Angle, 0.0, 0.0, 1.0);
-		 glBindTexture(GL_TEXTURE_2D, Texture);
-		 //Non-OpenGL ES code!. Must be replaced.
-		 glBegin(GL_QUADS);
+		PreLoadedTextGPU->erase(PreLoadedTextGPU->begin(), PreLoadedTextGPU->begin() + Count);
+		PreLoadedPathsGPU->erase(PreLoadedPathsGPU->begin(), PreLoadedPathsGPU->begin() + Count);
+	}
+	
+	
+};
 
-		//Unfinished function!!!!!!!!
 
+
+class DrawCPU
+{
+
+
+	SDL_Window* Window = NULL;
+	SDL_Surface* WinSurf = NULL;
+	SDL_Rect CopyFrom;
+	SDL_Rect CopyTo;
+	GraphicsManager* ManagerGR = NULL;
+
+public:
+	DrawCPU(GraphicsManager* ManagerGR, SDL_Window* mainWindow)
+	{
+		this->Window = mainWindow;
+		this->ManagerGR = ManagerGR;
+		WinSurf = SDL_GetWindowSurface(Window);
+
+	}
+	~DrawCPU()
+	{
+		ClearAll();
 
 	}
 
+
+	void StartBuffer()
+	{
+		SDL_FillRect(WinSurf, NULL, SDL_MapRGB(WinSurf->format, 0, 0, 0));
+	}
+
+
+	void AddToBuffer(int OrigX, int OrigY, int OrigW, int OrigH, int CopyX, int CopyY, int CopyW, int CopyH, string Source)
+	{
+		CopyFrom.h = OrigH;
+		CopyFrom.w = OrigW;
+		CopyFrom.x = OrigX;
+		CopyFrom.y = OrigY;
+		CopyTo.h = CopyH;
+		CopyTo.w = CopyW;
+		CopyTo.x = CopyX;
+		CopyTo.y = CopyY;
+		SDL_BlitSurface(ManagerGR->LoaderCPU(Source), &CopyFrom, WinSurf, &CopyTo);
+
+	}
+	void AddToBuffer(int X, int Y, int W, int H, string Source)
+	{
+
+		CopyTo.h = H;
+		CopyTo.w = W;
+		CopyTo.x = X;
+		CopyTo.y = Y;
+		SDL_BlitSurface(ManagerGR->LoaderCPU(Source), NULL, WinSurf, &CopyTo);
+
+	}
+
+	void PushBuffer()
+	{
+		SDL_UpdateWindowSurface(Window);
+	}
+
+	void ClearAll()
+	{
+		ManagerGR->ClearPreLoadCPU(1.0);
+		SDL_FreeSurface(WinSurf);
+	}
+
 };
+
+class DrawGPU
+{
+
+
+	SDL_Rect CopyFrom;
+	SDL_Rect CopyTo;
+	SDL_Renderer *Render = NULL;
+	SDL_Window* mainWindow;
+	GraphicsManager* ManagerGR = NULL;
+
+
+
+public:
+	DrawGPU(GraphicsManager* ManagerGR, SDL_Renderer* Render, SDL_Window* mainWindow, EventingEngine* Events)
+	{
+
+		this->ManagerGR = ManagerGR;
+		this->mainWindow = mainWindow;
+		this->Render = Render;
+		if (Render == NULL)
+		{
+			Events->GraphicsError("Renderer not initialized for DrawGPU.");
+		}
+	}
+
+	~DrawGPU()
+	{
+		ClearAll();
+
+	}
+
+	void StartBuffer()
+	{
+		SDL_RenderClear(Render);
+	}
+
+
+	void AddToBuffer(int OrigX, int OrigY, int OrigW, int OrigH, int CopyX, int CopyY, int CopyW, int CopyH, string Source)
+	{
+		CopyFrom.h = OrigH;
+		CopyFrom.w = OrigW;
+		CopyFrom.x = OrigX;
+		CopyFrom.y = OrigY;
+		CopyTo.h = CopyH;
+		CopyTo.w = CopyW;
+		CopyTo.x = CopyX;
+		CopyTo.y = CopyY;
+		SDL_RenderCopy(Render, ManagerGR->LoaderGPU(Source), &CopyFrom, &CopyTo);
+
+	}
+	void AddToBuffer(int X, int Y, int W, int H, string Source)
+	{
+
+		CopyTo.h = H;
+		CopyTo.w = W;
+		CopyTo.x = X;
+		CopyTo.y = Y;
+		SDL_RenderCopy(Render, ManagerGR->LoaderGPU(Source), NULL, &CopyTo);
+
+	}
+	void PushBuffer()
+	{
+		SDL_RenderPresent(Render);
+	}
+
+
+
+	void ClearAll()
+	{
+		ManagerGR->ClearPreLoadGPU(1.0);
+
+	}
+};
+
+struct WindowInfo
+{
+	int Height;
+	int Width;
+};
+
+
+class GraphicsEngine
+{
+	
+
+private:
+	int Width, Height, LayerNumber;
+	string Title = "Default";
+	bool IsReady = false;
+	bool IsStarted = false;
+	SDL_Window* mainWindow = NULL;
+	SDL_Renderer *Renderer = NULL;
+	EventingEngine* EventEngine = NULL;
+	GraphicsManager* ManagerGR = NULL;
+	
+	bool CPUInited = false;
+
+	bool GPUInited = false;
+	vector<SDL_Surface*> PreLoadedSurfCPU;
+	vector<SDL_Texture*> PreLoadedTextGPU;
+	vector<string> PreLoadedPathsCPU;
+	vector<string> PreLoadedPathsGPU;
+	
+
+public:
+	DrawCPU* DrawerCPU;
+	DrawGPU* DrawerGPU;
+
+
+
+public:
+	GraphicsEngine(){}
+	GraphicsEngine(int Width, int Height, int LayerNumber, string Title, EventingEngine* Events)
+	{
+		this->Width = Width;
+		this->Height = Height;
+		this->LayerNumber = LayerNumber;
+		this->Title = Title;
+		this->IsReady = true;
+		this->EventEngine = Events;
+		
+	}
+	void Init(int Width, int Height, int LayerNumber, string Title, EventingEngine* EvVar)
+	{
+		this->Width = Width;
+		this->Height = Height;
+		this->LayerNumber = LayerNumber;
+		this->Title = Title;
+		this->EventEngine = EvVar;
+		this->IsReady = true;
+		
+	}
+
+	bool Start()
+	{
+		if (IsReady == false)
+		{
+			EventEngine->GraphicsError("GraphicsEngine class is not initialized properly.");
+			return false;
+		}
+
+		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+		{
+			EventEngine->GraphicsError(SDL_GetError());
+			return false;
+		}
+		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_SHOWN);
+		if (mainWindow == NULL)
+		{
+			EventEngine->GraphicsError(SDL_GetError());
+			return false;
+		}
+
+
+		Renderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_ACCELERATED);
+		if (Renderer == NULL)
+		{
+			EventEngine->GraphicsError(SDL_GetError());
+
+		}
+		
+		int IMGFlags = IMG_INIT_PNG;
+		int InitStat = IMG_Init(IMGFlags);
+		if (InitStat != IMGFlags)
+		{
+			EventEngine->GraphicsError(IMG_GetError());
+			return false;
+		}
+
+
+
+		//this->ManagerGR = new GraphicsManager(EventEngine, Render, &PreLoadedSurfCPU, &PreLoadedTextGPU,&PreLoadedPathsCPU, &PreLoadedPathsGPU);
+		this->ManagerGR = new GraphicsManager(EventEngine, Renderer);
+		IsStarted = true;
+		return true;
+	}
+	
+	void InitCPU()
+	{
+		DrawerCPU = new DrawCPU(ManagerGR, mainWindow);
+		CPUInited = true;
+		
+	}
+
+	void DeleteCPU()
+	{
+		DrawerCPU->~DrawCPU();
+		CPUInited = false;
+	}
+
+	void InitGPU()
+	{
+		DrawerGPU = new DrawGPU(ManagerGR, Renderer, mainWindow, EventEngine);
+		
+		GPUInited = true;
+	}
+
+	void DeleteGPU()
+	{
+		DrawerGPU->~DrawGPU();
+		GPUInited = false;
+	}
+
+	
+	bool Stop()
+	{
+		
+		SDL_DestroyWindow(mainWindow);
+		IMG_Quit();
+		SDL_Quit();
+
+		if (CPUInited==true)
+		{
+			DeleteCPU();
+		}
+		if (GPUInited==true)
+		{
+			DeleteGPU();
+		}
+
+		
+		IsStarted = false;
+		return true;
+	}
+	void Delay(int Milliseconds)
+	{
+		SDL_Delay(Milliseconds);
+	}
+
+	WindowInfo getWindowSize()
+	{
+		WindowInfo Info;
+		SDL_GetWindowSize(mainWindow, &Info.Width, &Info.Height);
+		return Info;
+	}
+
+	
+};
+
 
