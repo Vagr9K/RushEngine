@@ -21,21 +21,28 @@ public:
 	{
 		Physics = new PhysicsEngine;
 	}
+	void DeletePhysics()
+	{
 
+	}
 	void InitObjects(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackGroundLayerCount)
 	{
 		Objects = new ObjectsEngine(InterfaceLayerCount, SpecialLayerCount, WorldCount, BackGroundLayerCount);
 	}
+	
 	void InitObjects(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackGroundLayerCount, int OptimalObjectsCount)
 	{
 		Objects = new ObjectsEngine(InterfaceLayerCount, SpecialLayerCount, WorldCount, BackGroundLayerCount, OptimalObjectsCount);
 	}
+	void DeletObjects()
+	{
 
+	}
 	GameEngine()
 	{ 
 		
 	}
-	bool StartGraphics(int Width, int Height, int LayerNumber, string Title)
+	void InitGraphics(int Width, int Height, int LayerNumber, string Title)
 	{
 		this->h = Height;
 		this->w = Width;
@@ -43,13 +50,15 @@ public:
 		this->Title = Title;
 		Graphics = new GraphicsEngine;
 		Graphics->Init(Width, Height, LayerNumber, Title, &EventEngine);
-		return Graphics->Start();
+		
 
 	}
 
-	bool StopGraphics()
+	bool DeleteGraphics()
 	{
-		return Graphics->Stop();
+		bool Status = Graphics->Stop();
+
+		return Status;
 	}
 
 	EventingEngine* getEventingEngine()
