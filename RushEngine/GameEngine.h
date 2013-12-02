@@ -7,14 +7,15 @@
 
 class Object
 {
-	GameEngine* mainEngine = NULL;
-	ObjDBManager *DatabaseManager = NULL;
-	PhysicsEngine *ObjPhysics=NULL;
-	b2World *ObjWorld=NULL;
+	GameEngine* mainEngine;
+	ObjDBManager *DatabaseManager;
+	PhysicsEngine *ObjPhysics;
+	b2World *ObjWorld;
 	int PhysicsWorldIndex;
 	int ObjectsIndex;
-	bool ObjElementInDB = false;
+	bool ObjElementInDB;
 	EventingEngine* EventingEngine;
+
 
 private:
 	void CleanObject(void *Obj)
@@ -37,21 +38,42 @@ private:
 		Image = NULL;
 		Text = NULL;
 	}
+
+	void InitOldCpp()
+	{
+		mainEngine = NULL;
+		DatabaseManager = NULL;
+		ObjPhysics=NULL;
+		ObjWorld=NULL;
+		PhysicsWorldIndex;
+		ObjectsIndex;
+		ObjElementInDB = false;
+		BodyDefinition = NULL;
+		FixtureDefinition = NULL;
+		Body=NULL;
+		Fixture = NULL;
+		ObjElement=NULL;
+		Image=NULL;
+		Text=NULL;
+		InstantPush = false;
+
+	}
 public:
-	b2BodyDef* BodyDefinition = NULL;
-	b2FixtureDef* FixtureDefinition = NULL;
-	b2Body* Body=NULL;
-	b2Fixture* Fixture = NULL;
-	LayerElement *ObjElement=NULL;
-	IMG *Image=NULL;
-	TXT *Text=NULL;
-	bool InstantPush = false;
+	b2BodyDef* BodyDefinition;
+	b2FixtureDef* FixtureDefinition;
+	b2Body* Body;
+	b2Fixture* Fixture;
+	LayerElement *ObjElement;
+	IMG *Image;
+	TXT *Text;
+	bool InstantPush;
 
 
 
 public:
 	Object(GameEngine* Engine, int PhysicsWorldIndex, int ObjectsIndex)
 	{
+		InitOldCpp();
 		mainEngine = Engine;
 		this->ObjectsIndex = ObjectsIndex;
 		this->PhysicsWorldIndex = PhysicsWorldIndex;

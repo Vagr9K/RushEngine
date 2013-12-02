@@ -37,17 +37,27 @@ struct TextFont
 
 
 	string FontPath;
-	int PointSize=12;
-	int FontOutline =0;
-	Style FontStyle = NORMAL;
-	int Index = 0;
-	bool FontKerning = false;
+	int PointSize;
+	int FontOutline;
+	Style FontStyle;
+	int Index;
+	bool FontKerning;
+private:
+	void InitOldCpp()
+	{
+		PointSize=12;
+		FontOutline =0;
+		FontStyle = NORMAL;
+		Index = 0;
+		FontKerning = false;
+	}
 
 
 public:
 
 	TextFont(string FontPath)
 	{
+		InitOldCpp();
 		this->FontPath = FontPath;
 
 	}
@@ -57,13 +67,13 @@ public:
 class GraphicsManager
 {
 
-	vector<SDL_Surface*>* PreLoadedSurfCPU=NULL;
-	vector<SDL_Texture*>* PreLoadedTextGPU=NULL;
-	vector<string>* PreLoadedPathsCPU=NULL;
-	vector<string>* PreLoadedPathsGPU=NULL;
-	EventingEngine* EventEngine=NULL;
-	SDL_Renderer* Renderer=NULL;
-	int OptimalObjectCount=0;
+	vector<SDL_Surface*>* PreLoadedSurfCPU;
+	vector<SDL_Texture*>* PreLoadedTextGPU;
+	vector<string>* PreLoadedPathsCPU;
+	vector<string>* PreLoadedPathsGPU;
+	EventingEngine* EventEngine;
+	SDL_Renderer* Renderer;
+	int OptimalObjectCount;
 
 	vector<TTF_Font*> LoadedFonts;
 	vector<string> LoadedFontsPaths;
@@ -73,7 +83,19 @@ class GraphicsManager
 	vector<SDL_Texture*> LoadedTextsGPU;
 	vector<int> TimeFromLastUseCPU;
 	vector<int> TimeFromLastUseGPU;
-	int MaximumTimeFromLastUse = 40;
+	int MaximumTimeFromLastUse;
+private:
+	void InitOldCpp()
+	{
+		PreLoadedSurfCPU=NULL;
+		PreLoadedTextGPU=NULL;
+		PreLoadedPathsCPU=NULL;
+		PreLoadedPathsGPU=NULL;
+		EventEngine=NULL;
+		Renderer=NULL;
+		OptimalObjectCount=0;
+		MaximumTimeFromLastUse = 40;
+	}
 
 
 public:
@@ -81,6 +103,7 @@ public:
 		vector<SDL_Surface*>* PreLoadedSurfCPU, vector<SDL_Texture*>* PreLoadedTextGPU, 
 		vector<string>* PreLoadedPathsCPU, vector<string>* PreLoadedPathsGPU)
 	{
+		InitOldCpp();
 		this->EventEngine = EventEngine;
 		this->Renderer = Renderer;
 		this->PreLoadedPathsCPU = PreLoadedPathsCPU;
@@ -90,12 +113,14 @@ public:
 	}
 	GraphicsManager(EventingEngine *EventEngine, SDL_Renderer* Renderer)
 	{
+		InitOldCpp();
 		this->EventEngine = EventEngine;
 		this->Renderer = Renderer;
 		InitPreloaders();
 	}
 	GraphicsManager(EventingEngine *EventEngine, SDL_Renderer* Renderer, int OptimalObjectCount)
 	{
+		InitOldCpp();
 		this->EventEngine = EventEngine;
 		this->Renderer = Renderer;
 		this->OptimalObjectCount = OptimalObjectCount;
@@ -166,7 +191,7 @@ public:
 
 	TTF_Font* GetFont(string FontPath, int PointSize, int FontOutline, Style FontStyle, int Index = 0, bool FontKerning = false)
 	{
-		string Path = FontPath + to_string(PointSize) + to_string(Index);
+		string Path = FontPath + to_string(static_cast<long long>(PointSize)) + to_string(static_cast<long long>(Index));
 		for (unsigned int i = 0; i < LoadedFontsPaths.size(); i++)
 		{
 			if (LoadedFontsPaths.at(i) == Path)
@@ -219,9 +244,9 @@ public:
 	SDL_Surface* GetTextImageCPU(TextFont* Font,string Text, Mode DrawMode, SDL_Color Foregroung, SDL_Color Background)
 	{
 		SDL_Surface* Surf = NULL;
-		string args = to_string(Font->FontKerning) + to_string(Font->FontOutline)
-			+ Font->FontPath + to_string(Font->FontStyle) + to_string(Font->Index)
-			+ to_string(Font->PointSize) + Text;
+		string args = to_string(static_cast<long long>(Font->FontKerning)) + to_string(static_cast<long long>(Font->FontOutline))
+			+ Font->FontPath + to_string(static_cast<long long>(Font->FontStyle)) + to_string(static_cast<long long>(Font->Index))
+			+ to_string(static_cast<long long>(Font->PointSize)) + Text;
 		for (unsigned int i = 0; i < TimeFromLastUseCPU.size(); i++)
 		{
 			if (LoadedTextArgsCPU.at(i) == args)
@@ -276,9 +301,9 @@ public:
 	SDL_Texture* GetTextImageGPU(TextFont* Font, string Text, Mode DrawMode, SDL_Color Foregroung, SDL_Color Background)
 	{
 		SDL_Texture* Texture = NULL;
-		string args = to_string(Font->FontKerning) + to_string(Font->FontOutline)
-			+ Font->FontPath + to_string(Font->FontStyle) + to_string(Font->Index)
-			+ to_string(Font->PointSize) + Text;
+		string args = to_string(static_cast<long long>(Font->FontKerning)) + to_string(static_cast<long long>(Font->FontOutline))
+			+ Font->FontPath + to_string(static_cast<long long>(Font->FontStyle)) + to_string(static_cast<long long>(Font->Index))
+			+ to_string(static_cast<long long>(Font->PointSize)) + Text;
 		for (unsigned int i = 0; i < TimeFromLastUseGPU.size(); i++)
 		{
 			if (LoadedTextArgsGPU.at(i) == args)
@@ -491,15 +516,23 @@ class DrawCPU
 {
 
 
-	SDL_Window* Window = NULL;
-	SDL_Surface* WinSurf = NULL;
+	SDL_Window* Window;
+	SDL_Surface* WinSurf;
 	SDL_Rect CopyFrom;
 	SDL_Rect CopyTo;
-	GraphicsManager* ManagerGR = NULL;
+	GraphicsManager* ManagerGR;
+private:
+	void InitOldCpp()
+	{
+		Window = NULL;
+		WinSurf = NULL;
+		ManagerGR = NULL;
+	}
 
 public:
 	DrawCPU(GraphicsManager* ManagerGR, SDL_Window* mainWindow)
 	{
+		InitOldCpp();
 		this->Window = mainWindow;
 		this->ManagerGR = ManagerGR;
 		WinSurf = SDL_GetWindowSurface(Window);
@@ -584,16 +617,22 @@ class DrawGPU
 
 	SDL_Rect CopyFrom;
 	SDL_Rect CopyTo;
-	SDL_Renderer *Render = NULL;
+	SDL_Renderer *Render;
 	SDL_Window* mainWindow;
-	GraphicsManager* ManagerGR = NULL;
+	GraphicsManager* ManagerGR;
+private:
+	void InitOldCpp()
+	{
+		Render = NULL;
+		ManagerGR = NULL;
+	}
 
 
 
 public:
 	DrawGPU(GraphicsManager* ManagerGR, SDL_Renderer* Render, SDL_Window* mainWindow, EventingEngine* Events)
 	{
-
+		InitOldCpp();
 		this->ManagerGR = ManagerGR;
 		this->mainWindow = mainWindow;
 		this->Render = Render;
@@ -689,22 +728,35 @@ class GraphicsEngine
 
 private:
 	int Width, Height, LayerNumber;
-	string Title = "Default";
-	bool IsReady = false;
-	bool IsStarted = false;
-	SDL_Window* mainWindow = NULL;
-	SDL_Renderer *Renderer = NULL;
-	EventingEngine* EventEngine = NULL;
-	GraphicsManager* ManagerGR = NULL;
+	string Title;
+	bool IsReady;
+	bool IsStarted;
+	SDL_Window* mainWindow;
+	SDL_Renderer *Renderer;
+	EventingEngine* EventEngine;
+	GraphicsManager* ManagerGR;
 
 	
-	bool CPUInited = false;
+	bool CPUInited;
 
-	bool GPUInited = false;
+	bool GPUInited;
 	vector<SDL_Surface*> PreLoadedSurfCPU;
 	vector<SDL_Texture*> PreLoadedTextGPU;
 	vector<string> PreLoadedPathsCPU;
 	vector<string> PreLoadedPathsGPU;
+private:
+	void InitOldCpp()
+	{
+		Title = "Default";
+		IsReady = false;
+		IsStarted = false;
+		mainWindow = NULL;
+		Renderer = NULL;
+		EventEngine = NULL;
+		ManagerGR = NULL;
+		CPUInited = false;
+		GPUInited = false;
+	}
 	
 
 public:
@@ -714,9 +766,13 @@ public:
 
 
 public:
-	GraphicsEngine(){}
+	GraphicsEngine()
+	{
+		InitOldCpp();
+	}
 	GraphicsEngine(int Width, int Height, int LayerNumber, string Title, EventingEngine* Events)
 	{
+		InitOldCpp();
 		this->Width = Width;
 		this->Height = Height;
 		this->LayerNumber = LayerNumber;

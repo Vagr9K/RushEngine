@@ -9,19 +9,29 @@ private:
 	vector<LayerElement*>* Source;
 	vector<LayerElement*>* StoreForDelete;
 	vector<LayerElement*>* StoreForAdd;
-	int AddCount = 0;
-	int DeleteCount = 0;
-	int OptObjCount = 0;
-	bool Inited = false;
+	int AddCount;
+	int DeleteCount;
+	int OptObjCount;
+	bool Inited;
+private:
+	void InitOldCpp()
+	{
+		AddCount = 0;
+		DeleteCount = 0;
+		OptObjCount = 0;
+		Inited = false;
+	}
 
 public:
 
 	ObjDBManager(vector<LayerElement*>* Source)
 	{
+		InitOldCpp();
 		this->Source = Source;
 	}
 	ObjDBManager(vector<LayerElement*>* Source, int OptimalObjectCount)
 	{
+		InitOldCpp();
 		this->Source = Source;
 		this->OptObjCount = OptimalObjectCount;
 	}
@@ -149,12 +159,17 @@ public:
 	vector<vector<LayerElement*>*> GrLayers;
 
 	vector<ObjDBManager*> ManagerDB; 
-	int OptObjCount = 0;
+	int OptObjCount;
+private:
+	void InitOldCpp()
+	{
+		OptObjCount = 0;
+	}
 	
 public:
 	ObjectsEngine(int InterfaceLayerCount,int SpecialLayerCount ,int WorldCount, int BackgroundLayerCount)
 	{
-
+		InitOldCpp();
 		this->InterfaceLayerCount = InterfaceLayerCount;
 		this->WorldCount = WorldCount;
 		this->BackgroundLayerCount = BackgroundLayerCount;
@@ -171,7 +186,7 @@ public:
 	}
 	ObjectsEngine(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackgroundLayerCount, int OptimalObjectsCount)
 	{
-
+		InitOldCpp();
 		this->InterfaceLayerCount = InterfaceLayerCount;
 		this->WorldCount = WorldCount;
 		this->BackgroundLayerCount = BackgroundLayerCount;

@@ -71,13 +71,20 @@ public:
 class OPSTester
 {
 	time_t startFPS, endFPS;
-	bool FPSStarted = false;
+	bool FPSStarted;
 	double FPSTestTime;
-	int Frames = 0;
+	int Frames;
 	EventingEngine event;
+private:
+	void InitOldCpp()
+	{
+		FPSStarted = false;
+		Frames = 0;
+	}
 public:
 	void TestOPS(double TestTime)
 	{
+		InitOldCpp();
 		if (FPSStarted == false)
 		{
 
