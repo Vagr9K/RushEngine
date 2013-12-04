@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 
 			
 			mainEngine->Graphics->DrawerGPU->StartBuffer();
-			mainEngine->Graphics->DrawerGPU->AddToBuffer(200, 100, 400, 50, Text, &FontofText, SOLID, Foreground, Back);
+			mainEngine->Graphics->DrawerGPU->AddToBuffer(200, 100, 400, 50, Text, &FontofText, SOLID, Foreground, Back); 
 			mainEngine->Graphics->DrawerGPU->AddToBuffer(static_cast<int>(680-Pos1.x*100),static_cast<int>(900-Pos1.y*100), 30, 30, "images/BlackInit.png");
 			mainEngine->Graphics->DrawerGPU->AddToBuffer(0,899, 5000, 1000, "ground.png");
 			mainEngine->Graphics->DrawerGPU->PushBuffer();

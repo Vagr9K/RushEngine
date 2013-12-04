@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <ctime>
 #include <sstream>
+#include <vld.h> //Debug only.
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -87,20 +88,20 @@ class GraphicsManager
 private:
 	void InitOldCpp()
 	{
-		PreLoadedSurfCPU=NULL;
-		PreLoadedTextGPU=NULL;
-		PreLoadedPathsCPU=NULL;
-		PreLoadedPathsGPU=NULL;
-		EventEngine=NULL;
-		Renderer=NULL;
-		OptimalObjectCount=0;
+		PreLoadedSurfCPU = NULL;
+		PreLoadedTextGPU = NULL;
+		PreLoadedPathsCPU = NULL;
+		PreLoadedPathsGPU = NULL;
+		EventEngine = NULL;
+		Renderer = NULL;
+		OptimalObjectCount = 0;
 		MaximumTimeFromLastUse = 40;
 	}
 
 
 public:
-	GraphicsManager(EventingEngine *EventEngine, SDL_Renderer* Renderer, 
-		vector<SDL_Surface*>* PreLoadedSurfCPU, vector<SDL_Texture*>* PreLoadedTextGPU, 
+	GraphicsManager(EventingEngine *EventEngine, SDL_Renderer* Renderer,
+		vector<SDL_Surface*>* PreLoadedSurfCPU, vector<SDL_Texture*>* PreLoadedTextGPU,
 		vector<string>* PreLoadedPathsCPU, vector<string>* PreLoadedPathsGPU)
 	{
 		InitOldCpp();
@@ -137,10 +138,10 @@ public:
 		return this->OptimalObjectCount;
 	}
 
-	
+
 	void InitPreloaders()
 	{
-		if (PreLoadedPathsCPU !=NULL)
+		if (PreLoadedPathsCPU != NULL)
 		{
 			delete[] PreLoadedPathsCPU;
 		}
@@ -160,6 +161,23 @@ public:
 		this->PreLoadedPathsGPU = new vector<string>(OptimalObjectCount);
 		this->PreLoadedSurfCPU = new vector <SDL_Surface*>(OptimalObjectCount);
 		this->PreLoadedTextGPU = new vector<SDL_Texture*>(OptimalObjectCount);
+	}
+
+
+	
+	void CleanTextSurfaceCPU(int IndexOfItem)
+	{
+		SDL_FreeSurface(LoadedTextsCPU.at(IndexOfItem));
+		LoadedTextsCPU.erase(LoadedTextsCPU.begin() + IndexOfItem); 
+		TimeFromLastUseCPU.erase(TimeFromLastUseCPU.begin() + IndexOfItem);
+		LoadedTextArgsCPU.erase(LoadedTextArgsCPU.begin() + IndexOfItem);
+	}
+	void CleanTextTextureGPU(int IndexOfItem)
+	{
+		SDL_DestroyTexture(LoadedTextsGPU.at(IndexOfItem));
+		LoadedTextsGPU.erase(LoadedTextsGPU.begin() + IndexOfItem);
+		TimeFromLastUseGPU.erase(TimeFromLastUseGPU.begin() + IndexOfItem);
+		LoadedTextArgsGPU.erase(LoadedTextArgsGPU.begin() + IndexOfItem);
 	}
 	
 	TTF_Font* LoadFont(string FontPath, int PointSize, int Index = 0)
@@ -191,19 +209,23 @@ public:
 
 	TTF_Font* GetFont(string FontPath, int PointSize, int FontOutline, Style FontStyle, int Index = 0, bool FontKerning = false)
 	{
+		TTF_Font* Font = NULL;
+		bool Found = false;
 		string Path = FontPath + to_string(static_cast<long long>(PointSize)) + to_string(static_cast<long long>(Index));
 		for (unsigned int i = 0; i < LoadedFontsPaths.size(); i++)
 		{
 			if (LoadedFontsPaths.at(i) == Path)
 			{
-				return LoadedFonts.at(i);
+				Font = LoadedFonts.at(i);
+				Found = true;
+				break;
 			}
 		}
 
 
 
-
-		TTF_Font* Font = LoadFont(FontPath, PointSize, Index);
+		if (Found == false)
+			Font = LoadFont(FontPath, PointSize, Index);
 		if (FontOutline != 0)
 		{
 			TTF_SetFontOutline(Font, FontOutline);
@@ -261,9 +283,7 @@ public:
 			{
 				if (TimeFromLastUseCPU.at(i)>=MaximumTimeFromLastUse)
 				{
-					LoadedTextsCPU.erase(LoadedTextsCPU.begin() + i);
-					TimeFromLastUseCPU.erase(TimeFromLastUseCPU.begin() + i);
-					LoadedTextArgsCPU.erase(LoadedTextArgsCPU.begin() + i);
+					CleanTextSurfaceCPU(i);
 					i--;
 
 				} 
@@ -313,14 +333,13 @@ public:
 				return LoadedTextsGPU.at(i);
 				Texture = LoadedTextsGPU.at(i);
 				break;
+				
 			}
 			else
 			{
 				if (TimeFromLastUseGPU.at(i) >= MaximumTimeFromLastUse)
 				{
-					LoadedTextsGPU.erase(LoadedTextsGPU.begin() + i);
-					TimeFromLastUseGPU.erase(TimeFromLastUseGPU.begin() + i);
-					LoadedTextArgsGPU.erase(LoadedTextArgsGPU.begin() + i);
+					CleanTextTextureGPU(i);
 					i--;
 
 				}
@@ -430,6 +449,12 @@ public:
 		PreLoadedSurfCPU->push_back(IMGLoad(Path));
 		return true;
 	}
+	void CleanPreLoadCPU(int IndexOfItem)
+	{
+		SDL_FreeSurface(PreLoadedSurfCPU->at(IndexOfItem));
+		PreLoadedPathsCPU->erase(PreLoadedPathsCPU->begin() + IndexOfItem);
+		PreLoadedSurfCPU->erase(PreLoadedSurfCPU->begin() + IndexOfItem);
+	}
 	void ClearPreLoadCPU(double PartToClear)
 	{
 		unsigned int Size = PreLoadedPathsCPU->size();
@@ -496,6 +521,12 @@ public:
 			PreLoadedTextGPU->push_back(SDL_CreateTextureFromSurface(Renderer, IMGLoad(Path)));
 		}
 		
+	}
+	void CleanPreLoadGPU(int IndexOfItem)
+	{
+		SDL_DestroyTexture(PreLoadedTextGPU->at(IndexOfItem));
+		PreLoadedPathsGPU->erase(PreLoadedPathsGPU->begin() + IndexOfItem);
+		PreLoadedTextGPU->erase(PreLoadedTextGPU->begin() + IndexOfItem);
 	}
 	void ClearPreLoadGPU(double PartToClear)
 	{
