@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <ctime>
 
+
+
 int main(int argc, char** argv)
 {
 	b2Vec2 Gravity(0,-10.0);
@@ -51,7 +53,7 @@ int main(int argc, char** argv)
 	 groundBox.SetAsBox(50.0f, 10.0f);
 	 groundBody->CreateFixture(&groundBox, 0.0f);
 
-	 float32 Hz = 1.0f/60.0f;
+	 float32 Hz = 1.0f/30.0f;
 	 MainWorld.Step(Hz, 10, 8);
 
 	 b2Vec2 Pos1;
@@ -70,6 +72,7 @@ int main(int argc, char** argv)
 	 Back.b = 234;
 	 Back.g = 23;
 	 Back.r = 245;
+	 string Text;
 
 	while (Die == false)
 	 {
@@ -86,15 +89,15 @@ int main(int argc, char** argv)
 			}
 			MainWorld.Step(Hz, 10, 8);
 			Pos1 = Ball.Body->GetPosition();
+
+			Text = to_string(static_cast<long long>(Pos1.x * 100)) + " " + to_string(static_cast<long long>(Pos1.y * 100));
 			
-
-			string Text = to_string(static_cast<long long>(Pos1.x * 100)) + " " + to_string(static_cast<long long>(Pos1.y * 100));
-
 
 
 			
 			mainEngine->Graphics->DrawerGPU->StartBuffer();
-			mainEngine->Graphics->DrawerGPU->AddToBuffer(200, 100, 400, 50, Text, &FontofText, SOLID, Foreground, Back); 
+			mainEngine->Graphics->DrawerGPU->AddToBuffer(200, 100, 400, 50, Text, &FontofText, SOLID, Foreground, Back);
+			mainEngine->Graphics->DrawerGPU->AddToBuffer(200, 100, 400, 50, Text, &FontofText, SOLID, Foreground, Back);
 			mainEngine->Graphics->DrawerGPU->AddToBuffer(static_cast<int>(680-Pos1.x*100),static_cast<int>(900-Pos1.y*100), 30, 30, "images/BlackInit.png");
 			mainEngine->Graphics->DrawerGPU->AddToBuffer(0,899, 5000, 1000, "ground.png");
 			mainEngine->Graphics->DrawerGPU->PushBuffer();
