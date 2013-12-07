@@ -3,7 +3,6 @@
 #include <assert.h>
 #include <ctime>
 #include <sstream>
-#include <vld.h> //Debug only.
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -84,7 +83,7 @@ class GraphicsManager
 	vector<SDL_Texture*> LoadedTextsGPU;
 	vector<int> TimeFromLastUseCPU;
 	vector<int> TimeFromLastUseGPU;
-	int MaximumTimeFromLastUse;
+	int MaximumTimeFromLastUseOfText;
 private:
 	void InitOldCpp()
 	{
@@ -95,7 +94,7 @@ private:
 		EventEngine = NULL;
 		Renderer = NULL;
 		OptimalObjectCount = 0;
-		MaximumTimeFromLastUse = 40;
+		MaximumTimeFromLastUseOfText = 0;
 	}
 
 
@@ -137,7 +136,14 @@ public:
 	{
 		return this->OptimalObjectCount;
 	}
-
+	void SetMaximumTimeOfText(int Time)
+	{
+		MaximumTimeFromLastUseOfText = Time;
+	}
+	int GetMaximumTimeOfText()
+	{
+		return MaximumTimeFromLastUseOfText;
+	}
 
 	void InitPreloaders()
 	{
@@ -164,11 +170,11 @@ public:
 	}
 
 
-	
+
 	void CleanTextSurfaceCPU(int IndexOfItem)
 	{
 		SDL_FreeSurface(LoadedTextsCPU.at(IndexOfItem));
-		LoadedTextsCPU.erase(LoadedTextsCPU.begin() + IndexOfItem); 
+		LoadedTextsCPU.erase(LoadedTextsCPU.begin() + IndexOfItem);
 		TimeFromLastUseCPU.erase(TimeFromLastUseCPU.begin() + IndexOfItem);
 		LoadedTextArgsCPU.erase(LoadedTextArgsCPU.begin() + IndexOfItem);
 	}
@@ -179,7 +185,7 @@ public:
 		TimeFromLastUseGPU.erase(TimeFromLastUseGPU.begin() + IndexOfItem);
 		LoadedTextArgsGPU.erase(LoadedTextArgsGPU.begin() + IndexOfItem);
 	}
-	
+
 	TTF_Font* LoadFont(string FontPath, int PointSize, int Index = 0)
 	{
 		TTF_Font* Font = NULL;
@@ -255,15 +261,18 @@ public:
 		default:
 			break;
 		}
-		LoadedFonts.push_back(Font);
-		LoadedFontsPaths.push_back(Path);
+		if (Found == false)
+		{
+			LoadedFonts.push_back(Font);
+			LoadedFontsPaths.push_back(Path);
+		}
 		return Font;
 
 	}
 
 
 
-	SDL_Surface* GetTextImageCPU(TextFont* Font,string Text, Mode DrawMode, SDL_Color Foregroung, SDL_Color Background)
+	SDL_Surface* GetTextImageCPU(TextFont* Font, string Text, Mode DrawMode, SDL_Color Foregroung, SDL_Color Background)
 	{
 		SDL_Surface* Surf = NULL;
 		string args = to_string(static_cast<long long>(Font->FontKerning)) + to_string(static_cast<long long>(Font->FontOutline))
@@ -273,7 +282,7 @@ public:
 		{
 			if (LoadedTextArgsCPU.at(i) == args)
 			{
-				
+
 				TimeFromLastUseCPU.at(i) = 0;
 				return LoadedTextsCPU.at(i);
 				Surf = LoadedTextsCPU.at(i);
@@ -281,12 +290,12 @@ public:
 			}
 			else
 			{
-				if (TimeFromLastUseCPU.at(i)>=MaximumTimeFromLastUse)
+				if (TimeFromLastUseCPU.at(i) >= MaximumTimeFromLastUseOfText)
 				{
 					CleanTextSurfaceCPU(i);
 					i--;
 
-				} 
+				}
 				else
 				{
 					TimeFromLastUseCPU.at(i)++;
@@ -330,14 +339,14 @@ public:
 			{
 
 				TimeFromLastUseGPU.at(i) = 0;
-				return LoadedTextsGPU.at(i);
 				Texture = LoadedTextsGPU.at(i);
+				return Texture;
 				break;
-				
+
 			}
 			else
 			{
-				if (TimeFromLastUseGPU.at(i) >= MaximumTimeFromLastUse)
+				if (TimeFromLastUseGPU.at(i) >= MaximumTimeFromLastUseOfText)
 				{
 					CleanTextTextureGPU(i);
 					i--;
@@ -345,7 +354,7 @@ public:
 				}
 				else
 				{
-					TimeFromLastUseGPU.at(i)++;
+					TimeFromLastUseGPU.at(i) = TimeFromLastUseGPU.at(i) + 1;
 				}
 			}
 		}
@@ -353,13 +362,13 @@ public:
 		switch (DrawMode)
 		{
 		case SOLID:
-			Texture = SDL_CreateTextureFromSurface(Renderer,GetSurfaceSolid(TTFFONT, Text, Foregroung));
+			Texture = GetTextureSolid(TTFFONT, Text, Foregroung);
 			break;
 		case SHADED:
-			Texture = SDL_CreateTextureFromSurface(Renderer,GetSurfaceShaded(TTFFONT, Text, Foregroung, Background));
+			Texture = GetTextureShaded(TTFFONT, Text, Foregroung, Background);
 			break;
 		case BLENDED:
-			Texture = SDL_CreateTextureFromSurface(Renderer, GetSurfaceBlended(TTFFONT, Text, Foregroung));
+			Texture = GetTextureBlended(TTFFONT, Text, Foregroung);
 			break;
 		default:
 			break;
@@ -385,6 +394,18 @@ public:
 		}
 		return Surf;
 	}
+	SDL_Texture* GetTextureSolid(TTF_Font* Font, string Text, SDL_Color Foreground)
+	{
+		SDL_Surface* Surf = GetSurfaceSolid(Font, Text, Foreground);
+		SDL_Texture* Texture = NULL;
+		Texture = SDL_CreateTextureFromSurface(Renderer, Surf);
+		if (Texture == NULL)
+		{
+			EventEngine->GraphicsError(SDL_GetError());
+		}
+		SDL_FreeSurface(Surf);
+		return Texture;
+	}
 
 	SDL_Surface* GetSurfaceShaded(TTF_Font* Font, string Text, SDL_Color Foreground, SDL_Color Background)
 	{
@@ -396,6 +417,20 @@ public:
 		}
 		return Surf;
 	}
+	SDL_Texture* GetTextureShaded(TTF_Font* Font, string Text, SDL_Color Foreground, SDL_Color Background)
+	{
+		SDL_Surface* Surf = GetSurfaceShaded(Font, Text, Foreground, Background);
+		SDL_Texture* Texture = NULL;
+		Texture = SDL_CreateTextureFromSurface(Renderer, Surf);
+		if (Texture==NULL)
+		{
+			EventEngine->GraphicsError(SDL_GetError());
+		}
+		SDL_FreeSurface(Surf);
+		return Texture;
+		
+	}
+
 
 	SDL_Surface* GetSurfaceBlended(TTF_Font* Font, string Text, SDL_Color Foreground)
 	{
@@ -407,7 +442,19 @@ public:
 		}
 		return Surf;
 	}
+	SDL_Texture* GetTextureBlended(TTF_Font* Font, string Text, SDL_Color Foreground)
+	{
+		SDL_Surface* Surf = GetSurfaceBlended(Font, Text, Foreground);
+		SDL_Texture* Texture = NULL;
+		Texture = SDL_CreateTextureFromSurface(Renderer, Surf);
+		if (Texture == NULL)
+		{
+			EventEngine->GraphicsError(SDL_GetError());
+		}
+		SDL_FreeSurface(Surf);
+		return Texture;
 
+	}
 	
 
 	
@@ -844,7 +891,7 @@ public:
 		}
 
 
-		Renderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_ACCELERATED);
+		Renderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_SOFTWARE);
 		if (Renderer == NULL)
 		{
 			EventEngine->GraphicsError(SDL_GetError());
