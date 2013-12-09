@@ -84,6 +84,8 @@ class GraphicsManager
 	vector<int> TimeFromLastUseCPU;
 	vector<int> TimeFromLastUseGPU;
 	int MaximumTimeFromLastUseOfText;
+	vector<string>* PreLoadedPathsGL;
+	vector<GLuint>* PreLoadedTextGL;
 private:
 	void InitOldCpp()
 	{
@@ -91,6 +93,8 @@ private:
 		PreLoadedTextGPU = NULL;
 		PreLoadedPathsCPU = NULL;
 		PreLoadedPathsGPU = NULL;
+		PreLoadedPathsGL = NULL;
+		PreLoadedTextGL = NULL;
 		EventEngine = NULL;
 		Renderer = NULL;
 		OptimalObjectCount = 0;
@@ -100,16 +104,18 @@ private:
 
 public:
 	GraphicsManager(EventingEngine *EventEngine, SDL_Renderer* Renderer,
-		vector<SDL_Surface*>* PreLoadedSurfCPU, vector<SDL_Texture*>* PreLoadedTextGPU,
-		vector<string>* PreLoadedPathsCPU, vector<string>* PreLoadedPathsGPU)
+		vector<SDL_Surface*>* PreLoadedSurfCPU, vector<SDL_Texture*>* PreLoadedTextGPU, vector<GLuint>* PreLoadedTextGL,
+		vector<string>* PreLoadedPathsCPU, vector<string>* PreLoadedPathsGPU, vector<string>* PreLoadedPathsGL)
 	{
 		InitOldCpp();
 		this->EventEngine = EventEngine;
 		this->Renderer = Renderer;
 		this->PreLoadedPathsCPU = PreLoadedPathsCPU;
 		this->PreLoadedPathsGPU = PreLoadedPathsGPU;
+		this->PreLoadedPathsGL = PreLoadedPathsGL;
 		this->PreLoadedSurfCPU = PreLoadedSurfCPU;
 		this->PreLoadedTextGPU = PreLoadedTextGPU;
+		this->PreLoadedTextGL = PreLoadedTextGL;
 	}
 	GraphicsManager(EventingEngine *EventEngine, SDL_Renderer* Renderer)
 	{
@@ -155,6 +161,10 @@ public:
 		{
 			delete[] PreLoadedPathsGPU;
 		}
+		if (PreLoadedPathsGL != NULL)
+		{
+			delete[] PreLoadedPathsGL;
+		}
 		if (PreLoadedSurfCPU != NULL)
 		{
 			delete[] PreLoadedSurfCPU;
@@ -163,10 +173,16 @@ public:
 		{
 			delete[] PreLoadedTextGPU;
 		}
+		if (PreLoadedTextGL != NULL)
+		{
+			delete[] PreLoadedTextGL;
+		}
 		this->PreLoadedPathsCPU = new vector<string>(OptimalObjectCount);
 		this->PreLoadedPathsGPU = new vector<string>(OptimalObjectCount);
+		this->PreLoadedPathsGL = new vector<string>(OptimalObjectCount);
 		this->PreLoadedSurfCPU = new vector <SDL_Surface*>(OptimalObjectCount);
 		this->PreLoadedTextGPU = new vector<SDL_Texture*>(OptimalObjectCount);
+		this->PreLoadedTextGL = new vector<GLuint>(OptimalObjectCount);
 	}
 
 
@@ -422,13 +438,13 @@ public:
 		SDL_Surface* Surf = GetSurfaceShaded(Font, Text, Foreground, Background);
 		SDL_Texture* Texture = NULL;
 		Texture = SDL_CreateTextureFromSurface(Renderer, Surf);
-		if (Texture==NULL)
+		if (Texture == NULL)
 		{
 			EventEngine->GraphicsError(SDL_GetError());
 		}
 		SDL_FreeSurface(Surf);
 		return Texture;
-		
+
 	}
 
 
@@ -455,9 +471,9 @@ public:
 		return Texture;
 
 	}
-	
 
-	
+
+
 	SDL_Surface* LoaderCPU(string Path)
 	{
 		SDL_Surface* Temp = NULL;
@@ -480,7 +496,7 @@ public:
 		}
 		return Temp;
 	}
-	
+
 	bool PreLoadCPU(string Path, bool CheckExistance = true)
 	{
 		if (CheckExistance == true)
@@ -505,14 +521,17 @@ public:
 	void ClearPreLoadCPU(double PartToClear)
 	{
 		unsigned int Size = PreLoadedPathsCPU->size();
-		int Count =static_cast<int>(Size*PartToClear);
-
+		int Count = static_cast<int>(Size*PartToClear);
+		for (int i = 0; i < Count;i++)
+		{
+			SDL_FreeSurface(PreLoadedSurfCPU->at(i));
+		}
 
 		PreLoadedSurfCPU->erase(PreLoadedSurfCPU->begin(), PreLoadedSurfCPU->begin() + Count);
 		PreLoadedPathsCPU->erase(PreLoadedPathsCPU->begin(), PreLoadedPathsCPU->begin() + Count);
 	}
 
-	
+
 
 
 
@@ -541,7 +560,7 @@ public:
 			}
 		}
 		if (TextPresent == false)
-	
+
 		{
 			PreLoadedTextGPU->push_back(SDL_CreateTextureFromSurface(Renderer, IMGLoad(Path)));
 			PreLoadedPathsGPU->push_back(Path);
@@ -567,7 +586,7 @@ public:
 		{
 			PreLoadedTextGPU->push_back(SDL_CreateTextureFromSurface(Renderer, IMGLoad(Path)));
 		}
-		
+
 	}
 	void CleanPreLoadGPU(int IndexOfItem)
 	{
@@ -579,13 +598,97 @@ public:
 	{
 		unsigned int Size = PreLoadedPathsGPU->size();
 		int Count = static_cast<int>(Size*PartToClear);
-
+		for (int i = 0; i < Count;i++)
+		{
+			SDL_DestroyTexture(PreLoadedTextGPU->at(i));
+		}
 
 		PreLoadedTextGPU->erase(PreLoadedTextGPU->begin(), PreLoadedTextGPU->begin() + Count);
 		PreLoadedPathsGPU->erase(PreLoadedPathsGPU->begin(), PreLoadedPathsGPU->begin() + Count);
 	}
-	
-	
+	GLuint GenerateTexture(string Path)
+	{
+		GLuint Texture;
+		GLuint Colors = 0;
+		GLenum IMGFormat = (GLenum)NULL;
+		SDL_Surface* TMPSURF = NULL;
+		TMPSURF = IMGLoad(Path);
+#define PowerChecker(n) !(n&(n-1))
+		if (!PowerChecker(TMPSURF->w) || !PowerChecker(TMPSURF->h))
+		{
+			EventEngine->GraphicsError("Image size is not a power of 2 at function GenerateTexture().");
+		}
+		Colors = TMPSURF->format->BytesPerPixel;
+		if (Colors == 4)
+		{
+			IMGFormat == GL_RGBA;
+		} 
+		else if (Colors == 3)
+		{
+			IMGFormat == GL_RGB;
+		}
+		else
+		{
+			EventEngine->GraphicsError("Image format not supported at function GenerateTexture().");
+		}
+		glGenTextures(1, &Texture);
+		glBindTexture(GL_TEXTURE_2D, Texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, Colors, TMPSURF->w, TMPSURF->h, 0, IMGFormat, GL_UNSIGNED_BYTE, TMPSURF->pixels);
+		SDL_FreeSurface(TMPSURF);
+		if (glGetError() != GL_NO_ERROR)
+		{
+			EventEngine->GraphicsError("OpenGL error in function GenerateTexture() : " + glGetError());
+		}
+		return Texture;
+
+	}
+
+
+	GLuint LoaderGL(string Path)
+	{
+		GLuint Temp = NULL;
+		bool TextPresent = false;
+		for (unsigned int i = 0; i < PreLoadedPathsGL->size(); i++)
+		{
+			if (PreLoadedPathsGL->at(i) == Path)
+			{
+				Temp = PreLoadedTextGL->at(i);
+				TextPresent = true;
+				break;
+			}
+		}
+		if (TextPresent == false)
+
+		{
+			PreLoadedTextGL->push_back(GenerateTexture(Path));
+			PreLoadedPathsGL->push_back(Path);
+			Temp = PreLoadedTextGL->back();
+		}
+		return Temp;
+	}
+	void CleanPreLoadGL(int IndexOfItem)
+	{
+		glDeleteTextures(1,&(PreLoadedTextGL->at(IndexOfItem)));
+		PreLoadedPathsGL->erase(PreLoadedPathsGL->begin() + IndexOfItem);
+		PreLoadedTextGL->erase(PreLoadedTextGL->begin() + IndexOfItem);
+	}
+	void ClearPreLoadGL(double PartToClear)
+	{
+		unsigned int Size = PreLoadedPathsGL->size();
+		int Count = static_cast<int>(Size*PartToClear);
+		GLuint* TextureToDelete = new GLuint[Count];
+		for (int i = 0; i < Count;i++)
+		{
+			TextureToDelete[i] = PreLoadedTextGL->at(i);
+		}
+		glDeleteTextures(Count, TextureToDelete);
+		PreLoadedTextGL->erase(PreLoadedTextGL->begin(), PreLoadedTextGL->begin() + Count);
+		PreLoadedPathsGL->erase(PreLoadedPathsGL->begin(), PreLoadedPathsGL->begin() + Count);
+	}
+
+
 };
 
 
@@ -793,6 +896,135 @@ public:
 	}
 };
 
+class DrawGL
+{
+	SDL_Window* mainWindow;
+	GraphicsManager* ManagerGR;
+	EventingEngine* EventEngine;
+	SDL_GLContext ContextGL;
+	int WinHeight, WinWidth;
+private:
+	void InitOldCpp()
+	{
+		mainWindow = NULL;
+		ManagerGR = NULL;
+		EventEngine == NULL;
+	}
+	bool GLErrorTest(string FuntionName)
+	{
+		if (glGetError() != GL_NO_ERROR)
+		{
+			EventEngine->GraphicsError("OpenGL error in function " + FuntionName + " : " + to_string(static_cast<long long>(static_cast<int>(glGetError()))));
+			return false;
+		}
+		return true;
+	}
+	bool InitOpenGL()
+	{
+		ContextGL = SDL_GL_CreateContext(mainWindow);
+		SDL_GL_MakeCurrent(mainWindow, ContextGL);
+		SDL_GL_SetSwapInterval(1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
+
+		glClearColor(0, 0, 0, 0);
+		glEnable(GL_TEXTURE_2D);
+		glViewport(0, 0, WinWidth, WinHeight);
+		glMatrixMode(GL_PROJECTION);
+		glOrtho(0, WinHeight, WinWidth, 0, -1, 1);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glClear(GL_COLOR_BUFFER_BIT);
+		return GLErrorTest("InitOpenGL()");
+
+	}
+
+	void AddToBufferFULLFUNC(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
+	{
+		glTranslatef(X, Y, 0.0);
+
+		glRotatef(AngleX, 1.0, 0.0, 0.0);
+		glRotatef(AngleY, 0.0, 1.0, 0.0);
+		glRotatef(AngleZ, 0.0, 0.0, 1.0);
+
+		GLfloat Trg1Sz[] = {
+							-W/2, -H/2, 0,
+							-W/2,  H/2, 0,
+							 W/2,  H/2, 0
+						   };
+		GLfloat Trg1Crd[] = {0,0 ,0,1 ,1,1};
+		GLfloat Trg2Sz[] = {
+							-W/2, -H/2, 0,
+							 W/2, -H/2, 0,
+							 W/2,  H/2, 0
+						   };
+		GLfloat Trg2Crd[] = {0,0 ,1,0 ,1,1};
+
+		GLuint TextureID = ManagerGR->LoaderGL(Path);
+		glBindTexture(GL_TEXTURE_2D, TextureID);
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		glVertexPointer(3, GL_FLOAT, 0, &Trg1Sz);
+		glTexCoordPointer(2, GL_FLOAT, 0, &Trg1Crd);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		glVertexPointer(3, GL_FLOAT, 0, &Trg2Sz);
+		glTexCoordPointer(2, GL_FLOAT, 0, &Trg2Crd);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		glLoadIdentity();
+
+		GLErrorTest("AddToBuffer()");
+	}
+
+public:
+	DrawGL(GraphicsManager* ManagerGR, SDL_Window* mainWindow, EventingEngine* Events)
+	{
+		InitOldCpp();
+		this->ManagerGR = ManagerGR;
+		this->mainWindow = mainWindow;
+		this->EventEngine = Events;
+		if (InitOpenGL() == false)
+		{
+			EventEngine->GraphicsError("OpenGL initialization error in function DrawGL().");
+		}
+	}
+	void StartBuffer()
+	{
+		glClearColor(0, 0, 0, 0);
+	}
+	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path)
+	{
+		AddToBufferFULLFUNC(X, Y, H, W, Path, 0, 0, 0);
+	}
+	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path,GLfloat Angle)
+	{
+		AddToBufferFULLFUNC(X, Y, H, W, Path, 0, 0, Angle);
+	}
+	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
+	{
+		AddToBufferFULLFUNC(X, Y, H, W, Path, AngleX, AngleY, AngleZ);
+	}
+	void PushBuffer()
+	{
+		SDL_GL_SwapWindow(mainWindow);
+	}
+	void ClearAll()
+	{
+		ManagerGR->ClearPreLoadGL(1.0);
+	}
+
+};
+
 struct WindowInfo
 {
 	int Height;
@@ -883,7 +1115,7 @@ public:
 			EventEngine->GraphicsError(SDL_GetError());
 			return false;
 		}
-		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_SHOWN);
+		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_OPENGL || SDL_WINDOW_SHOWN);
 		if (mainWindow == NULL)
 		{
 			EventEngine->GraphicsError(SDL_GetError());
@@ -891,7 +1123,7 @@ public:
 		}
 
 
-		Renderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_SOFTWARE);
+		Renderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_ACCELERATED);
 		if (Renderer == NULL)
 		{
 			EventEngine->GraphicsError(SDL_GetError());
