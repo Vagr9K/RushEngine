@@ -80,9 +80,12 @@ class GraphicsManager
 	vector<SDL_Surface*> LoadedTextsCPU;
 	vector<string> LoadedTextArgsCPU;
 	vector<string> LoadedTextArgsGPU;
+	vector<string> LoadedTextArgsGL;
 	vector<SDL_Texture*> LoadedTextsGPU;
+	vector<GLuint> LoadedTextsGL;
 	vector<int> TimeFromLastUseCPU;
 	vector<int> TimeFromLastUseGPU;
+	vector<int> TimeFromLastUseGL;
 	int MaximumTimeFromLastUseOfText;
 	vector<string>* PreLoadedPathsGL;
 	vector<GLuint>* PreLoadedTextGL;
@@ -200,6 +203,14 @@ public:
 		LoadedTextsGPU.erase(LoadedTextsGPU.begin() + IndexOfItem);
 		TimeFromLastUseGPU.erase(TimeFromLastUseGPU.begin() + IndexOfItem);
 		LoadedTextArgsGPU.erase(LoadedTextArgsGPU.begin() + IndexOfItem);
+	}
+
+	void CleanTextTextureGL(int IndexOfItem)
+	{
+		glDeleteTextures(1, &(LoadedTextsGL.at(IndexOfItem)));
+		LoadedTextsGL.erase(LoadedTextsGL.begin() + IndexOfItem);
+		TimeFromLastUseGL.erase(TimeFromLastUseGL.begin() + IndexOfItem);
+		LoadedTextArgsGL.erase(LoadedTextArgsGL.begin() + IndexOfItem);
 	}
 
 	TTF_Font* LoadFont(string FontPath, int PointSize, int Index = 0)
@@ -397,7 +408,59 @@ public:
 
 		return Texture;
 	}
+	GLuint GetTextImageGL(TextFont* Font, string Text, Mode DrawMode, SDL_Color Foregroung, SDL_Color Background)
+	{
+		GLuint Texture = NULL;
+		string args = to_string(static_cast<long long>(Font->FontKerning)) + to_string(static_cast<long long>(Font->FontOutline))
+			+ Font->FontPath + to_string(static_cast<long long>(Font->FontStyle)) + to_string(static_cast<long long>(Font->Index))
+			+ to_string(static_cast<long long>(Font->PointSize)) + Text;
+		for (unsigned int i = 0; i < TimeFromLastUseGL.size(); i++)
+		{
+			if (LoadedTextArgsGL.at(i) == args)
+			{
 
+				TimeFromLastUseGL.at(i) = 0;
+				return LoadedTextsGL.at(i);
+				Texture = LoadedTextsGL.at(i);
+				break;
+			}
+			else
+			{
+				if (TimeFromLastUseGL.at(i) >= MaximumTimeFromLastUseOfText)
+				{
+					CleanTextTextureGL(i);
+					i--;
+
+				}
+				else
+				{
+					TimeFromLastUseGL.at(i)++;
+				}
+			}
+		}
+		TTF_Font* TTFFONT = GetFont(Font->FontPath, Font->PointSize, Font->FontOutline, Font->FontStyle, Font->Index, Font->FontKerning);
+		switch (DrawMode)
+		{
+		case SOLID:
+			Texture = GetTextureSolidGL(TTFFONT, Text, Foregroung);
+			break;
+		case SHADED:
+			Texture = GetTextureShadedGL(TTFFONT, Text, Foregroung, Background);
+			break;
+		case BLENDED:
+			Texture = GetTextureBlendedGL(TTFFONT, Text, Foregroung);
+			break;
+		default:
+			break;
+		}
+		LoadedTextsGL.push_back(Texture);
+		TimeFromLastUseGL.push_back(0);
+		LoadedTextArgsGL.push_back(args);
+
+
+
+		return Texture;
+	}
 
 
 	SDL_Surface* GetSurfaceSolid(TTF_Font* Font, string Text, SDL_Color Foreground)
@@ -458,6 +521,13 @@ public:
 		}
 		return Surf;
 	}
+	GLuint GetTextureBlendedGL(TTF_Font* Font, string Text, SDL_Color Foreground)
+	{
+		SDL_Surface* TMPSURF = GetSurfaceBlended(Font, Text, Foreground);
+		GLuint Texture = GenerateTexture(TMPSURF);
+		SDL_FreeSurface(TMPSURF);
+		return Texture;
+	}
 	SDL_Texture* GetTextureBlended(TTF_Font* Font, string Text, SDL_Color Foreground)
 	{
 		SDL_Surface* Surf = GetSurfaceBlended(Font, Text, Foreground);
@@ -471,8 +541,28 @@ public:
 		return Texture;
 
 	}
+	GLuint GetTextureSolidGL(TTF_Font* Font, string Text, SDL_Color Foreground)
+	{
+		SDL_Surface* TMPSURF = GetSurfaceSolid(Font, Text, Foreground);
+		GLuint Texture = GenerateTexture(TMPSURF);
+		SDL_FreeSurface(TMPSURF);
+		return Texture;
+	}
 
-
+	GLuint GetTextureBlendedGL(TTF_Font* Font, string Text, SDL_Color Foreground)
+	{
+		SDL_Surface* TMPSURF = GetSurfaceBlended(Font, Text, Foreground);
+		GLuint Texture = GenerateTexture(TMPSURF);
+		SDL_FreeSurface(TMPSURF);
+		return Texture;
+	}
+	GLuint GetTextureShadedGL(TTF_Font* Font, string Text, SDL_Color Foreground, SDL_Color Background)
+	{
+		SDL_Surface* TMPSURF = GetSurfaceShaded(Font, Text, Foreground, Background);
+		GLuint Texture = GenerateTexture(TMPSURF);
+		SDL_FreeSurface(TMPSURF);
+		return Texture;
+	}
 
 	SDL_Surface* LoaderCPU(string Path)
 	{
@@ -606,13 +696,13 @@ public:
 		PreLoadedTextGPU->erase(PreLoadedTextGPU->begin(), PreLoadedTextGPU->begin() + Count);
 		PreLoadedPathsGPU->erase(PreLoadedPathsGPU->begin(), PreLoadedPathsGPU->begin() + Count);
 	}
-	GLuint GenerateTexture(string Path)
+	GLuint GenerateTexture(SDL_Surface* Surface)
 	{
 		GLuint Texture;
 		GLuint Colors = 0;
 		GLenum IMGFormat = (GLenum)NULL;
 		SDL_Surface* TMPSURF = NULL;
-		TMPSURF = IMGLoad(Path);
+		TMPSURF = Surface;
 #define PowerChecker(n) !(n&(n-1))
 		if (!PowerChecker(TMPSURF->w) || !PowerChecker(TMPSURF->h))
 		{
@@ -643,6 +733,14 @@ public:
 		}
 		return Texture;
 
+	}
+	GLuint GenerateTexture(string Path)
+	{
+		SDL_Surface* TMPSURF = NULL;
+		TMPSURF = IMGLoad(Path);
+		GLuint Texture = GenerateTexture(TMPSURF);
+		SDL_FreeSurface(TMPSURF);
+		return Texture;
 	}
 
 
@@ -943,7 +1041,7 @@ private:
 
 	}
 
-	void AddToBufferFULLFUNC(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
+	void AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, GLuint TextureID, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
 	{
 		glTranslatef(X, Y, 0.0);
 
@@ -964,11 +1062,8 @@ private:
 						   };
 		GLfloat Trg2Crd[] = {0,0 ,1,0 ,1,1};
 
-		GLuint TextureID = ManagerGR->LoaderGL(Path);
+		GLuint TextureID = TextureID;
 		glBindTexture(GL_TEXTURE_2D, TextureID);
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 		glVertexPointer(3, GL_FLOAT, 0, &Trg1Sz);
 		glTexCoordPointer(2, GL_FLOAT, 0, &Trg1Crd);
@@ -978,16 +1073,22 @@ private:
 		glTexCoordPointer(2, GL_FLOAT, 0, &Trg2Crd);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
 		glLoadIdentity();
 
 		GLErrorTest("AddToBuffer()");
+	} 
+	void AddToBufferFROMPATH(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
+	{
+		GLuint TextureID = ManagerGR->LoaderGL(Path);
+		AddToBufferFROMTEXTURE(X, Y, H, W, TextureID, AngleX, AngleY, AngleZ);
 	}
-
+	void AddToBufferFROMTEXT(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont* Font,string Text,Mode DrawMode ,SDL_Color Foreground, SDL_Color Background, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
+	{
+		GLuint TextureID = ManagerGR->GetTextImageGL(Font, Text, DrawMode, Foreground, Background);
+		AddToBufferFROMTEXTURE(X, Y, H, W, TextureID, AngleX, AngleY, AngleZ);
+	}
 public:
-	DrawGL(GraphicsManager* ManagerGR, SDL_Window* mainWindow, EventingEngine* Events)
+	DrawGL(GraphicsManager* ManagerGR, SDL_Window* mainWindow,int Height, int Width, EventingEngine* Events)
 	{
 		InitOldCpp();
 		this->ManagerGR = ManagerGR;
@@ -1001,21 +1102,64 @@ public:
 	void StartBuffer()
 	{
 		glClearColor(0, 0, 0, 0);
-	}
-	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path)
-	{
-		AddToBufferFULLFUNC(X, Y, H, W, Path, 0, 0, 0);
-	}
-	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path,GLfloat Angle)
-	{
-		AddToBufferFULLFUNC(X, Y, H, W, Path, 0, 0, Angle);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
 	{
-		AddToBufferFULLFUNC(X, Y, H, W, Path, AngleX, AngleY, AngleZ);
+		AddToBufferFROMPATH(X, Y, H, W, Path, AngleX, AngleY, AngleZ);
+	}
+	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleZ)
+	{
+		AddToBufferFROMPATH(X, Y, H, W, Path, 0, 0, AngleZ);
+	}
+	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path)
+	{
+		AddToBufferFROMPATH(X, Y, H, W, Path, 0, 0, 0);
+	}
+	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont* Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
+	{
+		AddToBufferFROMTEXT(X, Y, H, W, Font, Text, DrawMode, Foreground, Background, AngleX, AngleY, AngleZ);
+	}
+	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont* Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background, GLfloat AngleZ)
+	{
+		AddToBufferFROMTEXT(X, Y, H, W, Font, Text, DrawMode, Foreground, Background, 0, 0, AngleZ);
+	}
+	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont* Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background)
+	{
+		AddToBufferFROMTEXT(X, Y, H, W, Font, Text, DrawMode, Foreground, Background, 0, 0, 0);
+	}
+	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont* Font, string Text, Mode DrawMode, SDL_Color Background, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
+	{
+		SDL_Color Foreground;
+		Foreground.a = 0;
+		Foreground.b = 0;
+		Foreground.r = 0;
+		Foreground.g = 0;
+		AddToBufferFROMTEXT(X, Y, H, W, Font, Text, DrawMode, Foreground, Background, AngleX, AngleY, AngleZ);
+	}
+	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont* Font, string Text, Mode DrawMode, SDL_Color Background, GLfloat AngleZ)
+	{
+		SDL_Color Foreground;
+		Foreground.a = 0;
+		Foreground.b = 0;
+		Foreground.r = 0;
+		Foreground.g = 0;
+		AddToBufferFROMTEXT(X, Y, H, W, Font, Text, DrawMode, Foreground, Background, 0, 0, AngleZ);
+	}
+	void AddToBuffer(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont* Font, string Text, Mode DrawMode, SDL_Color Background)
+	{
+		SDL_Color Foreground;
+		Foreground.a = 0;
+		Foreground.b = 0;
+		Foreground.r = 0;
+		Foreground.g = 0;
+		AddToBufferFROMTEXT(X, Y, H, W, Font, Text, DrawMode, Foreground, Background, 0, 0, 0);
 	}
 	void PushBuffer()
 	{
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		SDL_GL_SwapWindow(mainWindow);
 	}
 	void ClearAll()
