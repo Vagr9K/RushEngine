@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <assert.h>
 #include <ctime>
 #include <sstream>
 
@@ -10,6 +9,14 @@
 #include <SDL_opengl.h>
 
 #include "Eventing.h"
+//Platform dependent includes!
+#ifdef __WINDOWS__
+#include <gl/GLU.h>
+#elif __ANDROID__
+//Android includes here!
+
+#endif // __WINDOWS__
+
 
 
 using namespace std;
@@ -549,13 +556,7 @@ public:
 		return Texture;
 	}
 
-	GLuint GetTextureBlendedGL(TTF_Font* Font, string Text, SDL_Color Foreground)
-	{
-		SDL_Surface* TMPSURF = GetSurfaceBlended(Font, Text, Foreground);
-		GLuint Texture = GenerateTexture(TMPSURF);
-		SDL_FreeSurface(TMPSURF);
-		return Texture;
-	}
+	
 	GLuint GetTextureShadedGL(TTF_Font* Font, string Text, SDL_Color Foreground, SDL_Color Background)
 	{
 		SDL_Surface* TMPSURF = GetSurfaceShaded(Font, Text, Foreground, Background);
@@ -701,21 +702,20 @@ public:
 		GLuint Texture;
 		GLuint Colors = 0;
 		GLenum IMGFormat = (GLenum)NULL;
-		SDL_Surface* TMPSURF = NULL;
-		TMPSURF = Surface;
+		
 #define PowerChecker(n) !(n&(n-1))
-		if (!PowerChecker(TMPSURF->w) || !PowerChecker(TMPSURF->h))
+		if (!PowerChecker(Surface->w) || !PowerChecker(Surface->h))
 		{
 			EventEngine->GraphicsError("Image size is not a power of 2 at function GenerateTexture().");
 		}
-		Colors = TMPSURF->format->BytesPerPixel;
+		Colors = Surface->format->BytesPerPixel;
 		if (Colors == 4)
 		{
-			IMGFormat == GL_RGBA;
+			IMGFormat = GL_RGBA;
 		} 
 		else if (Colors == 3)
 		{
-			IMGFormat == GL_RGB;
+			IMGFormat = GL_RGB;
 		}
 		else
 		{
@@ -725,8 +725,8 @@ public:
 		glBindTexture(GL_TEXTURE_2D, Texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, Colors, TMPSURF->w, TMPSURF->h, 0, IMGFormat, GL_UNSIGNED_BYTE, TMPSURF->pixels);
-		SDL_FreeSurface(TMPSURF);
+		glTexImage2D(GL_TEXTURE_2D, 0, Colors, Surface->w, Surface->h, 0, IMGFormat, GL_UNSIGNED_BYTE, Surface->pixels);
+
 		if (glGetError() != GL_NO_ERROR)
 		{
 			EventEngine->GraphicsError("OpenGL error in function GenerateTexture() : " + glGetError());
@@ -1006,13 +1006,14 @@ private:
 	{
 		mainWindow = NULL;
 		ManagerGR = NULL;
-		EventEngine == NULL;
+		EventEngine = NULL;
 	}
 	bool GLErrorTest(string FuntionName)
 	{
-		if (glGetError() != GL_NO_ERROR)
+		GLenum Error = glGetError();
+		if (Error != GL_NO_ERROR)
 		{
-			EventEngine->GraphicsError("OpenGL error in function " + FuntionName + " : " + to_string(static_cast<long long>(static_cast<int>(glGetError()))));
+			EventEngine->GraphicsError("OpenGL error in function " + FuntionName + " : " + to_string(static_cast<long long>(static_cast<int>(Error))));
 			return false;
 		}
 		return true;
@@ -1020,23 +1021,40 @@ private:
 	bool InitOpenGL()
 	{
 		ContextGL = SDL_GL_CreateContext(mainWindow);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		SDL_GL_MakeCurrent(mainWindow, ContextGL);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		SDL_GL_SetSwapInterval(1);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 
 		glClearColor(0, 0, 0, 0);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glEnable(GL_TEXTURE_2D);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glViewport(0, 0, WinWidth, WinHeight);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glMatrixMode(GL_PROJECTION);
-		glOrtho(0, WinHeight, WinWidth, 0, -1, 1);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+		glOrtho(0, WinWidth, WinHeight, 0, -1, 1);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glMatrixMode(GL_MODELVIEW);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glLoadIdentity();
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glEnable(GL_BLEND);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glClear(GL_COLOR_BUFFER_BIT);
+		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
 		return GLErrorTest("InitOpenGL()");
 
 	}
@@ -1062,20 +1080,29 @@ private:
 						   };
 		GLfloat Trg2Crd[] = {0,0 ,1,0 ,1,1};
 
-		GLuint TextureID = TextureID;
-		glBindTexture(GL_TEXTURE_2D, TextureID);
-
+		GLuint Texture = TextureID;
+		glGenTextures(1,TextureID);
+		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
+		glBindTexture(GL_TEXTURE_2D, Texture);
+		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glVertexPointer(3, GL_FLOAT, 0, &Trg1Sz);
+		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glTexCoordPointer(2, GL_FLOAT, 0, &Trg1Crd);
+		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
 
 		glVertexPointer(3, GL_FLOAT, 0, &Trg2Sz);
+		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glTexCoordPointer(2, GL_FLOAT, 0, &Trg2Crd);
+		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
 
 		glLoadIdentity();
+		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
 
-		GLErrorTest("AddToBuffer()");
+		GLErrorTest("AddToBufferFROMTEXTURE()");
 	} 
 	void AddToBufferFROMPATH(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
 	{
@@ -1094,14 +1121,24 @@ public:
 		this->ManagerGR = ManagerGR;
 		this->mainWindow = mainWindow;
 		this->EventEngine = Events;
+		this->WinHeight = Height;
+		this->WinWidth = Width;
 		if (InitOpenGL() == false)
 		{
 			EventEngine->GraphicsError("OpenGL initialization error in function DrawGL().");
 		}
 	}
+	~DrawGL()
+	{
+		ManagerGR->ClearPreLoadGL(1.0);
+		SDL_GL_MakeCurrent(NULL, NULL);
+		SDL_GL_DeleteContext(ContextGL);
+	}
 	void StartBuffer()
 	{
-		glClearColor(0, 0, 0, 0);
+		
+		glClear(GL_COLOR_BUFFER_BIT);
+		SDL_GL_SwapWindow(mainWindow);
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
@@ -1160,6 +1197,7 @@ public:
 	{
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		
 		SDL_GL_SwapWindow(mainWindow);
 	}
 	void ClearAll()
@@ -1192,7 +1230,7 @@ private:
 
 	
 	bool CPUInited;
-
+	bool GLInited;
 	bool GPUInited;
 	vector<SDL_Surface*> PreLoadedSurfCPU;
 	vector<SDL_Texture*> PreLoadedTextGPU;
@@ -1210,13 +1248,14 @@ private:
 		ManagerGR = NULL;
 		CPUInited = false;
 		GPUInited = false;
+		GLInited = false;
 	}
 	
 
 public:
 	DrawCPU* DrawerCPU;
 	DrawGPU* DrawerGPU;
-
+	DrawGL* DrawerGL;
 
 
 public:
@@ -1259,7 +1298,7 @@ public:
 			EventEngine->GraphicsError(SDL_GetError());
 			return false;
 		}
-		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_OPENGL || SDL_WINDOW_SHOWN);
+		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 		if (mainWindow == NULL)
 		{
 			EventEngine->GraphicsError(SDL_GetError());
@@ -1320,7 +1359,16 @@ public:
 		DrawerGPU->~DrawGPU();
 		GPUInited = false;
 	}
-
+	void InitGL()
+	{
+		DrawerGL = new DrawGL(ManagerGR, mainWindow, Height, Width, EventEngine);
+		GLInited = true;
+	}
+	void DeleteGL()
+	{
+		DrawerGL->~DrawGL();
+		GLInited = false;
+	}
 	
 	bool Stop()
 	{
@@ -1337,6 +1385,10 @@ public:
 		if (GPUInited==true)
 		{
 			DeleteGPU();
+		}
+		if (GLInited==true)
+		{
+			DeleteGL();
 		}
 
 		
