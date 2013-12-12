@@ -1080,10 +1080,10 @@ private:
 						   };
 		GLfloat Trg2Crd[] = {0,0 ,1,0 ,1,1};
 
-		GLuint Texture = TextureID;
-		glGenTextures(1,TextureID);
+		
+		glBindTexture(GL_TEXTURE_2D, 0);
 		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
-		glBindTexture(GL_TEXTURE_2D, Texture);
+		glBindTexture(GL_TEXTURE_2D, TextureID);
 		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
 		glVertexPointer(3, GL_FLOAT, 0, &Trg1Sz);
 		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));

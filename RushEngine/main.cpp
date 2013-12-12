@@ -13,6 +13,7 @@ int main(int argc, char** argv)
 	mainEngine->InitGraphics(680, 900, 2, "Very stupid physics test...");
 	mainEngine->Graphics->Start();
 	mainEngine->Graphics->InitGL();
+
 	mainEngine->InitObjects(0, 0, 1, 0);
 	mainEngine->InitPhysics();
 	mainEngine->Physics->AddWorld(&MainWorld);
@@ -73,6 +74,7 @@ int main(int argc, char** argv)
 	 Back.g = 23;
 	 Back.r = 245;
 	 string Text;
+	 int Angle1 = 0;
 
 	while (Die == false)
 	 {
@@ -91,17 +93,18 @@ int main(int argc, char** argv)
 			Pos1 = Ball.Body->GetPosition();
 			float32 Angle = Ball.Body->GetAngle();
 			Text = to_string(static_cast<long long>(Pos1.x * 100)) + " " + to_string(static_cast<long long>(Pos1.y * 100));
-			
+			Angle1++;
 
 
 			
 			mainEngine->Graphics->DrawerGL->StartBuffer();
-			//mainEngine->Graphics->DrawerGL->AddToBuffer(200, 100, 512, 64, &FontofText,Text,  SOLID, Foreground, Back);
-			//mainEngine->Graphics->DrawerGL->AddToBuffer(200, 100, 512, 64, &FontofText, Text, SOLID, Foreground, Back);
+			mainEngine->Graphics->DrawerGPU->AddToBuffer(200, 100, 512, 64,Text, &FontofText,  SOLID, Foreground, Back);
+			
 			mainEngine->Graphics->DrawerGL->AddToBuffer(static_cast<int>(680-Pos1.x*100),static_cast<int>(900-Pos1.y*100), 30, 30, "images/BlackInit.png", Angle);
-			mainEngine->Graphics->DrawerGL->AddToBuffer(static_cast<int>(680 - Pos1.x * 100+50), static_cast<int>(900 - Pos1.y * 100), 30, 30, "images/image.png", Angle);
+			mainEngine->Graphics->DrawerGL->AddToBuffer(static_cast<int>(680 - Pos1.x * 100+50), static_cast<int>(900 - Pos1.y * 100), 30, 30, "images/image.png", Angle1);
 			//mainEngine->Graphics->DrawerGL->AddToBuffer(0,899, 5000, 1000, "ground.png");
-			//mainEngine->Graphics->DrawerGL->PushBuffer();
+			mainEngine->Graphics->DrawerGL->PushBuffer();
+			
 			
 
 		}
