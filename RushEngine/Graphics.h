@@ -1021,40 +1021,40 @@ private:
 	bool InitOpenGL()
 	{
 		ContextGL = SDL_GL_CreateContext(mainWindow);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+		
 		SDL_GL_MakeCurrent(mainWindow, ContextGL);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		SDL_GL_SetSwapInterval(1);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 
 		glClearColor(0, 0, 0, 0);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glEnable(GL_TEXTURE_2D);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glViewport(0, 0, WinWidth, WinHeight);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glMatrixMode(GL_PROJECTION);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glOrtho(0, WinWidth, WinHeight, 0, -1, 1);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glMatrixMode(GL_MODELVIEW);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glLoadIdentity();
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glEnable(GL_BLEND);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glClear(GL_COLOR_BUFFER_BIT);
-		GLErrorTest("InitOpenGL(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		return GLErrorTest("InitOpenGL()");
 
 	}
@@ -1082,25 +1082,25 @@ private:
 
 		
 		glBindTexture(GL_TEXTURE_2D, 0);
-		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glBindTexture(GL_TEXTURE_2D, TextureID);
-		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glVertexPointer(3, GL_FLOAT, 0, &Trg1Sz);
-		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glTexCoordPointer(2, GL_FLOAT, 0, &Trg1Crd);
-		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glDrawArrays(GL_TRIANGLES, 0, 3);
-		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 
 		glVertexPointer(3, GL_FLOAT, 0, &Trg2Sz);
-		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glTexCoordPointer(2, GL_FLOAT, 0, &Trg2Crd);
-		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 		glDrawArrays(GL_TRIANGLES, 0, 3);
-		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 
 		glLoadIdentity();
-		GLErrorTest("AddToBufferFROMTEXTURE(), Line : " + to_string(static_cast<int>(__LINE__)));
+
 
 		GLErrorTest("AddToBufferFROMTEXTURE()");
 	} 
@@ -1133,6 +1133,10 @@ public:
 		ManagerGR->ClearPreLoadGL(1.0);
 		SDL_GL_MakeCurrent(NULL, NULL);
 		SDL_GL_DeleteContext(ContextGL);
+	}
+	void SetViewPort(int X, int Y, int Height, int Width)
+	{
+		glViewport(X, Y, Width, Height);
 	}
 	void StartBuffer()
 	{
@@ -1369,7 +1373,7 @@ public:
 		DrawerGL->~DrawGL();
 		GLInited = false;
 	}
-	
+
 	bool Stop()
 	{
 		

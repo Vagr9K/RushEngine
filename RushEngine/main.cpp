@@ -2,6 +2,10 @@
 #include <cstdlib>
 #include <ctime>
 
+#define WHEIGHT 900
+#define WWIDTH 680
+
+
 
 
 int main(int argc, char** argv)
@@ -10,7 +14,7 @@ int main(int argc, char** argv)
 	
 	b2World MainWorld(Gravity);
 	GameEngine* mainEngine = new GameEngine;
-	mainEngine->InitGraphics(680, 900, 2, "Very stupid physics test...");
+	mainEngine->InitGraphics(WWIDTH, WHEIGHT, 2, "Very stupid physics test...");
 	mainEngine->Graphics->Start();
 	mainEngine->Graphics->InitGL();
 
@@ -75,7 +79,8 @@ int main(int argc, char** argv)
 	 Back.r = 245;
 	 string Text;
 	 int Angle1 = 0;
-
+	 int VX = 0;
+	 int VY = 0;
 	while (Die == false)
 	 {
 		Now = GetTickCount();
@@ -95,14 +100,31 @@ int main(int argc, char** argv)
 			Text = to_string(static_cast<long long>(Pos1.x * 100)) + " " + to_string(static_cast<long long>(Pos1.y * 100));
 			Angle1++;
 
-
+			const Uint8* A = SDL_GetKeyboardState(NULL);
+			if (A[SDL_SCANCODE_RIGHT])
+			{
+				VX+=40;
+			} 
+			else if (A[SDL_SCANCODE_LEFT])
+			{
+				VX-=40;
+			}
+			else if (A[SDL_SCANCODE_UP])
+			{
+				VY+=40;
+			}
+			else if (A[SDL_SCANCODE_DOWN])
+			{
+				VY=VY-40;
+			}
 			
 			mainEngine->Graphics->DrawerGL->StartBuffer();
-			mainEngine->Graphics->DrawerGPU->AddToBuffer(200, 100, 512, 64,Text, &FontofText,  SOLID, Foreground, Back);
 			
-			mainEngine->Graphics->DrawerGL->AddToBuffer(static_cast<int>(680-Pos1.x*100),static_cast<int>(900-Pos1.y*100), 30, 30, "images/BlackInit.png", Angle);
-			mainEngine->Graphics->DrawerGL->AddToBuffer(static_cast<int>(680 - Pos1.x * 100+50), static_cast<int>(900 - Pos1.y * 100), 30, 30, "images/image.png", Angle1);
-			//mainEngine->Graphics->DrawerGL->AddToBuffer(0,899, 5000, 1000, "ground.png");
+			
+			mainEngine->Graphics->DrawerGL->AddToBuffer(Pos1.x*100, Pos1.y*100, 30, 30, "images/BlackInit.png", Angle);
+			mainEngine->Graphics->DrawerGL->AddToBuffer((Pos1.x*100+50),Pos1.y*100, 30, 30, "images/image.png", Angle1);
+			
+			mainEngine->Graphics->DrawerGL->SetViewPort(VX, VY, WHEIGHT, WWIDTH);
 			mainEngine->Graphics->DrawerGL->PushBuffer();
 			
 			
