@@ -1032,7 +1032,7 @@ private:
 
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
 
 		glClearColor(0, 0, 0, 0);
@@ -1140,7 +1140,7 @@ public:
 	}
 	void StartBuffer()
 	{
-		
+		glFlush();
 		glClear(GL_COLOR_BUFFER_BIT);
 		SDL_GL_SwapWindow(mainWindow);
 		glEnableClientState(GL_VERTEX_ARRAY);

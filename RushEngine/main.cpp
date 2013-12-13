@@ -13,6 +13,8 @@ using namespace std;
 
 #define  K 100
 
+const float FPS = 1.f / 120.f;
+
 GameEngine mainEngine;
 
 vector<Object*> Balls(BallCount);
@@ -27,6 +29,24 @@ int CamX = 0;
 int CamY = 0;
 
 SDL_Event* Ev;
+
+int StartTime = GetTickCount();
+int Now = GetTickCount();
+int Delta = 0;
+
+bool FPSCheck(float Step)
+{
+	bool Ret = false;
+	Now = GetTickCount();
+	Delta = Now - StartTime;
+
+	if (Delta>=Step*1000)
+	{
+		Ret = true;
+	}
+	return Ret;
+}
+
 
 int RndGen(int Max)
 {
@@ -172,8 +192,11 @@ int main(int argc, char** argv)
 			Close = true;
 		}
 		RenderPhysics();
-
-		RenderGraphics();
+		if (FPSCheck(FPS))
+		{
+			RenderGraphics();
+		}
+		
 		RenderCamera();
 	}
 
