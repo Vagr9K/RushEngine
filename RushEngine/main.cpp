@@ -192,10 +192,9 @@ int main(int argc, char** argv)
 			Close = true;
 		}
 		RenderPhysics();
-		if (FPSCheck(FPS))
-		{
-			RenderGraphics();
-		}
+		
+		RenderGraphics();
+		
 		
 		RenderCamera();
 	}

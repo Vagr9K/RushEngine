@@ -1140,9 +1140,9 @@ public:
 	}
 	void StartBuffer()
 	{
-		glFlush();
+		
 		glClear(GL_COLOR_BUFFER_BIT);
-		SDL_GL_SwapWindow(mainWindow);
+		
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
