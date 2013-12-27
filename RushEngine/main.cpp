@@ -21,7 +21,7 @@ vector<Object*> Balls(BallCount);
 vector<Object*> Walls(WallCount);
 b2Vec2 Gravity(0.0f, -10.0f);
 b2World World(Gravity);
-b2CircleShape* STDShape; 
+b2CircleShape* STDShape;
 b2PolygonShape* W1;
 b2PolygonShape* W2;
 
@@ -40,7 +40,7 @@ bool FPSCheck(float Step)
 	Now = GetTickCount();
 	Delta = Now - StartTime;
 
-	if (Delta>=Step*1000)
+	if (Delta >= Step * 1000)
 	{
 		Ret = true;
 	}
@@ -50,6 +50,7 @@ bool FPSCheck(float Step)
 
 int RndGen(int Max)
 {
+	srand(GetTickCount());
 	int Ret = rand() % Max;
 	return Ret;
 }
@@ -57,12 +58,12 @@ int RndGen(int Max)
 
 void Init()
 {
-	
+
 	mainEngine.InitPhysics();
 	mainEngine.InitGraphics(WWIDTH, WHEIGHT, 1, "Test #002.");
 	mainEngine.Graphics->Start();
 	mainEngine.Graphics->InitGL();
-	mainEngine.InitObjects(0,0,1,0);
+	mainEngine.InitObjects(0, 0, 1, 0);
 	mainEngine.Physics->AddWorld(&World);
 	STDShape = new b2CircleShape;
 	STDShape->m_p.Set(0.0f, 0.0f);
@@ -90,7 +91,7 @@ void Init()
 
 	}
 
-	for (int j = 0; j < WallCount;j++)
+	for (int j = 0; j < WallCount; j++)
 	{
 		Walls.at(j) = new Object(&mainEngine, 0, 0);
 		Walls.at(j)->BodyDefinition = new b2BodyDef;
@@ -137,24 +138,24 @@ void RenderGraphics()
 	float Angle = 0;
 	b2Vec2 Pos;
 	mainEngine.Graphics->DrawerGL->StartBuffer();
-	for (int i = 0; i < BallCount;i++)
+	for (int i = 0; i < BallCount; i++)
 	{
 		Pos = Balls.at(i)->Body->GetPosition();
 		Angle = Balls.at(i)->Body->GetAngle();
 		mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x*K, WHEIGHT - Pos.y*K, 0.2*K, 0.2*K, "Ball.png", Angle);
 	}
-	
-		Pos = Walls.at(0)->Body->GetPosition();
-		mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 10 * K, 5 * K, "Wall.png");
-		Pos = Walls.at(1)->Body->GetPosition();
-		mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 5 * K, 10 * K, "Wall.png");
-		Pos = Walls.at(2)->Body->GetPosition();
-		mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 10 * K, 5 * K, "Wall.png");
-		Pos = Walls.at(3)->Body->GetPosition();
-		mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 5 * K, 10 * K, "Wall.png");
-	
-		mainEngine.Graphics->DrawerGL->PushBuffer();
-		
+
+	Pos = Walls.at(0)->Body->GetPosition();
+	mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 10 * K, 5 * K, "Wall.png");
+	Pos = Walls.at(1)->Body->GetPosition();
+	mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 5 * K, 10 * K, "Wall.png");
+	Pos = Walls.at(2)->Body->GetPosition();
+	mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 10 * K, 5 * K, "Wall.png");
+	Pos = Walls.at(3)->Body->GetPosition();
+	mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 5 * K, 10 * K, "Wall.png");
+
+	mainEngine.Graphics->DrawerGL->PushBuffer();
+
 }
 
 void RenderCamera()
@@ -183,8 +184,8 @@ void RenderCamera()
 int main(int argc, char** argv)
 {
 	Init();
-	bool Close=false;
-	while (Close==false)
+	bool Close = false;
+	while (Close == false)
 	{
 		SDL_PollEvent(Ev);
 		if (Ev->type == SDL_QUIT)
@@ -192,13 +193,13 @@ int main(int argc, char** argv)
 			Close = true;
 		}
 		RenderPhysics();
-		
+
 		RenderGraphics();
-		
-		
+
+
 		RenderCamera();
 	}
 
-	
+
 	return 0;
 }

@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <assert.h>
+#include <string>
 using namespace std;
 
 
