@@ -98,19 +98,19 @@ public:
 	{
 		if (IsReady == false)
 		{
-			EventEngine->GraphicsError("GraphicsEngine class is not initialized properly.");
+			EventEngine->SystemEvents.GraphicsError("GraphicsEngine class is not initialized properly.");
 			return false;
 		}
 
 		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 		{
-			EventEngine->GraphicsError(SDL_GetError());
+			EventEngine->SystemEvents.GraphicsError(SDL_GetError());
 			return false;
 		}
 		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 		if (mainWindow == NULL)
 		{
-			EventEngine->GraphicsError(SDL_GetError());
+			EventEngine->SystemEvents.GraphicsError(SDL_GetError());
 			return false;
 		}
 
@@ -118,19 +118,19 @@ public:
 		Renderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_ACCELERATED);
 		if (Renderer == NULL)
 		{
-			EventEngine->GraphicsError(SDL_GetError());
+			EventEngine->SystemEvents.GraphicsError(SDL_GetError());
 
 		}
 		if (TTF_Init() < 0)
 		{
-			EventEngine->GraphicsError(TTF_GetError());
+			EventEngine->SystemEvents.GraphicsError(TTF_GetError());
 		}
 
 		int IMGFlags = IMG_INIT_PNG;
 		int InitStat = IMG_Init(IMGFlags);
 		if (InitStat != IMGFlags)
 		{
-			EventEngine->GraphicsError(IMG_GetError());
+			EventEngine->SystemEvents.GraphicsError(IMG_GetError());
 			return false;
 		}
 		

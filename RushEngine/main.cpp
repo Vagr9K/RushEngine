@@ -50,7 +50,6 @@ bool FPSCheck(float Step)
 
 int RndGen(int Max)
 {
-	srand(GetTickCount());
 	int Ret = rand() % Max;
 	return Ret;
 }

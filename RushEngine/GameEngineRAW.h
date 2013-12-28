@@ -103,7 +103,7 @@ public:
 				double FPSActual = Frames/DiffTime;
 				std::ostringstream ToString;
 				ToString << FPSActual;
-				event.OPSLog(ToString.str());
+				event.SystemEvents.OPSLog(ToString.str());
 				FPSStarted = false;
 			}
 			else

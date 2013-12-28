@@ -13,7 +13,7 @@ DrawGPU::DrawGPU (GraphicsManager * ManagerGR, SDL_Renderer * Render, SDL_Window
 		this->Render = Render;
 		if (Render == NULL)
 		{
-			Events->GraphicsError("Renderer not initialized for DrawGPU.");
+			Events->SystemEvents.GraphicsError("Renderer not initialized for DrawGPU.");
 		}
 	}
 DrawGPU::~ DrawGPU ()

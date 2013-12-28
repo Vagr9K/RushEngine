@@ -38,7 +38,7 @@ TTF_Font * GraphicsManager::LoadFont (string FontPath, int PointSize, int Index)
 			Font = TTF_OpenFont(FontPath.c_str(), PointSize);
 			if (Font == NULL)
 			{
-				EventEngine->GraphicsError(TTF_GetError());
+				EventEngine->SystemEvents.GraphicsError(TTF_GetError());
 
 			}
 			return Font;
@@ -48,7 +48,7 @@ TTF_Font * GraphicsManager::LoadFont (string FontPath, int PointSize, int Index)
 			Font = TTF_OpenFontIndex(FontPath.c_str(), PointSize, Index);
 			if (Font == NULL)
 			{
-				EventEngine->GraphicsError(TTF_GetError());
+				EventEngine->SystemEvents.GraphicsError(TTF_GetError());
 
 			}
 			return Font;
@@ -278,7 +278,7 @@ SDL_Surface * GraphicsManager::GetSurfaceSolid (TTF_Font * Font, string Text, SD
 		Surf = TTF_RenderText_Solid(Font, Text.c_str(), Foreground);
 		if (Surf == NULL)
 		{
-			EventEngine->GraphicsError(TTF_GetError());
+			EventEngine->SystemEvents.GraphicsError(TTF_GetError());
 		}
 		return Surf;
 	}
@@ -289,7 +289,7 @@ SDL_Texture * GraphicsManager::GetTextureSolid (TTF_Font * Font, string Text, SD
 		Texture = SDL_CreateTextureFromSurface(Renderer, Surf);
 		if (Texture == NULL)
 		{
-			EventEngine->GraphicsError(SDL_GetError());
+			EventEngine->SystemEvents.GraphicsError(SDL_GetError());
 		}
 		SDL_FreeSurface(Surf);
 		return Texture;
@@ -300,7 +300,7 @@ SDL_Surface * GraphicsManager::GetSurfaceShaded (TTF_Font * Font, string Text, S
 		Surf = TTF_RenderText_Shaded(Font, Text.c_str(), Foreground, Background);
 		if (Surf == NULL)
 		{
-			EventEngine->GraphicsError(TTF_GetError());
+			EventEngine->SystemEvents.GraphicsError(TTF_GetError());
 		}
 		return Surf;
 	}
@@ -311,7 +311,7 @@ SDL_Texture * GraphicsManager::GetTextureShaded (TTF_Font * Font, string Text, S
 		Texture = SDL_CreateTextureFromSurface(Renderer, Surf);
 		if (Texture == NULL)
 		{
-			EventEngine->GraphicsError(SDL_GetError());
+			EventEngine->SystemEvents.GraphicsError(SDL_GetError());
 		}
 		SDL_FreeSurface(Surf);
 		return Texture;
@@ -323,7 +323,7 @@ SDL_Surface * GraphicsManager::GetSurfaceBlended (TTF_Font * Font, string Text, 
 		Surf = TTF_RenderText_Blended(Font, Text.c_str(), Foreground);
 		if (Surf == NULL)
 		{
-			EventEngine->GraphicsError(TTF_GetError());
+			EventEngine->SystemEvents.GraphicsError(TTF_GetError());
 		}
 		return Surf;
 	}
@@ -341,7 +341,7 @@ SDL_Texture * GraphicsManager::GetTextureBlended (TTF_Font * Font, string Text, 
 		Texture = SDL_CreateTextureFromSurface(Renderer, Surf);
 		if (Texture == NULL)
 		{
-			EventEngine->GraphicsError(SDL_GetError());
+			EventEngine->SystemEvents.GraphicsError(SDL_GetError());
 		}
 		SDL_FreeSurface(Surf);
 		return Texture;

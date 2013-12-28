@@ -89,7 +89,13 @@
     <ClInclude Include="Graphics\Graphics.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Eventing.h">
+    <ClInclude Include="EventManagers.h">
+      <Filter>Header Files\Eventing</Filter>
+    </ClInclude>
+    <ClInclude Include="Eventing\EventComponents.h">
+      <Filter>Header Files\Eventing</Filter>
+    </ClInclude>
+    <ClInclude Include="Eventing\Eventing.h">
       <Filter>Header Files\Eventing</Filter>
     </ClInclude>
   </ItemGroup>

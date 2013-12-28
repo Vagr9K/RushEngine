@@ -9,7 +9,7 @@ GLuint GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 #define PowerChecker(n) !(n&(n-1))
 		if (!PowerChecker(Surface->w) || !PowerChecker(Surface->h))
 		{
-			EventEngine->GraphicsError("Image size is not a power of 2 at function GenerateTexture().");
+			EventEngine->SystemEvents.GraphicsError("Image size is not a power of 2 at function GenerateTexture().");
 		}
 		Colors = Surface->format->BytesPerPixel;
 		if (Colors == 4)
@@ -22,7 +22,7 @@ GLuint GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 		}
 		else
 		{
-			EventEngine->GraphicsError("Image format not supported at function GenerateTexture().");
+			EventEngine->SystemEvents.GraphicsError("Image format not supported at function GenerateTexture().");
 		}
 		glGenTextures(1, &Texture);
 		glBindTexture(GL_TEXTURE_2D, Texture);
@@ -32,7 +32,7 @@ GLuint GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 
 		if (glGetError() != GL_NO_ERROR)
 		{
-			EventEngine->GraphicsError("OpenGL error in function GenerateTexture() : " + glGetError());
+			EventEngine->SystemEvents.GraphicsError("OpenGL error in function GenerateTexture() : " + glGetError());
 		}
 		return Texture;
 
