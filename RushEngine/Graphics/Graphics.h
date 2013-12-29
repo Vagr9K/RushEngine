@@ -6,7 +6,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
-#include <SDL_opengl.h>
+
 using namespace std;
 
 
@@ -16,9 +16,10 @@ using namespace std;
 #include "DrawGL.h"
 //Platform dependent includes!
 #ifdef __WINDOWS__
-
+#include <SDL_opengl.h>
 #elif __ANDROID__
 //Android includes here!
+#include <SDL_opengles.h>
 
 #endif 
 
