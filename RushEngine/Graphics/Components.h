@@ -16,6 +16,12 @@ enum Style
   STRIKETHROUGH,
   UNDERLINE
 };
+enum DRAWMODE
+{
+	CPU,
+	GPU,
+	OPENGL
+};
 class GameEngine;
 struct TextFont
 {
