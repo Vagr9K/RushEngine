@@ -83,6 +83,13 @@ struct LayerElement
 public:
 	IMG* Image;
 	TXT* Text;
+	bool TextExists;
+	bool ImageExists;
+	LayerElement()
+	{
+		TextExists = false;
+		ImageExists = false;
+	}
 
 };
 
