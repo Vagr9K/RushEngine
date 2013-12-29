@@ -1,4 +1,6 @@
 #include <string>
+#include <windows.h>
+#include <ctime>
 using namespace std;
 enum Mode
 {
@@ -33,3 +35,15 @@ struct WindowInfo
   int Height;
   int Width;
 };
+
+class OperationController  //Windows only!
+{
+	int StartTime;
+	int CurrentTime;
+	int RepeatsPerSecond;
+	double MinDiff;
+	OperationController(int RepeatsPerSecond);
+	bool GetStatus();
+
+};
+
