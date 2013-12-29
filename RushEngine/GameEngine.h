@@ -1,10 +1,6 @@
 #include "GameEngineRAW.h"
 
 
-
-
-
-
 class Object
 {
 	GameEngine* mainEngine;
@@ -43,18 +39,18 @@ private:
 	{
 		mainEngine = NULL;
 		DatabaseManager = NULL;
-		ObjPhysics=NULL;
-		ObjWorld=NULL;
+		ObjPhysics = NULL;
+		ObjWorld = NULL;
 		PhysicsWorldIndex;
 		ObjectsIndex;
 		ObjElementInDB = false;
 		BodyDefinition = NULL;
 		FixtureDefinition = NULL;
-		Body=NULL;
+		Body = NULL;
 		Fixture = NULL;
-		ObjElement=NULL;
-		Image=NULL;
-		Text=NULL;
+		ObjElement = NULL;
+		Image = NULL;
+		Text = NULL;
 		InstantPush = false;
 
 	}
@@ -108,7 +104,7 @@ public:
 
 	void CreateBody()
 	{
-		if (BodyDefinition==NULL)
+		if (BodyDefinition == NULL)
 		{
 			throw "Body definition not initialized.";
 			EventingEngine->SystemEvents.ObjectsError("Body definition not initialized.");
@@ -128,7 +124,7 @@ public:
 	}
 	void CreateFixture()
 	{
-		if (Body==NULL)
+		if (Body == NULL)
 		{
 			throw "Body not initialized.";
 			EventingEngine->SystemEvents.ObjectsError("Body not initialized.");
@@ -144,7 +140,7 @@ public:
 
 	void DestroyFixture()
 	{
-		
+
 		if (Fixture == NULL)
 		{
 			throw "Fixture not initialized.";
@@ -156,7 +152,7 @@ public:
 	}
 	void InitObjElement()
 	{
-		if (ObjElement!=NULL)
+		if (ObjElement != NULL)
 		{
 			throw "ObjElement already initialized.";
 			EventingEngine->SystemEvents.ObjectsError("ObjElement already initialized.");
@@ -168,7 +164,7 @@ public:
 
 	void InitFixtureDefinition()
 	{
-		if (FixtureDefinition==NULL)
+		if (FixtureDefinition == NULL)
 		{
 			FixtureDefinition = new b2FixtureDef;
 		}
@@ -176,7 +172,7 @@ public:
 
 	void AddObjElementToManager()
 	{
-		if (ObjElement==NULL)
+		if (ObjElement == NULL)
 		{
 			InitObjElement();
 		}
@@ -200,7 +196,7 @@ public:
 
 	void DeleteObjElement()
 	{
-		if (ObjElementInDB==true)
+		if (ObjElementInDB == true)
 		{
 			DeleteObjElementFromManager();
 			ObjElementInDB = false;
@@ -218,7 +214,7 @@ public:
 
 	void AddImage(IMG *Image)
 	{
-		if (Image==NULL)
+		if (Image == NULL)
 			throw "IMG pointer is NULL.";
 		if (ObjElement == NULL)
 		{
@@ -247,7 +243,7 @@ public:
 	{
 		if (ObjElement->Image == NULL)
 		{
-			throw "IMG pointer is NULL."; 
+			throw "IMG pointer is NULL.";
 			EventingEngine->SystemEvents.ObjectsError("IMG pointer is NULL.");
 		}
 		delete Image;
@@ -264,13 +260,13 @@ public:
 		delete Text;
 		Text = NULL;
 	}
-	
+
 };
 
 class ObjectContainer
 {
-	private:
-		vector<Object*> Objs;
+private:
+	vector<Object*> Objs;
 
 
 
