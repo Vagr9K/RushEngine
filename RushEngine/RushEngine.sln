@@ -9,6 +9,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RushEngine", "RushEngine.vc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Box2D", "..\Box2D\Box2D.vcxproj", "{B456B67F-A905-4CD0-97DC-EBB6639E26BB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGame", "..\TestGame\TestGame.vcxproj", "{5A41F4F6-2535-49B7-B765-6AFAA3EF3F9C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B456B67F-A905-4CD0-97DC-EBB6639E26BB} = {B456B67F-A905-4CD0-97DC-EBB6639E26BB}
+		{AD47C77F-FBE0-458C-BC07-96B08EDBE7CD} = {AD47C77F-FBE0-458C-BC07-96B08EDBE7CD}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +45,16 @@ Global
 		{B456B67F-A905-4CD0-97DC-EBB6639E26BB}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{B456B67F-A905-4CD0-97DC-EBB6639E26BB}.Release|Win32.ActiveCfg = Release|Win32
 		{B456B67F-A905-4CD0-97DC-EBB6639E26BB}.Release|Win32.Build.0 = Release|Win32
+		{5A41F4F6-2535-49B7-B765-6AFAA3EF3F9C}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{5A41F4F6-2535-49B7-B765-6AFAA3EF3F9C}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{5A41F4F6-2535-49B7-B765-6AFAA3EF3F9C}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{5A41F4F6-2535-49B7-B765-6AFAA3EF3F9C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5A41F4F6-2535-49B7-B765-6AFAA3EF3F9C}.Debug|Win32.Build.0 = Debug|Win32
+		{5A41F4F6-2535-49B7-B765-6AFAA3EF3F9C}.Release|Any CPU.ActiveCfg = Release|Win32
+		{5A41F4F6-2535-49B7-B765-6AFAA3EF3F9C}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{5A41F4F6-2535-49B7-B765-6AFAA3EF3F9C}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{5A41F4F6-2535-49B7-B765-6AFAA3EF3F9C}.Release|Win32.ActiveCfg = Release|Win32
+		{5A41F4F6-2535-49B7-B765-6AFAA3EF3F9C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
