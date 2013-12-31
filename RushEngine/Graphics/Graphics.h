@@ -9,14 +9,7 @@
 
 using namespace std;
 
-
-
-
-#include "DrawCPU.h"
-#include "DrawGPU.h"
 #include "DrawGL.h"
-
-
 
 //Platform dependent includes!
 #ifdef __WINDOWS__
@@ -38,18 +31,9 @@ private:
 	bool IsReady;
 	bool IsStarted;
 	SDL_Window* mainWindow;
-	SDL_Renderer *Renderer;
 	EventingEngine* EventEngine;
 	GraphicsManager* ManagerGR;
-
-	
-	bool CPUInited;
 	bool GLInited;
-	bool GPUInited;
-	vector<SDL_Surface*> PreLoadedSurfCPU;
-	vector<SDL_Texture*> PreLoadedTextGPU;
-	vector<string> PreLoadedPathsCPU;
-	vector<string> PreLoadedPathsGPU;
 private:
 	void InitOldCpp()
 	{
@@ -57,27 +41,40 @@ private:
 		IsReady = false;
 		IsStarted = false;
 		mainWindow = NULL;
-		Renderer = NULL;
 		EventEngine = NULL;
 		ManagerGR = NULL;
-		CPUInited = false;
-		GPUInited = false;
 		GLInited = false;
 	}
 	
 
 public:
-	DrawCPU* DrawerCPU;
-	DrawGPU* DrawerGPU;
 	DrawGL* DrawerGL;
+private:
+	void InitGL()
+	{
+		if (GLInited==false)
+		{
 
+			DrawerGL = new DrawGL(ManagerGR, mainWindow, Height, Width, EventEngine);
+			GLInited = true;
+		}
+	}
+	void DeleteGL()
+	{
+		if (GLInited == true)
+		{
+
+			DrawerGL->~DrawGL();
+			GLInited = false;
+		}
+	}
 
 public:
 	GraphicsEngine()
 	{
 		InitOldCpp();
 	}
-	GraphicsEngine(int Width, int Height, int LayerNumber, string Title, EventingEngine* Events)
+	GraphicsEngine(int Width, int Height, int LayerNumber, string Title, EventingEngine* EventsEnginePtr)
 	{
 		InitOldCpp();
 		this->Width = Width;
@@ -85,7 +82,7 @@ public:
 		this->LayerNumber = LayerNumber;
 		this->Title = Title;
 		this->IsReady = true;
-		this->EventEngine = Events;
+		this->EventEngine = EventsEnginePtr;
 		
 	}
 	void Init(int Width, int Height, int LayerNumber, string Title, EventingEngine* EvVar)
@@ -118,14 +115,6 @@ public:
 			EventEngine->SystemEvents.GraphicsError(SDL_GetError());
 			return false;
 		}
-
-
-		Renderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_ACCELERATED);
-		if (Renderer == NULL)
-		{
-			EventEngine->SystemEvents.GraphicsError(SDL_GetError());
-
-		}
 		if (TTF_Init() < 0)
 		{
 			EventEngine->SystemEvents.GraphicsError(TTF_GetError());
@@ -139,50 +128,15 @@ public:
 			return false;
 		}
 		
+		this->ManagerGR = new GraphicsManager(EventEngine);
 
+		InitGL();
 
-
-		
-		this->ManagerGR = new GraphicsManager(EventEngine, Renderer);
 		IsStarted = true;
 		return true;
 	}
 	
-	void InitCPU()
-	{
-		DrawerCPU = new DrawCPU(ManagerGR, mainWindow);
-		CPUInited = true;
-		
-	}
-
-	void DeleteCPU()
-	{
-		DrawerCPU->~DrawCPU();
-		CPUInited = false;
-	}
-
-	void InitGPU()
-	{
-		DrawerGPU = new DrawGPU(ManagerGR, Renderer, mainWindow, EventEngine);
-		
-		GPUInited = true;
-	}
-
-	void DeleteGPU()
-	{
-		DrawerGPU->~DrawGPU();
-		GPUInited = false;
-	}
-	void InitGL()
-	{
-		DrawerGL = new DrawGL(ManagerGR, mainWindow, Height, Width, EventEngine);
-		GLInited = true;
-	}
-	void DeleteGL()
-	{
-		DrawerGL->~DrawGL();
-		GLInited = false;
-	}
+	
 
 	bool Stop()
 	{
@@ -192,14 +146,6 @@ public:
 		TTF_Quit();
 		SDL_Quit();
 
-		if (CPUInited == true)
-		{
-			DeleteCPU();
-		}
-		if (GPUInited == true)
-		{
-			DeleteGPU();
-		}
 		if (GLInited==true)
 		{
 			DeleteGL();

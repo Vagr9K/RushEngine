@@ -16,12 +16,6 @@ enum Style
   STRIKETHROUGH,
   UNDERLINE
 };
-enum DRAWMODE
-{
-	CPU,
-	GPU,
-	OPENGL
-};
 class GameEngine;
 struct TextFont
 {
@@ -44,8 +38,8 @@ struct WindowInfo
 
 class OperationController  //Windows only!
 {
-	int StartTime;
-	int CurrentTime;
+	ULONGLONG StartTime;
+	ULONGLONG CurrentTime;
 	int RepeatsPerSecond;
 	double MinDiff;
 	OperationController(int RepeatsPerSecond);

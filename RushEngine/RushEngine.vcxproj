@@ -105,12 +105,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\Components.cpp" />
-    <ClCompile Include="Graphics\CPUManager.cpp" />
-    <ClCompile Include="Graphics\DrawCPU.cpp" />
     <ClCompile Include="Graphics\DrawGL.cpp" />
-    <ClCompile Include="Graphics\DrawGPU.cpp" />
     <ClCompile Include="Graphics\GLManager.cpp" />
-    <ClCompile Include="Graphics\GPUManager.cpp" />
     <ClCompile Include="Graphics\GraphicsManager.cpp" />
     <ClCompile Include="Graphics\TextManager.cpp" />
   </ItemGroup>
@@ -120,9 +116,7 @@
     <ClInclude Include="EventManagers.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="Graphics\Components.h" />
-    <ClInclude Include="Graphics\DrawCPU.h" />
     <ClInclude Include="Graphics\DrawGL.h" />
-    <ClInclude Include="Graphics\DrawGPU.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GraphicsManager.h" />
     <ClInclude Include="GameEngineRAW.h" />

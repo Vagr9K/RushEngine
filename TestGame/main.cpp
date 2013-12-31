@@ -61,7 +61,6 @@ void Init()
 	mainEngine.InitPhysics();
 	mainEngine.InitGraphics(WWIDTH, WHEIGHT, 1, "Test #002.");
 	mainEngine.Graphics->Start();
-	mainEngine.Graphics->InitGL();
 	mainEngine.InitObjects(0, 0, 1, 0);
 	mainEngine.Physics->AddWorld(&World);
 	STDShape = new b2CircleShape;
@@ -75,8 +74,8 @@ void Init()
 	float Rnd2 = 0;
 	for (int i = 0; i < BallCount; i++)
 	{
-		Rnd1 = RndGen(10);
-		Rnd2 = RndGen(10);
+		Rnd1 = (float)RndGen(10);
+		Rnd2 = (float)RndGen(10);
 		Balls.at(i) = new Object(&mainEngine, 0, 0);
 		Balls.at(i)->BodyDefinition = new b2BodyDef;
 		Balls.at(i)->BodyDefinition->type = b2_dynamicBody;

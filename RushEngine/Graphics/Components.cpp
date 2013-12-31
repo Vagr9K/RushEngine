@@ -24,7 +24,7 @@ OperationController::OperationController(int RepeatsPerSecond)  //TODO: Windows 
 bool OperationController::GetStatus()
 {
 	this->CurrentTime = GetTickCount64();
-	int Diff = CurrentTime - StartTime;
+	ULONGLONG Diff = CurrentTime - StartTime;
 	if (Diff >= MinDiff)
 	{
 		StartTime = GetTickCount64();
