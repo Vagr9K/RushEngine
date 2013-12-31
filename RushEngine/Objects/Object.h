@@ -1,3 +1,6 @@
+#include "ObjectManager.h"
+#include <Box2D/Box2D.h>
+#include "../Eventing/Eventing.h"
 
 
 
@@ -10,7 +13,7 @@ class ObjectRAW
 	int PhysicsWorldIndex;
 	int ObjectsIndex;
 	bool ObjElementInDB;
-	EventingEngine* EventingEngine;
+	EventingEngine* EventingEnginePtr;
 
 
 protected:
@@ -65,14 +68,14 @@ public:
 
 
 public:
-	Object(b2World* ObjWorld, ObjDBManager* DatabaseManager, EventingEngine* Events, bool AddToManager)
+	ObjectRAW(b2World* ObjWorld, ObjDBManager* DatabaseManager, EventingEngine* EventsEngine, bool AddToManager)
 	{
 		InitOldCpp();
 		this->DatabaseManager = DatabaseManager;
 		this->ObjWorld = ObjWorld;
-		EventingEngine = Events;
+		EventingEnginePtr = EventsEngine;
 	}
-	~Object()
+	~ObjectRAW()
 	{
 		DeleteObjElement();
 		if (InstantPush == true)
@@ -97,7 +100,7 @@ public:
 		if (BodyDefinition == NULL)
 		{
 			throw "Body definition not initialized.";
-			EventingEngine->SystemEvents.ObjectsError("Body definition not initialized.");
+			EventingEnginePtr->SystemEvents.ObjectsError("Body definition not initialized.");
 		}
 		Body = ObjWorld->CreateBody(BodyDefinition);
 	}
@@ -107,7 +110,7 @@ public:
 		if (Body == NULL)
 		{
 			throw "Body not initialized.";
-			EventingEngine->SystemEvents.ObjectsError("Body not initialized.");
+			EventingEnginePtr->SystemEvents.ObjectsError("Body not initialized.");
 		}
 		ObjWorld->DestroyBody(Body);
 		Body = NULL;
@@ -117,12 +120,12 @@ public:
 		if (Body == NULL)
 		{
 			throw "Body not initialized.";
-			EventingEngine->SystemEvents.ObjectsError("Body not initialized.");
+			EventingEnginePtr->SystemEvents.ObjectsError("Body not initialized.");
 		}
 		if (FixtureDefinition == NULL)
 		{
 			throw "Fixture definition not initialized.";
-			EventingEngine->SystemEvents.ObjectsError("Fixture definition not initialized.");
+			EventingEnginePtr->SystemEvents.ObjectsError("Fixture definition not initialized.");
 		}
 		Fixture = Body->CreateFixture(FixtureDefinition);
 
@@ -134,7 +137,7 @@ public:
 		if (Fixture == NULL)
 		{
 			throw "Fixture not initialized.";
-			EventingEngine->SystemEvents.ObjectsError("Fixture not initialized.");
+			EventingEnginePtr->SystemEvents.ObjectsError("Fixture not initialized.");
 		}
 		Body->DestroyFixture(Fixture);
 		Fixture = NULL;
@@ -145,7 +148,7 @@ public:
 		if (ObjElement != NULL)
 		{
 			throw "ObjElement already initialized.";
-			EventingEngine->SystemEvents.ObjectsError("ObjElement already initialized.");
+			EventingEnginePtr->SystemEvents.ObjectsError("ObjElement already initialized.");
 		}
 		ObjElement = new LayerElement;
 		Image = ObjElement->Image;
@@ -209,7 +212,7 @@ public:
 		if (ObjElement == NULL)
 		{
 			throw "ObjElement is NULL";
-			EventingEngine->SystemEvents.ObjectsError("ObjElement is NULL");
+			EventingEnginePtr->SystemEvents.ObjectsError("ObjElement is NULL");
 		}
 		ObjElement->Image = Image;
 		ObjElement->ImageExists = true;
@@ -220,12 +223,12 @@ public:
 		if (Text == NULL)
 		{
 			throw "TXT pointer is NULL.";
-			EventingEngine->SystemEvents.ObjectsError("TXT pointer is NULL.");
+			EventingEnginePtr->SystemEvents.ObjectsError("TXT pointer is NULL.");
 		}
 		if (ObjElement == NULL)
 		{
 			throw "ObjElement is NULL";
-			EventingEngine->SystemEvents.ObjectsError("ObjElement is NULL");
+			EventingEnginePtr->SystemEvents.ObjectsError("ObjElement is NULL");
 		}
 		ObjElement->Text = Text;
 		ObjElement->TextExists = true;
@@ -236,7 +239,7 @@ public:
 		if (ObjElement->Image == NULL)
 		{
 			throw "IMG pointer is NULL.";
-			EventingEngine->SystemEvents.ObjectsError("IMG pointer is NULL.");
+			EventingEnginePtr->SystemEvents.ObjectsError("IMG pointer is NULL.");
 		}
 		delete Image;
 		Image = NULL;
@@ -248,7 +251,7 @@ public:
 		if (ObjElement->Text == NULL)
 		{
 			throw "TXT pointer is NULL.";
-			EventingEngine->SystemEvents.ObjectsError("TXT pointer is NULL.");
+			EventingEnginePtr->SystemEvents.ObjectsError("TXT pointer is NULL.");
 		}
 		delete Text;
 		Text = NULL;

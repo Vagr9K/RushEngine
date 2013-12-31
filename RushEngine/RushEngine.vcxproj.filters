@@ -22,6 +22,12 @@
     <Filter Include="Header Files\Eventing">
       <UniqueIdentifier>{5960fdc2-4894-46e8-9edf-3b19a1d3555d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Objects">
+      <UniqueIdentifier>{bf3d8041-50fd-439c-9eaf-02c3127369db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Physics">
+      <UniqueIdentifier>{5cba256c-3ddd-450c-96c4-b585d9bfd019}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -56,15 +62,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ObjModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameEngineRAW.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -97,6 +94,21 @@
     </ClInclude>
     <ClInclude Include="Eventing\Eventing.h">
       <Filter>Header Files\Eventing</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\ObjectManager.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\ObjectsEngine.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\ObjModel.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Object.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Physics.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

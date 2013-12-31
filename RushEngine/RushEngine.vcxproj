@@ -126,10 +126,12 @@
     <ClInclude Include="Graphics\DrawGPU.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GraphicsManager.h" />
-    <ClInclude Include="Objects.h" />
     <ClInclude Include="GameEngineRAW.h" />
-    <ClInclude Include="ObjModel.h" />
-    <ClInclude Include="Physics.h" />
+    <ClInclude Include="Objects\Object.h" />
+    <ClInclude Include="Objects\ObjectManager.h" />
+    <ClInclude Include="Objects\ObjectsEngine.h" />
+    <ClInclude Include="Objects\ObjModel.h" />
+    <ClInclude Include="Physics\Physics.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Box2D\Box2D.vcxproj">

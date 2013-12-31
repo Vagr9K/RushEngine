@@ -1,6 +1,7 @@
 #include "Graphics/Graphics.h"
-#include "Objects.h"
-#include "Physics.h"
+#include "Physics/Physics.h"
+#include "Objects/ObjectsEngine.h"
+
 
 
 class GameEngine

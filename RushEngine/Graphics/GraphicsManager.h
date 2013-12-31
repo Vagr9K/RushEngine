@@ -7,7 +7,7 @@ using namespace std;
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_opengl.h>
-#include "../Eventing/Eventing.h"
+#include "../Objects/ObjectsEngine.h"
 #include "Components.h"
 class GraphicsManager
 {
