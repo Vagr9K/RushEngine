@@ -11,7 +11,7 @@ int GraphicsManager::GetMaximumTimeOfText ()
 
 void GraphicsManager::CleanTextTextureGL (int IndexOfItem)
         {
-		glDeleteTextures(1, &(LoadedTextsGL.at(IndexOfItem)));
+		glDeleteTextures(1, &(LoadedTextsGL.at(IndexOfItem)).TextureID);
 		LoadedTextsGL.erase(LoadedTextsGL.begin() + IndexOfItem);
 		TimeFromLastUseGL.erase(TimeFromLastUseGL.begin() + IndexOfItem);
 		LoadedTextArgsGL.erase(LoadedTextArgsGL.begin() + IndexOfItem);
@@ -119,9 +119,9 @@ SDL_Surface * GraphicsManager::GetSurfaceShaded(TTF_Font * Font, string Text, SD
 	}
 	return Surf;
 }
-GLuint GraphicsManager::GetTextImageGL (TextFont * Font, string Text, Mode DrawMode, SDL_Color Foregroung, SDL_Color Background)
+TextureInfo GraphicsManager::GetTextImageGL(TextFont * Font, string Text, Mode DrawMode, SDL_Color Foregroung, SDL_Color Background)
         {
-		GLuint Texture = NULL;
+		TextureInfo Texture;
 		string args = to_string(static_cast<long long>(Font->FontKerning)) + to_string(static_cast<long long>(Font->FontOutline))
 			+ Font->FontPath + to_string(static_cast<long long>(Font->FontStyle)) + to_string(static_cast<long long>(Font->Index))
 			+ to_string(static_cast<long long>(Font->PointSize)) + Text;
@@ -182,24 +182,24 @@ SDL_Surface * GraphicsManager::GetSurfaceBlended (TTF_Font * Font, string Text, 
 		}
 		return Surf;
 	}
-GLuint GraphicsManager::GetTextureBlendedGL (TTF_Font * Font, string Text, SDL_Color Foreground)
+TextureInfo GraphicsManager::GetTextureBlendedGL(TTF_Font * Font, string Text, SDL_Color Foreground)
         {
 		SDL_Surface* TMPSURF = GetSurfaceBlended(Font, Text, Foreground);
-		GLuint Texture = GenerateTexture(TMPSURF);
+		TextureInfo Texture = GenerateTexture(TMPSURF);
 		SDL_FreeSurface(TMPSURF);
 		return Texture;
 	}
-GLuint GraphicsManager::GetTextureSolidGL (TTF_Font * Font, string Text, SDL_Color Foreground)
+TextureInfo GraphicsManager::GetTextureSolidGL(TTF_Font * Font, string Text, SDL_Color Foreground)
         {
 		SDL_Surface* TMPSURF = GetSurfaceSolid(Font, Text, Foreground);
-		GLuint Texture = GenerateTexture(TMPSURF);
+		TextureInfo Texture = GenerateTexture(TMPSURF);
 		SDL_FreeSurface(TMPSURF);
 		return Texture;
 	}
-GLuint GraphicsManager::GetTextureShadedGL (TTF_Font * Font, string Text, SDL_Color Foreground, SDL_Color Background)
+TextureInfo GraphicsManager::GetTextureShadedGL(TTF_Font * Font, string Text, SDL_Color Foreground, SDL_Color Background)
         {
 		SDL_Surface* TMPSURF = GetSurfaceShaded(Font, Text, Foreground, Background);
-		GLuint Texture = GenerateTexture(TMPSURF);
+		TextureInfo Texture = GenerateTexture(TMPSURF);
 		SDL_FreeSurface(TMPSURF);
 		return Texture;
 	}

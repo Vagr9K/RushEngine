@@ -9,12 +9,14 @@ class DrawGL
   SDL_GLContext ContextGL;
   int WinHeight;
   int WinWidth;
+  int DeltaX;
+  int DeltaY;
 private:
   void InitOldCpp ();
   bool GLErrorTest (string FuntionName);
   bool InitOpenGL ();
   void ManageTexture (GLuint TextureID, GLfloat H, GLfloat W, GLfloat * Trg1Sz, GLfloat * Trg2Sz, GLfloat * Trg1Crd, GLfloat * Trg2Crd);
-  void AddToBufferFROMTEXTURE (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, GLuint TextureID, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
+  void AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
   void AddToBufferFROMPATH (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
   void AddToBufferFROMTEXT (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
 public:

@@ -16,16 +16,15 @@ class GraphicsManager
   vector <TTF_Font*> LoadedFonts;
   vector <string> LoadedFontsPaths;
   vector <string> LoadedTextArgsGL;
-  vector <SDL_Texture*> LoadedTextsGPU;
-  vector <GLuint> LoadedTextsGL;
+  vector <TextureInfo> LoadedTextsGL;
   vector <int> TimeFromLastUseGL;
   int MaximumTimeFromLastUseOfText;
   vector <string> * PreLoadedPathsGL;
-  vector <GLuint> * PreLoadedTextGL;
+  vector <TextureInfo> * PreLoadedTextGL;
 private:
   void InitOldCpp ();
 public:
-  GraphicsManager (EventingEngine * EventEngine, vector <GLuint> * PreLoadedTextGL, vector <string> * PreLoadedPathsGL);
+	GraphicsManager(EventingEngine * EventEngine, vector <TextureInfo> * PreLoadedTextGL, vector <string> * PreLoadedPathsGL);
   GraphicsManager (EventingEngine * EventEngine);
   GraphicsManager (EventingEngine * EventEngine, int OptimalObjectCount);
   void SetOptimalObjectCount (int OptimalObjectCount);
@@ -36,19 +35,20 @@ public:
   void CleanTextTextureGL (int IndexOfItem);
   TTF_Font * LoadFont (string FontPath, int PointSize, int Index = 0);
   TTF_Font * GetFont (string FontPath, int PointSize, int FontOutline, Style FontStyle, int Index = 0, bool FontKerning = false);
-  GLuint GetTextImageGL (TextFont * Font, string Text, Mode DrawMode, SDL_Color Foregroung, SDL_Color Background);
+  TextureInfo GetTextImageGL(TextFont * Font, string Text, Mode DrawMode, SDL_Color Foregroung, SDL_Color Background);
   SDL_Surface * GetSurfaceSolid(TTF_Font * Font, string Text, SDL_Color Foreground);
   SDL_Surface * GetSurfaceShaded(TTF_Font * Font, string Text, SDL_Color Foreground, SDL_Color Background);
   SDL_Surface * GetSurfaceBlended (TTF_Font * Font, string Text, SDL_Color Foreground);
-  GLuint GetTextureBlendedGL (TTF_Font * Font, string Text, SDL_Color Foreground);
-  GLuint GetTextureSolidGL (TTF_Font * Font, string Text, SDL_Color Foreground);
-  GLuint GetTextureShadedGL (TTF_Font * Font, string Text, SDL_Color Foreground, SDL_Color Background);
+  TextureInfo GetTextureBlendedGL(TTF_Font * Font, string Text, SDL_Color Foreground);
+  TextureInfo GetTextureSolidGL(TTF_Font * Font, string Text, SDL_Color Foreground);
+  TextureInfo GetTextureShadedGL(TTF_Font * Font, string Text, SDL_Color Foreground, SDL_Color Background);
   SDL_Surface * IMGLoad (string Path);
-  GLuint GenerateTexture (SDL_Surface * Surface);
-  GLuint GenerateTexture (string Path);
-  GLuint LoaderGL (string Path);
+  TextureInfo GenerateTexture(SDL_Surface * Surface);
+  TextureInfo GenerateTexture(string Path);
+  TextureInfo LoaderGL(string Path);
   void CleanPreLoadGL (int IndexOfItem);
   void ClearPreLoadGL (double PartToClear);
+  int GetNearestPowerOfTwo(int OldNumber);
 };
 
 #endif

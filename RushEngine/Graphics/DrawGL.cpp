@@ -5,6 +5,8 @@ void DrawGL::InitOldCpp ()
 		mainWindow = NULL;
 		ManagerGR = NULL;
 		EventEngine = NULL;
+		DeltaX = 0;
+		DeltaY = 0;
 	}
 bool DrawGL::GLErrorTest (string FuntionName)
         {
@@ -41,7 +43,7 @@ bool DrawGL::InitOpenGL ()
 
 		glMatrixMode(GL_PROJECTION);
 
-		glOrtho(0, WinWidth, WinHeight, 0, -1, 1);
+		glOrtho(0, WinWidth, WinHeight, 0, 0.f, 4.f);
 
 		glMatrixMode(GL_MODELVIEW);
 
@@ -56,74 +58,63 @@ bool DrawGL::InitOpenGL ()
 		return GLErrorTest("InitOpenGL()");
 
 	}
-void DrawGL::ManageTexture (GLuint TextureID, GLfloat H, GLfloat W, GLfloat * Trg1Sz, GLfloat * Trg2Sz, GLfloat * Trg1Crd, GLfloat * Trg2Crd)
-        {
-		GLfloat Trg1SzT[] = {
-			-W / 2, -H / 2, 0,
-			-W / 2, H / 2, 0,
-			W / 2, H / 2, 0
-		};
-		GLfloat Trg1CrdT[] = { 0, 0, 0, 1, 1, 1 };
-		GLfloat Trg2SzT[] = {
-			-W / 2, -H / 2, 0,
-			W / 2, -H / 2, 0,
-			W / 2, H / 2, 0
-		};
-		GLfloat Trg2CrdT[] = { 0, 0, 1, 0, 1, 1 };
-	}
-void DrawGL::AddToBufferFROMTEXTURE (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, GLuint TextureID, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
-        {
-		glTranslatef(X, Y, 0.0);
 
-		glRotatef(AngleX, 1.0, 0.0, 0.0);
-		glRotatef(AngleY, 0.0, 1.0, 0.0);
-		glRotatef(AngleZ, 0.0, 0.0, 1.0);
+void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData,GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
+        {
+        	float KX = TextureData.KxKy.KX;
+        	float KY = TextureData.KxKy.KY;
+        	GLuint TextureID = TextureData.TextureID;
+			glTranslatef(X + DeltaX, Y + DeltaY, 0.0);
 
-		GLfloat Trg1Sz[] = {
+			glRotatef(AngleX, 1.0, 0.0, 0.0);
+			glRotatef(AngleY, 0.0, 1.0, 0.0);
+			glRotatef(AngleZ, 0.0, 0.0, 1.0);
+
+			GLfloat Trg1Sz[] = {
 							-W/2, -H/2, 0,
 							-W/2,  H/2, 0,
 							 W/2,  H/2, 0
 						   };
-		GLfloat Trg1Crd[] = {0,0 ,0,1 ,1,1};
-		GLfloat Trg2Sz[] = {
+			GLfloat Trg1Crd[] = {0,0 ,0,KY ,KX,KY};
+			GLfloat Trg2Sz[] = {
 							-W/2, -H/2, 0,
 							 W/2, -H/2, 0,
 							 W/2,  H/2, 0
 						   };
-		GLfloat Trg2Crd[] = {0,0 ,1,0 ,1,1};
+			GLfloat Trg2Crd[] = {0,0 ,KX,0 ,KX,KY};
 
 		
-		glBindTexture(GL_TEXTURE_2D, 0);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			
+			glBindTexture(GL_TEXTURE_2D, TextureID);
+			
+			glVertexPointer(3, GL_FLOAT, 0, &Trg1Sz);
+			
+			glTexCoordPointer(2, GL_FLOAT, 0, &Trg1Crd);
+			
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+			
 
-		glBindTexture(GL_TEXTURE_2D, TextureID);
+			glVertexPointer(3, GL_FLOAT, 0, &Trg2Sz);
+			
+			glTexCoordPointer(2, GL_FLOAT, 0, &Trg2Crd);
+			
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+			
 
-		glVertexPointer(3, GL_FLOAT, 0, &Trg1Sz);
-
-		glTexCoordPointer(2, GL_FLOAT, 0, &Trg1Crd);
-
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-
-		glVertexPointer(3, GL_FLOAT, 0, &Trg2Sz);
-
-		glTexCoordPointer(2, GL_FLOAT, 0, &Trg2Crd);
-
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+			glLoadIdentity();
 
 
-		glLoadIdentity();
-
-
-		GLErrorTest("AddToBufferFROMTEXTURE()");
+			GLErrorTest("AddToBufferFROMTEXTURE()");
 	}
 void DrawGL::AddToBufferFROMPATH (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
         {
-		GLuint TextureID = ManagerGR->LoaderGL(Path);
+		TextureInfo TextureID = ManagerGR->LoaderGL(Path);
 		AddToBufferFROMTEXTURE(X, Y, H, W, TextureID, AngleX, AngleY, AngleZ);
 	}
 void DrawGL::AddToBufferFROMTEXT (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
         {
-		GLuint TextureID = ManagerGR->GetTextImageGL(Font, Text, DrawMode, Foreground, Background);
+		TextureInfo TextureID = ManagerGR->GetTextImageGL(Font, Text, DrawMode, Foreground, Background);
 		AddToBufferFROMTEXTURE(X, Y, H, W, TextureID, AngleX, AngleY, AngleZ);
 	}
 DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height, int Width, EventingEngine * Events)
@@ -146,8 +137,11 @@ DrawGL::~ DrawGL ()
 		SDL_GL_DeleteContext(ContextGL);
 	}
 void DrawGL::SetViewPort (int X, int Y, int Height, int Width)
-        {
+    {
 		glViewport(X, Y, Width, Height);
+		//DeltaX = X;
+		//DeltaY = Y;
+		
 	}
 void DrawGL::StartBuffer ()
         {

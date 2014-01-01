@@ -1,6 +1,11 @@
 #include <string>
+
 #include <windows.h>
+
+
 #include <ctime>
+
+#include <SDL_opengl.h>
 using namespace std;
 enum Mode
 {
@@ -47,3 +52,16 @@ class OperationController  //Windows only!
 
 };
 
+struct TextureRenderFactor
+{
+	GLfloat KX;
+	GLfloat KY;
+	TextureRenderFactor();
+	
+};
+
+struct TextureInfo
+{
+	GLuint TextureID;
+	TextureRenderFactor KxKy;
+};

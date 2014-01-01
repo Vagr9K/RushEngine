@@ -24,10 +24,13 @@ b2World World(Gravity);
 b2CircleShape* STDShape;
 b2PolygonShape* W1;
 b2PolygonShape* W2;
+TextFont* NewFont;
+SDL_Color NewColor;
 
 int CamX = 0;
 int CamY = 0;
-
+int NewHeight = WHEIGHT;
+int NewWidth = WWIDTH;
 SDL_Event* Ev;
 
 int StartTime = GetTickCount();
@@ -57,6 +60,12 @@ int RndGen(int Max)
 
 void Init()
 {
+	NewFont = new TextFont("font.ttf");
+	NewFont->PointSize = 12;
+	NewColor.a = 0;
+	NewColor.b = 0;
+	NewColor.g = 0;
+	NewColor.r = 0;
 
 	mainEngine.InitPhysics();
 	mainEngine.InitGraphics(WWIDTH, WHEIGHT, 1, "Test #002.");
@@ -152,6 +161,9 @@ void RenderGraphics()
 	Pos = Walls.at(3)->Body->GetPosition();
 	mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 5 * K, 10 * K, "Wall.png");
 
+	GLfloat TextFl = 123.f;
+	string Text = "Text Here!";
+	mainEngine.Graphics->DrawerGL->AddToBuffer(TextFl, TextFl, TextFl, TextFl, NewFont, Text, SOLID, NewColor, NewColor);
 	mainEngine.Graphics->DrawerGL->PushBuffer();
 
 }
@@ -175,7 +187,32 @@ void RenderCamera()
 	{
 		CamY = CamY - 40;
 	}
-	mainEngine.Graphics->DrawerGL->SetViewPort(CamX, CamY, WHEIGHT, WWIDTH);
+	else if (A[SDL_SCANCODE_R])
+	{
+		NewHeight += 40;
+	}
+	else if (A[SDL_SCANCODE_V])
+	{
+		NewHeight -= 40;
+	}
+	else if (A[SDL_SCANCODE_F])
+	{
+		NewHeight = WHEIGHT;
+	}
+	else if (A[SDL_SCANCODE_T])
+	{
+		NewWidth += 40;
+	}
+	else if (A[SDL_SCANCODE_B])
+	{
+		NewWidth -= 40;
+	}
+	else if (A[SDL_SCANCODE_G])
+	{
+		NewWidth = WHEIGHT;
+	}
+	
+	mainEngine.Graphics->DrawerGL->SetViewPort(CamX, CamY, NewHeight, NewWidth);
 
 }
 

@@ -8,7 +8,7 @@ void GraphicsManager::InitOldCpp ()
 		OptimalObjectCount = 0;
 		MaximumTimeFromLastUseOfText = 0;
 	}
-GraphicsManager::GraphicsManager (EventingEngine * EventEngine, vector <GLuint> * PreLoadedTextGL, vector <string> * PreLoadedPathsGL)
+GraphicsManager::GraphicsManager(EventingEngine * EventEngine, vector <TextureInfo> * PreLoadedTextGL, vector <string> * PreLoadedPathsGL)
         {
 		InitOldCpp();
 		this->EventEngine = EventEngine;
@@ -49,7 +49,7 @@ void GraphicsManager::InitPreloaders ()
 		}
 		
 		this->PreLoadedPathsGL = new vector<string>(OptimalObjectCount);
-		this->PreLoadedTextGL = new vector<GLuint>(OptimalObjectCount);
+		this->PreLoadedTextGL = new vector<TextureInfo>(OptimalObjectCount);
 	}
 
 

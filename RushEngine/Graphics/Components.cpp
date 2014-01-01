@@ -37,6 +37,9 @@ bool OperationController::GetStatus()
 	return false;
 }
 
-
-
+TextureRenderFactor::TextureRenderFactor()
+{
+	KX = 0;
+	KY = 0;
+}
 
