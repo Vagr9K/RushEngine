@@ -155,13 +155,16 @@ TextureInfo GraphicsManager::GetTextImageGL(TextFont * Font, string Text, Mode D
 		case SOLID:
 			Texture = GetTextureSolidGL(TTFFONT, Text, Foregroung);
 			break;
+			/*
 		case SHADED:
-			Texture = GetTextureShadedGL(TTFFONT, Text, Foregroung, Background);
+			Texture = GetTextureShadedGL(TTFFONT, Text, Foregroung, Background); //No support for SHADED mode!
 			break;
+			*/
 		case BLENDED:
 			Texture = GetTextureBlendedGL(TTFFONT, Text, Foregroung);
 			break;
 		default:
+			EventEngine->SystemEvents.GraphicsError("Undefined drawing mode passed to GetTextImageGL() function.");
 			break;
 		}
 		LoadedTextsGL.push_back(Texture);

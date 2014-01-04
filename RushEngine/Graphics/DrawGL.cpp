@@ -32,7 +32,7 @@ bool DrawGL::InitOpenGL ()
 
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
 
 
 		glClearColor(0, 0, 0, 0);

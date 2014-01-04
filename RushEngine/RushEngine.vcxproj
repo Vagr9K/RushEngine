@@ -113,7 +113,7 @@
   <ItemGroup>
     <ClInclude Include="Eventing\EventComponents.h" />
     <ClInclude Include="Eventing\Eventing.h" />
-    <ClInclude Include="EventManagers.h" />
+    <ClInclude Include="Eventing\EventManagers.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="Graphics\Components.h" />
     <ClInclude Include="Graphics\DrawGL.h" />

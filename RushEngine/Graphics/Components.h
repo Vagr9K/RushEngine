@@ -10,7 +10,7 @@ using namespace std;
 enum Mode
 {
   SOLID,
-  SHADED,
+ // SHADED,  //No support because of OpenGL problems.
   BLENDED
 };
 enum Style

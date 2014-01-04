@@ -26,6 +26,7 @@ b2PolygonShape* W1;
 b2PolygonShape* W2;
 TextFont* NewFont;
 SDL_Color NewColor;
+SDL_Color NewColorBG;
 
 int CamX = 0;
 int CamY = 0;
@@ -53,19 +54,64 @@ bool FPSCheck(float Step)
 
 int RndGen(int Max)
 {
+	srand(GetTickCount());
 	int Ret = rand() % Max;
 	return Ret;
 }
+/*
+void ModColors()
+{
+	int Mode = RndGen(3);
+	switch (Mode)
+	{
 
-
+	case 1:
+		if (NewColor.b < 256)
+		{
+			NewColor.b++;
+		}
+		else
+		{
+			NewColor.b = 0;
+		}
+		break;
+	case 2:
+		if (NewColor.g < 256)
+		{
+			NewColor.g++;
+		}
+		else
+		{
+			NewColor.g = 0;
+		}
+		break;
+	case 3:
+		if (NewColor.r < 256)
+		{
+			NewColor.r++;
+		}
+		else
+		{
+			NewColor.r = 0;
+		}
+		break;
+	default:
+		break;
+	}
+}
+*/
 void Init()
 {
 	NewFont = new TextFont("font.ttf");
 	NewFont->PointSize = 12;
 	NewColor.a = 0;
-	NewColor.b = 0;
+	NewColor.b = 255;
 	NewColor.g = 0;
 	NewColor.r = 0;
+	NewColorBG.a = 0;
+	NewColorBG.b = 0;
+	NewColorBG.g = 0;
+	NewColorBG.r = 0;
 
 	mainEngine.InitPhysics();
 	mainEngine.InitGraphics(WWIDTH, WHEIGHT, 1, "Test #002.");
@@ -161,9 +207,10 @@ void RenderGraphics()
 	Pos = Walls.at(3)->Body->GetPosition();
 	mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 5 * K, 10 * K, "Wall.png");
 
-	GLfloat TextFl = 123.f;
-	string Text = "Text Here!";
-	mainEngine.Graphics->DrawerGL->AddToBuffer(TextFl, TextFl, TextFl, TextFl, NewFont, Text, SOLID, NewColor, NewColor);
+	
+	GLfloat TextFl = 240.f;
+	string Text = "Text Is changing it's color!";
+	mainEngine.Graphics->DrawerGL->AddToBuffer(TextFl, TextFl, TextFl, TextFl, NewFont, Text, BLENDED, NewColor, NewColor);
 	mainEngine.Graphics->DrawerGL->PushBuffer();
 
 }
