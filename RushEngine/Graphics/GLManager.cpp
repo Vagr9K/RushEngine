@@ -20,6 +20,7 @@ int GraphicsManager::GetNearestPowerOfTwo(int OldNumber)
 
 TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
         {
+		bool CleanSurface = false;
 		GLuint Texture;
 		GLuint Colors = 4;
 		GLenum IMGFormat = (GLenum)NULL;
@@ -98,8 +99,9 @@ TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 
 			SDL_BlitSurface(Surface, &BlitArea, NewSurf, NULL);
 
-			SDL_FreeSurface(Surface);
+			
 			Surface = NewSurf;
+			CleanSurface = true;
 			
 		}
 		else
@@ -134,6 +136,8 @@ TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 		TextureData.KxKy.KX = KX;
 		TextureData.KxKy.KY = KY;
 		TextureData.TextureID = Texture;
+		if (CleanSurface)
+			SDL_FreeSurface(Surface);
 		return TextureData;
 
 	}

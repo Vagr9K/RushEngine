@@ -121,10 +121,14 @@ SDL_Surface * GraphicsManager::GetSurfaceShaded(TTF_Font * Font, string Text, SD
 }
 TextureInfo GraphicsManager::GetTextImageGL(TextFont * Font, string Text, Mode DrawMode, SDL_Color Foregroung, SDL_Color Background)
         {
+        string ColorDataFG = to_string(static_cast<long long>(Foregroung.a)) + to_string(static_cast<long long>(Foregroung.r)) +
+         to_string(static_cast<long long>(Foregroung.g)) + to_string(static_cast<long long>(Foregroung.b));
+        string ColorDataBG = to_string(static_cast<long long>(Background.a)) + to_string(static_cast<long long>(Background.r)) +
+         to_string(static_cast<long long>(Background.g)) + to_string(static_cast<long long>(Background.b));
 		TextureInfo Texture;
 		string args = to_string(static_cast<long long>(Font->FontKerning)) + to_string(static_cast<long long>(Font->FontOutline))
 			+ Font->FontPath + to_string(static_cast<long long>(Font->FontStyle)) + to_string(static_cast<long long>(Font->Index))
-			+ to_string(static_cast<long long>(Font->PointSize)) + Text;
+			+ to_string(static_cast<long long>(Font->PointSize)) + Text + ColorDataBG + ColorDataFG;
 		for (unsigned int i = 0; i < TimeFromLastUseGL.size(); i++)
 		{
 			if (LoadedTextArgsGL.at(i) == args)

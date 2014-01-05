@@ -58,7 +58,7 @@ int RndGen(int Max)
 	int Ret = rand() % Max;
 	return Ret;
 }
-/*
+
 void ModColors()
 {
 	int Mode = RndGen(3);
@@ -99,11 +99,11 @@ void ModColors()
 		break;
 	}
 }
-*/
+
 void Init()
 {
 	NewFont = new TextFont("font.ttf");
-	NewFont->PointSize = 12;
+	NewFont->PointSize = 30;
 	NewColor.a = 0;
 	NewColor.b = 255;
 	NewColor.g = 0;
@@ -129,8 +129,8 @@ void Init()
 	float Rnd2 = 0;
 	for (int i = 0; i < BallCount; i++)
 	{
-		Rnd1 = (float)RndGen(10);
-		Rnd2 = (float)RndGen(10);
+		Rnd1 = (float)RndGen(8)+1.f;
+		Rnd2 = (float)RndGen(8)+1.f;
 		Balls.at(i) = new Object(&mainEngine, 0, 0);
 		Balls.at(i)->BodyDefinition = new b2BodyDef;
 		Balls.at(i)->BodyDefinition->type = b2_dynamicBody;
@@ -207,10 +207,10 @@ void RenderGraphics()
 	Pos = Walls.at(3)->Body->GetPosition();
 	mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 5 * K, 10 * K, "Wall.png");
 
-	
-	GLfloat TextFl = 240.f;
+	ModColors();
+	GLfloat TextFl = 400.f;
 	string Text = "Text Is changing it's color!";
-	mainEngine.Graphics->DrawerGL->AddToBuffer(TextFl, TextFl, TextFl, TextFl, NewFont, Text, BLENDED, NewColor, NewColor);
+	mainEngine.Graphics->DrawerGL->AddToBuffer(TextFl, TextFl, 30.f, 240.f, NewFont, Text, BLENDED, NewColor, NewColor);
 	mainEngine.Graphics->DrawerGL->PushBuffer();
 
 }
