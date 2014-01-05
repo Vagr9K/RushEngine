@@ -4,7 +4,7 @@ using namespace std;
 struct Event
 {
 	string EventName;
-	bool EventState = false;
+	bool EventState;
 	vector<string> EventArgs;
 	Event(string Name, bool State)
 	{
