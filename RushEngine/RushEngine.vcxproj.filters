@@ -1,31 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Graphics">
-      <UniqueIdentifier>{6218c169-2dfc-4025-8948-470d71577c0b}</UniqueIdentifier>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Source Files\Graphics">
-      <UniqueIdentifier>{9e4b6c10-4157-4588-ae77-e5756e6b663b}</UniqueIdentifier>
+      <UniqueIdentifier>{6218c169-2dfc-4025-8948-470d71577c0b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Eventing">
+    <Filter Include="Source Files\Eventing">
       <UniqueIdentifier>{5960fdc2-4894-46e8-9edf-3b19a1d3555d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Objects">
+    <Filter Include="Source Files\Objects">
       <UniqueIdentifier>{bf3d8041-50fd-439c-9eaf-02c3127369db}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Physics">
+    <Filter Include="Source Files\Physics">
       <UniqueIdentifier>{5cba256c-3ddd-450c-96c4-b585d9bfd019}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -48,46 +41,46 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngineRAW.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="GameEngine.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Components.h">
-      <Filter>Header Files\Graphics</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\DrawGL.h">
-      <Filter>Header Files\Graphics</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GraphicsManager.h">
-      <Filter>Header Files\Graphics</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Graphics.h">
-      <Filter>Header Files\Graphics</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Eventing\EventComponents.h">
-      <Filter>Header Files\Eventing</Filter>
+      <Filter>Source Files\Eventing</Filter>
     </ClInclude>
     <ClInclude Include="Eventing\Eventing.h">
-      <Filter>Header Files\Eventing</Filter>
+      <Filter>Source Files\Eventing</Filter>
     </ClInclude>
     <ClInclude Include="Objects\ObjectManager.h">
-      <Filter>Header Files\Objects</Filter>
+      <Filter>Source Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Objects\ObjectsEngine.h">
-      <Filter>Header Files\Objects</Filter>
+      <Filter>Source Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Objects\ObjModel.h">
-      <Filter>Header Files\Objects</Filter>
+      <Filter>Source Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Object.h">
-      <Filter>Header Files\Objects</Filter>
+      <Filter>Source Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Physics\Physics.h">
-      <Filter>Header Files\Physics</Filter>
+      <Filter>Source Files\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Eventing\EventManagers.h">
-      <Filter>Header Files\Eventing</Filter>
+      <Filter>Source Files\Eventing</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
