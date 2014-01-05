@@ -18,16 +18,16 @@ OperationController::OperationController(int RepeatsPerSecond)  //TODO: Windows 
 {
 	this->RepeatsPerSecond = RepeatsPerSecond;
 
-	this->StartTime = GetTickCount64();
+	this->StartTime = GetTickCount();
 	this->MinDiff = 1 / RepeatsPerSecond;
 }
 bool OperationController::GetStatus()
 {
-	this->CurrentTime = GetTickCount64();
+	this->CurrentTime = GetTickCount();
 	ULONGLONG Diff = CurrentTime - StartTime;
 	if (Diff >= MinDiff)
 	{
-		StartTime = GetTickCount64();
+		StartTime = GetTickCount();
 		return true;
 	}
 	else
