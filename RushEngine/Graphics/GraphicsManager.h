@@ -1,5 +1,5 @@
-#ifndef GraphicsManager_H
-#define GraphicsManager_H
+#pragma once
+
 
 #include <vector>
 #include <iostream>
@@ -7,7 +7,7 @@ using namespace std;
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_opengl.h>
-#include "../Objects/ObjectsEngine.h"
+#include "../Objects/Objects.h"
 #include "Components.h"
 class GraphicsManager
 {
@@ -51,4 +51,3 @@ public:
   int GetNearestPowerOfTwo(int OldNumber);
 };
 
-#endif

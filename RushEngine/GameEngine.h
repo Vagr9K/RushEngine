@@ -1,3 +1,5 @@
+#pragma once
+
 #ifdef _MSC_VER
 #pragma comment(lib, "Box2D.lib")
 #pragma comment(lib, "SDL2.lib")

@@ -11,6 +11,9 @@ using namespace std;
 
 #include "EventComponents.h"
 
+#if __cplusplus <= 199711L
+#define to_string(Number) to_string(static_cast<long long>(Number))
+#endif
 
 class SystemEventing : public Events
 {
@@ -23,15 +26,15 @@ public:
 		localtime_s(&TimeNow, &TmNow);
 		string DataToWrite = "\n";
 		DataToWrite += "Date : ";
-		DataToWrite += to_string(static_cast<long long>(TimeNow.tm_mday));
+		DataToWrite += to_string(TimeNow.tm_mday);
 		DataToWrite += "/";
-		DataToWrite += to_string(static_cast<long long>(TimeNow.tm_mon + 1));
+		DataToWrite += to_string(TimeNow.tm_mon + 1);
 		DataToWrite += "/";
-		DataToWrite += to_string(static_cast<long long>(TimeNow.tm_year + 1900));
+		DataToWrite += to_string(TimeNow.tm_year + 1900);
 		DataToWrite += " ";
-		DataToWrite += to_string(static_cast<long long>(TimeNow.tm_hour));
+		DataToWrite += to_string(TimeNow.tm_hour);
 		DataToWrite += ":";
-		DataToWrite += to_string(static_cast<long long>(TimeNow.tm_min));
+		DataToWrite += to_string(TimeNow.tm_min);
 		DataToWrite += "\n";
 		DataToWrite += "Data Type : ";
 		DataToWrite += Type;

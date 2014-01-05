@@ -8,7 +8,7 @@ using namespace std;
 #define WWIDTH 1000
 
 
-#define  BallCount  40
+#define  BallCount  30
 #define  WallCount  4
 
 #define  K 100
@@ -52,12 +52,15 @@ bool FPSCheck(float Step)
 }
 
 
+
+
 int RndGen(int Max)
 {
 	srand(GetTickCount());
 	int Ret = rand() % Max;
 	return Ret;
 }
+
 
 void ModColors()
 {
@@ -68,7 +71,7 @@ void ModColors()
 	case 1:
 		if (NewColor.b < 256)
 		{
-			NewColor.b++;
+			NewColor.b += RndGen(20);
 		}
 		else
 		{
@@ -78,7 +81,7 @@ void ModColors()
 	case 2:
 		if (NewColor.g < 256)
 		{
-			NewColor.g++;
+			NewColor.g += RndGen(20);
 		}
 		else
 		{
@@ -88,7 +91,7 @@ void ModColors()
 	case 3:
 		if (NewColor.r < 256)
 		{
-			NewColor.r++;
+			NewColor.r += RndGen(20);
 		}
 		else
 		{
@@ -102,6 +105,7 @@ void ModColors()
 
 void Init()
 {
+	
 	NewFont = new TextFont("font.ttf");
 	NewFont->PointSize = 30;
 	NewColor.a = 0;
@@ -111,7 +115,7 @@ void Init()
 	NewColorBG.a = 0;
 	NewColorBG.b = 0;
 	NewColorBG.g = 0;
-	NewColorBG.r = 0;
+	NewColorBG.r = 255;
 
 	mainEngine.InitPhysics();
 	mainEngine.InitGraphics(WWIDTH, WHEIGHT, 1, "Test #002.");
@@ -129,8 +133,8 @@ void Init()
 	float Rnd2 = 0;
 	for (int i = 0; i < BallCount; i++)
 	{
-		Rnd1 = (float)RndGen(8)+1.f;
-		Rnd2 = (float)RndGen(8)+1.f;
+		Rnd1 = (float)RndGen(10);
+		Rnd2 = (float)RndGen(10);
 		Balls.at(i) = new Object(&mainEngine, 0, 0);
 		Balls.at(i)->BodyDefinition = new b2BodyDef;
 		Balls.at(i)->BodyDefinition->type = b2_dynamicBody;
@@ -210,7 +214,7 @@ void RenderGraphics()
 	ModColors();
 	GLfloat TextFl = 400.f;
 	string Text = "Text Is changing it's color!";
-	mainEngine.Graphics->DrawerGL->AddToBuffer(TextFl, TextFl, 30.f, 240.f, NewFont, Text, BLENDED, NewColor, NewColor);
+	mainEngine.Graphics->DrawerGL->AddToBuffer(TextFl, TextFl, 30.f, 240.f, NewFont, Text, SOLID, NewColor, NewColor);
 	mainEngine.Graphics->DrawerGL->PushBuffer();
 
 }

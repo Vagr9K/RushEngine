@@ -122,7 +122,7 @@
     <ClInclude Include="GameEngineRAW.h" />
     <ClInclude Include="Objects\Object.h" />
     <ClInclude Include="Objects\ObjectManager.h" />
-    <ClInclude Include="Objects\ObjectsEngine.h" />
+    <ClInclude Include="Objects\Objects.h" />
     <ClInclude Include="Objects\ObjModel.h" />
     <ClInclude Include="Physics\Physics.h" />
   </ItemGroup>
