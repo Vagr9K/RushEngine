@@ -7,10 +7,14 @@ struct IMG
 {
 
 public:
-	int x, y, w, h;
-	double Angle;
+	float x, y, w, h;
+	float Angle;
 	string Source;
-	IMG(int x, int y, int w, int h, double Angle, string Source)
+	IMG()
+	{
+
+	}
+	IMG(float x, float y, float w, float h, float Angle, string Source)
 	{
 		this->x = x;
 		this->y = y;
@@ -25,10 +29,14 @@ public:
 struct TXT
 {
 public:
-	int x, y, w, h;
-	double Angle;
+	float x, y, w, h;
+	float Angle;
 	string Content;
-	TXT(int x, int y, int w, int h, double Angle, string Content)
+	TXT()
+	{
+
+	}
+	TXT(float x, float y, float w, float h, float Angle, string Content)
 	{
 		this->x = x;
 		this->y = y;
@@ -43,10 +51,10 @@ struct IMGDynamic
 {
 
 public:
-	int *x, *y, *w, *h;
-	double* Angle;
+	float *x, *y, *w, *h;
+	float* Angle;
 	string Source;
-	IMGDynamic(int* pX, int* pY, int* pW, int* pH, double* pAngle, string Source)
+	IMGDynamic(float* pX, float* pY, float* pW, float* pH, float* pAngle, string Source)
 	{
 		x = pX;
 		y = pY;
@@ -62,10 +70,10 @@ struct TXTDynamic
 {
 
 public:
-	int *x, *y, *w, *h;
-	double* Angle;
+	float *x, *y, *w, *h;
+	float* Angle;
 	string Content;
-	TXTDynamic(int* pX, int* pY, int* pW, int* pH, double* pAngle, string Content)
+	TXTDynamic(float* pX, float* pY, float* pW, float* pH, float* pAngle, string Content)
 	{
 		x = pX;
 		y = pY;
@@ -76,20 +84,26 @@ public:
 	}
 
 };
-
+class ObjectBASE;
 
 struct LayerElement
 {
 public:
+	ObjectBASE* ObjectPtr;
 	IMG* Image;
 	TXT* Text;
+	float DrawFactor;
 	bool TextExists;
 	bool ImageExists;
+	bool AllowDraw;
 	LayerElement()
 	{
 		TextExists = false;
 		ImageExists = false;
+		DrawFactor = 1.f;
+		AllowDraw = true;
 	}
+
 
 };
 
