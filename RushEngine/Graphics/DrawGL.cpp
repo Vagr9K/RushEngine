@@ -7,6 +7,7 @@ void DrawGL::InitOldCpp ()
 		EventEngine = NULL;
 		DeltaX = 0;
 		DeltaY = 0;
+		BufferStarted = false;
 	}
 bool DrawGL::GLErrorTest (string FuntionName)
         {
@@ -136,12 +137,10 @@ DrawGL::~ DrawGL ()
 		SDL_GL_MakeCurrent(NULL, NULL);
 		SDL_GL_DeleteContext(ContextGL);
 	}
-void DrawGL::SetViewPort (int X, int Y, int Height, int Width)
-    {
-		glViewport(X, Y, Width, Height);
-		//DeltaX = X;
-		//DeltaY = Y;
-		
+void DrawGL::SetView(int X, int Y)
+{
+		DeltaX = X;
+		DeltaY = Y;
 	}
 void DrawGL::StartBuffer ()
         {
@@ -150,6 +149,7 @@ void DrawGL::StartBuffer ()
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		BufferStarted = true;
 	}
 void DrawGL::AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
         {
@@ -208,6 +208,7 @@ void DrawGL::PushBuffer ()
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		
 		SDL_GL_SwapWindow(mainWindow);
+		BufferStarted = false;
 	}
 void DrawGL::ClearAll ()
         {

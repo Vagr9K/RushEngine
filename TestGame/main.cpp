@@ -30,8 +30,6 @@ SDL_Color NewColorBG;
 
 int CamX = 0;
 int CamY = 0;
-int NewHeight = WHEIGHT;
-int NewWidth = WWIDTH;
 SDL_Event* Ev;
 
 int StartTime = GetTickCount();
@@ -238,32 +236,7 @@ void RenderCamera()
 	{
 		CamY = CamY - 40;
 	}
-	else if (A[SDL_SCANCODE_R])
-	{
-		NewHeight += 40;
-	}
-	else if (A[SDL_SCANCODE_V])
-	{
-		NewHeight -= 40;
-	}
-	else if (A[SDL_SCANCODE_F])
-	{
-		NewHeight = WHEIGHT;
-	}
-	else if (A[SDL_SCANCODE_T])
-	{
-		NewWidth += 40;
-	}
-	else if (A[SDL_SCANCODE_B])
-	{
-		NewWidth -= 40;
-	}
-	else if (A[SDL_SCANCODE_G])
-	{
-		NewWidth = WHEIGHT;
-	}
-	
-	mainEngine.Graphics->DrawerGL->SetViewPort(CamX, CamY, NewHeight, NewWidth);
+	mainEngine.Graphics->DrawerGL->SetView(CamX, CamY);
 
 }
 

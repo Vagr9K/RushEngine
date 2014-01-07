@@ -11,6 +11,7 @@ class DrawGL
   int WinWidth;
   int DeltaX;
   int DeltaY;
+  bool BufferStarted;
 private:
   void InitOldCpp ();
   bool GLErrorTest (string FuntionName);
@@ -22,7 +23,7 @@ private:
 public:
   DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height, int Width, EventingEngine * Events);
   ~ DrawGL ();
-  void SetViewPort (int X, int Y, int Height, int Width);
+  void SetView(int X, int Y);
   void StartBuffer ();
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleZ);
