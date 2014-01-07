@@ -7,27 +7,35 @@ void GraphicsManager::InitOldCpp ()
 		EventEngine = NULL;
 		OptimalObjectCount = 0;
 		MaximumTimeFromLastUseOfText = 0;
+		ObjEngine = NULL;
 	}
-GraphicsManager::GraphicsManager(EventingEngine * EventEngine, vector <TextureInfo> * PreLoadedTextGL, vector <string> * PreLoadedPathsGL)
+GraphicsManager::GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine, vector <TextureInfo> * PreLoadedTextGL, vector <string> * PreLoadedPathsGL)
         {
 		InitOldCpp();
 		this->EventEngine = EventEngine;
 		this->PreLoadedPathsGL = PreLoadedPathsGL;
 		this->PreLoadedTextGL = PreLoadedTextGL;
+		this->ObjEngine = ObjEngine;
 	}
-GraphicsManager::GraphicsManager (EventingEngine * EventEngine)
+GraphicsManager::GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine)
         {
 		InitOldCpp();
 		this->EventEngine = EventEngine;
+		this->ObjEngine = ObjEngine;
 		InitPreloaders();
 	}
-GraphicsManager::GraphicsManager (EventingEngine * EventEngine, int OptimalObjectCount)
+GraphicsManager::GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine, int OptimalObjectCount)
         {
 		InitOldCpp();
 		this->EventEngine = EventEngine;
 		this->OptimalObjectCount = OptimalObjectCount;
+		this->ObjEngine = ObjEngine;
 		InitPreloaders();
 	}
+ObjectsEngine* GraphicsManager::GetObjEngine()
+{
+	return this->ObjEngine;
+}
 void GraphicsManager::SetOptimalObjectCount (int OptimalObjectCount)
         {
 		this->OptimalObjectCount = OptimalObjectCount;

@@ -6,11 +6,14 @@ class DrawGL
   SDL_Window * mainWindow;
   GraphicsManager * ManagerGR;
   EventingEngine * EventEngine;
+  ObjectsEngine* ObjEngine;
   SDL_GLContext ContextGL;
   int WinHeight;
   int WinWidth;
   int DeltaX;
   int DeltaY;
+  int BgkC;
+  int WorldLC;
   bool BufferStarted;
 private:
   void InitOldCpp ();
@@ -34,6 +37,7 @@ public:
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Background, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Background, GLfloat AngleZ);
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Background);
+  void SyncObjects();
   void PushBuffer ();
   void ClearAll ();
 };

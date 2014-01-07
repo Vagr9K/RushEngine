@@ -12,6 +12,7 @@ using namespace std;
 class GraphicsManager
 {
   EventingEngine * EventEngine;
+  ObjectsEngine* ObjEngine;
   int OptimalObjectCount;
   vector <TTF_Font*> LoadedFonts;
   vector <string> LoadedFontsPaths;
@@ -24,13 +25,14 @@ class GraphicsManager
 private:
   void InitOldCpp ();
 public:
-	GraphicsManager(EventingEngine * EventEngine, vector <TextureInfo> * PreLoadedTextGL, vector <string> * PreLoadedPathsGL);
-  GraphicsManager (EventingEngine * EventEngine);
-  GraphicsManager (EventingEngine * EventEngine, int OptimalObjectCount);
+  GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine,vector <TextureInfo> * PreLoadedTextGL, vector <string> * PreLoadedPathsGL);
+  GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine);
+  GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine, int OptimalObjectCount);
   void SetOptimalObjectCount (int OptimalObjectCount);
   int GetOptimalObjectCount ();
   void SetMaximumTimeOfText (int Time);
   int GetMaximumTimeOfText ();
+  ObjectsEngine* GetObjEngine();
   void InitPreloaders ();
   void CleanTextTextureGL (int IndexOfItem);
   TTF_Font * LoadFont (string FontPath, int PointSize, int Index = 0);

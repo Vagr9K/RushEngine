@@ -59,14 +59,31 @@ public:
 
 
 	}
-	vector<vector<LayerElement*>*> GetLayers()
+	vector<vector<LayerElement*>*>* GetLayers()
 	{
-		return GrLayers;
+		return &GrLayers;
 	}
 
 	int GetCount()
 	{
 		return InterfaceLayerCount + SpecialLayerCount + WorldCount + BackgroundLayerCount;
+	}
+
+	int GetSpecialLCount()
+	{
+		return SpecialLayerCount;
+	}
+	int GetWorldLCount()
+	{
+		return WorldCount;
+	}
+	int GetInterfaceLCount()
+	{
+		return InterfaceLayerCount;
+	}
+	int GetBackgroundLCount()
+	{
+		return BackgroundLayerCount;
 	}
 
 };

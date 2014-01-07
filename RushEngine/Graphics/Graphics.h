@@ -11,15 +11,15 @@
 
 using namespace std;
 
+#include "../Objects/Objects.h"
+
 #include "DrawGL.h"
 
 //Platform dependent includes!
 #ifdef __WINDOWS__
 #include <SDL_opengl.h>
 #elif __ANDROID__
-//Android includes here!
-#include <SDL_opengles.h>
-
+#include <SDL_opengles2.h>
 #endif 
 
 
@@ -34,7 +34,9 @@ private:
 	bool IsStarted;
 	SDL_Window* mainWindow;
 	EventingEngine* EventEngine;
+	ObjectsEngine* ObjEngine;
 	GraphicsManager* ManagerGR;
+
 	bool GLInited;
 private:
 	void InitOldCpp()
@@ -44,6 +46,7 @@ private:
 		IsStarted = false;
 		mainWindow = NULL;
 		EventEngine = NULL;
+		ObjEngine = NULL;
 		ManagerGR = NULL;
 		GLInited = false;
 	}
@@ -76,7 +79,7 @@ public:
 	{
 		InitOldCpp();
 	}
-	GraphicsEngine(int Width, int Height, int LayerNumber, string Title, EventingEngine* EventsEnginePtr)
+	GraphicsEngine(int Width, int Height, int LayerNumber, string Title, EventingEngine* EventsEnginePtr, ObjectsEngine* ObjEngine)
 	{
 		InitOldCpp();
 		this->Width = Width;
@@ -85,15 +88,16 @@ public:
 		this->Title = Title;
 		this->IsReady = true;
 		this->EventEngine = EventsEnginePtr;
-		
+		this->ObjEngine = ObjEngine;
 	}
-	void Init(int Width, int Height, int LayerNumber, string Title, EventingEngine* EvVar)
+	void Init(int Width, int Height, int LayerNumber, string Title, EventingEngine* EvVar, ObjectsEngine* ObjEngine)
 	{
 		this->Width = Width;
 		this->Height = Height;
 		this->LayerNumber = LayerNumber;
 		this->Title = Title;
 		this->EventEngine = EvVar;
+		this->ObjEngine = ObjEngine;
 		this->IsReady = true;
 		
 	}

@@ -5,9 +5,12 @@ void DrawGL::InitOldCpp ()
 		mainWindow = NULL;
 		ManagerGR = NULL;
 		EventEngine = NULL;
+		ObjEngine = NULL;
 		DeltaX = 0;
 		DeltaY = 0;
 		BufferStarted = false;
+		BgkC = 0;
+		WorldLC = 0;
 	}
 bool DrawGL::GLErrorTest (string FuntionName)
         {
@@ -122,6 +125,7 @@ DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height
         {
 		InitOldCpp();
 		this->ManagerGR = ManagerGR;
+		this->ObjEngine = ManagerGR->GetObjEngine();
 		this->mainWindow = mainWindow;
 		this->EventEngine = Events;
 		this->WinHeight = Height;
@@ -130,6 +134,8 @@ DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height
 		{
 			EventEngine->SystemEvents.GraphicsError("OpenGL initialization error in function DrawGL().");
 		}
+		BgkC = ObjEngine->GetBackgroundLCount();
+		WorldLC = ObjEngine->GetWorldLCount();
 	}
 DrawGL::~ DrawGL ()
         {
@@ -201,6 +207,18 @@ void DrawGL::AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont *
 		Foreground.r = 0;
 		Foreground.g = 0;
 		AddToBufferFROMTEXT(X, Y, H, W, Font, Text, DrawMode, Foreground, Background, 0, 0, 0);
+	}
+void DrawGL::SyncObjects()
+	{
+
+		for (int LayerID = BgkC + 1; LayerID < BgkC + WorldLC; LayerID++)
+		{
+			vector<LayerElement*>* Layer = ObjEngine->GetLayers()->at(LayerID);
+			
+			
+		}
+		
+
 	}
 void DrawGL::PushBuffer ()
         {
