@@ -17,8 +17,8 @@ const float FPS = 1.f / 120.f;
 
 GameEngine mainEngine;
 
-vector<Object*> Balls(BallCount);
-vector<Object*> Walls(WallCount);
+vector<ObjectBASE*> Balls(BallCount);
+vector<ObjectBASE*> Walls(WallCount);
 b2Vec2 Gravity(0.0f, -10.0f);
 b2World World(Gravity);
 b2CircleShape* STDShape;
@@ -35,6 +35,8 @@ SDL_Event* Ev;
 int StartTime = GetTickCount();
 int Now = GetTickCount();
 int Delta = 0;
+
+
 
 bool FPSCheck(float Step)
 {
@@ -54,7 +56,7 @@ bool FPSCheck(float Step)
 
 int RndGen(int Max)
 {
-	srand(GetTickCount());
+	
 	int Ret = rand() % Max;
 	return Ret;
 }
@@ -116,9 +118,10 @@ void Init()
 	NewColorBG.r = 255;
 
 	mainEngine.InitPhysics();
+	mainEngine.InitObjects(0, 0, 1, 0);
 	mainEngine.InitGraphics(WWIDTH, WHEIGHT, 1, "Test #002.");
 	mainEngine.Graphics->Start();
-	mainEngine.InitObjects(0, 0, 1, 0);
+	
 	mainEngine.Physics->AddWorld(&World);
 	STDShape = new b2CircleShape;
 	STDShape->m_p.Set(0.0f, 0.0f);
@@ -127,56 +130,58 @@ void Init()
 	W1->SetAsBox(10.f, 5.f);
 	W2 = new b2PolygonShape;
 	W2->SetAsBox(5.f, 10.f);
-	float Rnd1 = 0;
-	float Rnd2 = 0;
+	b2BodyDef* BodyDefinitionBall = new b2BodyDef;
+	BodyDefinitionBall->type = b2_dynamicBody;
+	b2FixtureDef* FixtureDefBall = new b2FixtureDef;
+	FixtureDefBall->restitution = 1.1f;
+	FixtureDefBall->shape = STDShape;
+	float Rnd1 = (float)RndGen(9)+1.f;
+	float Rnd2 = (float)RndGen(9) + 1.f;
 	for (int i = 0; i < BallCount; i++)
 	{
-		Rnd1 = (float)RndGen(10);
-		Rnd2 = (float)RndGen(10);
-		Balls.at(i) = new Object(&mainEngine, 0, 0);
-		Balls.at(i)->BodyDefinition = new b2BodyDef;
-		Balls.at(i)->BodyDefinition->type = b2_dynamicBody;
-		Balls.at(i)->BodyDefinition->position.Set(Rnd1, Rnd2);
-		Balls.at(i)->CreateBody();
-		Balls.at(i)->FixtureDefinition = new b2FixtureDef;
-		Balls.at(i)->FixtureDefinition->restitution = 1.1f;
-		Balls.at(i)->FixtureDefinition->shape = STDShape;
-		Balls.at(i)->CreateFixture();
+		BodyDefinitionBall->position.Set(Rnd1, Rnd2);
+		Rnd1 = (float)RndGen(9) + 1.f;
+		Rnd2 = (float)RndGen(9) + 1.f;
+		Balls.at(i) = new ObjectBASE(&World, mainEngine.Objects->ManagerDB.at(0), mainEngine.getEventingEngine(), true, true);
+		Balls.at(i)->CreateBody(BodyDefinitionBall);
+		Balls.at(i)->CreateFixture(FixtureDefBall);
+		Balls.at(i)->SetImageSource("Ball.png");
+		Balls.at(i)->ForceLocalFactor = true;
+		Balls.at(i)->SyncFactor = K;
 
 
 	}
-
+	b2BodyDef* BodyDefinitionWall = new b2BodyDef;
+	BodyDefinitionWall->type = b2_kinematicBody;
+	b2FixtureDef* FixtureDefWall = new b2FixtureDef;
+	FixtureDefWall->restitution = 1.f;
 	for (int j = 0; j < WallCount; j++)
 	{
-		Walls.at(j) = new Object(&mainEngine, 0, 0);
-		Walls.at(j)->BodyDefinition = new b2BodyDef;
-		Walls.at(j)->BodyDefinition->type = b2_kinematicBody;
-
-
-		Walls.at(j)->FixtureDefinition = new b2FixtureDef;
-		Walls.at(j)->FixtureDefinition->restitution = 1.0f;
-
+		Walls.at(j) = new ObjectBASE(&World, mainEngine.Objects->ManagerDB.at(0), mainEngine.getEventingEngine(), true, true);
+		Walls.at(j)->SetImageSource("Wall.png");
+		Walls.at(j)->SyncFactor = K;
+		Walls.at(j)->ForceLocalFactor = true;
 	}
 
-	Walls.at(0)->BodyDefinition->position.Set(5.f, -2.5f);
-	Walls.at(0)->CreateBody();
-	Walls.at(0)->FixtureDefinition->shape = W1;
-	Walls.at(0)->CreateFixture();
-	Walls.at(1)->BodyDefinition->position.Set(-2.5f, 5.f);
-	Walls.at(1)->CreateBody();
-	Walls.at(1)->FixtureDefinition->shape = W2;
-	Walls.at(1)->CreateFixture();
-	Walls.at(2)->BodyDefinition->position.Set(5.f, 12.5f);
-	Walls.at(2)->CreateBody();
-	Walls.at(2)->FixtureDefinition->shape = W1;
-	Walls.at(2)->CreateFixture();
-	Walls.at(3)->BodyDefinition->position.Set(12.5f, 5.f);
-	Walls.at(3)->CreateBody();
-	Walls.at(3)->FixtureDefinition->shape = W2;
-	Walls.at(3)->CreateFixture();
+	BodyDefinitionWall->position.Set(5.f, -2.5f);
+	Walls.at(0)->CreateBody(BodyDefinitionWall);
+	FixtureDefWall->shape = W1;
+	Walls.at(0)->CreateFixture(FixtureDefWall);
+	BodyDefinitionWall->position.Set(-2.5f, 5.f);
+	Walls.at(1)->CreateBody(BodyDefinitionWall);
+	FixtureDefWall->shape = W2;
+	Walls.at(1)->CreateFixture(FixtureDefWall);
+	BodyDefinitionWall->position.Set(5.f, 12.5f);
+	Walls.at(2)->CreateBody(BodyDefinitionWall);
+	FixtureDefWall->shape = W1;
+	Walls.at(2)->CreateFixture(FixtureDefWall);
+	BodyDefinitionWall->position.Set(12.5f, 5.f);
+	Walls.at(3)->CreateBody(BodyDefinitionWall);
+	FixtureDefWall->shape = W2;
+	Walls.at(3)->CreateFixture(FixtureDefWall);
 
 	Ev = new SDL_Event;
-
+	mainEngine.Objects->ManagerDB.at(0)->PushChanges();
 }
 
 
@@ -190,29 +195,14 @@ void RenderPhysics()
 
 void RenderGraphics()
 {
-	float Angle = 0;
-	b2Vec2 Pos;
+	
 	mainEngine.Graphics->DrawerGL->StartBuffer();
-	for (int i = 0; i < BallCount; i++)
-	{
-		Pos = Balls.at(i)->Body->GetPosition();
-		Angle = Balls.at(i)->Body->GetAngle();
-		mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x*K, WHEIGHT - Pos.y*K, 0.2*K, 0.2*K, "Ball.png", Angle);
-	}
-
-	Pos = Walls.at(0)->Body->GetPosition();
-	mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 10 * K, 5 * K, "Wall.png");
-	Pos = Walls.at(1)->Body->GetPosition();
-	mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 5 * K, 10 * K, "Wall.png");
-	Pos = Walls.at(2)->Body->GetPosition();
-	mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 10 * K, 5 * K, "Wall.png");
-	Pos = Walls.at(3)->Body->GetPosition();
-	mainEngine.Graphics->DrawerGL->AddToBuffer(Pos.x * K, WHEIGHT - Pos.y * K, 5 * K, 10 * K, "Wall.png");
-
 	ModColors();
 	GLfloat TextFl = 400.f;
 	string Text = "Text Is changing it's color!";
 	mainEngine.Graphics->DrawerGL->AddToBuffer(TextFl, TextFl, 30.f, 240.f, NewFont, Text, SOLID, NewColor, NewColor);
+	
+	mainEngine.Graphics->DrawerGL->SyncObjects();
 	mainEngine.Graphics->DrawerGL->PushBuffer();
 
 }

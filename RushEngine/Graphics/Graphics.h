@@ -134,7 +134,7 @@ public:
 			return false;
 		}
 		
-		this->ManagerGR = new GraphicsManager(EventEngine);
+		this->ManagerGR = new GraphicsManager(EventEngine, ObjEngine);
 
 		InitGL();
 

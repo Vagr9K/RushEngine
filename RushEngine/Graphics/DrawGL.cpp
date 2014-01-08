@@ -208,15 +208,48 @@ void DrawGL::AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont *
 		Foreground.g = 0;
 		AddToBufferFROMTEXT(X, Y, H, W, Font, Text, DrawMode, Foreground, Background, 0, 0, 0);
 	}
-void DrawGL::SyncObjects()
+void DrawGL::SyncObjects(bool AutoPushBuffer)
 	{
-
-		for (int LayerID = BgkC + 1; LayerID < BgkC + WorldLC; LayerID++)
+		if (BufferStarted == false)
 		{
-			vector<LayerElement*>* Layer = ObjEngine->GetLayers()->at(LayerID);
+			StartBuffer();
+		}
+		int LayerID = 0;
+		LayerElement* CurrentElement = NULL;
+		for (LayerID = BgkC; LayerID < BgkC + WorldLC; LayerID++)
+		{
 			
+			vector<LayerElement*>* Layer = ObjEngine->GetLayers()->at(LayerID);
+			for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
+			{
+				CurrentElement = Layer->at(LayerElementID);
+				CurrentElement->ObjectPtr->SyncData();
+				if (CurrentElement->ImageExists == true)
+				{
+					IMG* Image = CurrentElement->Image;
+					float DrawFactor = CurrentElement->DrawFactor;
+					float X = WinWidth - (GLfloat)Image->x*DrawFactor;
+					float Y = WinHeight - (GLfloat)Image->y*DrawFactor;
+					float H = (GLfloat)Image->h*DrawFactor;
+					float W = (GLfloat)Image->w*DrawFactor;
+					string Path = Image->Source;
+					AddToBuffer(X, Y, H, W, Path);
+				}
+				if (CurrentElement->TextExists == true)
+				{
+					TXT* Text = CurrentElement->Text;
+					//AddToBuffer(Text->x, Text->y, Text->h, Text->w, Text->Content, );
+				}
+				
+			}
+			LayerID++;
 			
 		}
+		if (AutoPushBuffer == true)
+		{
+			PushBuffer();
+		}
+		
 		
 
 	}

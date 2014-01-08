@@ -86,8 +86,9 @@ protected:
 		else if (ShapeType == b2Shape::e_polygon)
 		{
 			b2PolygonShape* PolShape = (b2PolygonShape*)CShape;
-			float MaxX, MinX, MaxY, MinY;
+			
 			b2Vec2 Coords = PolShape->GetVertex(0);
+			float MaxX = Coords.x, MinX = Coords.x, MaxY = Coords.y, MinY = Coords.y;
 			for (int i = 1; i < PolShape->GetVertexCount();i++)
 			{
 				Coords = PolShape->GetVertex(i);
@@ -132,7 +133,7 @@ protected:
 		
 	}
 
-		void SyncImage(SYNCPATH SyncTo)
+		void SyncPhysicsData(SYNCPATH SyncTo)
 		{
 			b2Vec2 Pos = Body->GetPosition();
 			if (ForceLocalFactor)
@@ -383,7 +384,11 @@ public:
 		ObjElement->Text = NULL;
 		ObjElement->TextExists = false;
 	}
-
+	void SyncData()
+	{
+		SyncObjectSizeData(IMAGE);
+		SyncPhysicsData(IMAGE);
+	}
 
 	
 

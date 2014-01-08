@@ -12,6 +12,12 @@ private:
 	
 	string Errors;
 	EventingEngine EventEngine;
+	void InitOldCpp()
+	{
+		Physics = NULL;
+		Objects = NULL;
+		Graphics = NULL;
+	}
 
 public:
 	PhysicsEngine* Physics;
@@ -22,10 +28,7 @@ public:
 	{
 		Physics = new PhysicsEngine;
 	}
-	void DeletePhysics()
-	{
 
-	}
 	void InitObjects(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackGroundLayerCount)
 	{
 		Objects = new ObjectsEngine(InterfaceLayerCount, SpecialLayerCount, WorldCount, BackGroundLayerCount);
@@ -35,10 +38,7 @@ public:
 	{
 		Objects = new ObjectsEngine(InterfaceLayerCount, SpecialLayerCount, WorldCount, BackGroundLayerCount, OptimalObjectsCount);
 	}
-	void DeletObjects()
-	{
 
-	}
 	GameEngine()
 	{ 
 		
@@ -50,7 +50,12 @@ public:
 		this->LayerNumber = LayerNumber;
 		this->Title = Title;
 		Graphics = new GraphicsEngine;
-		Graphics->Init(Width, Height, LayerNumber, Title, &EventEngine);
+		if (Objects == NULL)
+		{
+			EventEngine.SystemEvents.GraphicsError("Objects engine is not initialized.");
+		}
+		
+		Graphics->Init(Width, Height, LayerNumber, Title, &EventEngine, Objects);
 		
 
 	}
