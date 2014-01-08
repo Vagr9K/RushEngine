@@ -25,8 +25,8 @@ b2CircleShape* STDShape;
 b2PolygonShape* W1;
 b2PolygonShape* W2;
 TextFont* NewFont;
-SDL_Color NewColor;
-SDL_Color NewColorBG;
+SDL_Color* NewColor = new SDL_Color;
+SDL_Color* NewColorBG = new SDL_Color;
 
 int CamX = 0;
 int CamY = 0;
@@ -36,7 +36,7 @@ int StartTime = GetTickCount();
 int Now = GetTickCount();
 int Delta = 0;
 
-
+SYNCPATH SYNCMODE = IMAGE;
 
 bool FPSCheck(float Step)
 {
@@ -69,33 +69,33 @@ void ModColors()
 	{
 
 	case 1:
-		if (NewColor.b < 256)
+		if (NewColor->b < 256)
 		{
-			NewColor.b += RndGen(20);
+			NewColor->b += RndGen(20);
 		}
 		else
 		{
-			NewColor.b = 0;
+			NewColor->b = 0;
 		}
 		break;
 	case 2:
-		if (NewColor.g < 256)
+		if (NewColor->g < 256)
 		{
-			NewColor.g += RndGen(20);
+			NewColor->g += RndGen(20);
 		}
 		else
 		{
-			NewColor.g = 0;
+			NewColor->g = 0;
 		}
 		break;
 	case 3:
-		if (NewColor.r < 256)
+		if (NewColor->r < 256)
 		{
-			NewColor.r += RndGen(20);
+			NewColor->r += RndGen(20);
 		}
 		else
 		{
-			NewColor.r = 0;
+			NewColor->r = 0;
 		}
 		break;
 	default:
@@ -108,20 +108,21 @@ void Init()
 	
 	NewFont = new TextFont("font.ttf");
 	NewFont->PointSize = 30;
-	NewColor.a = 0;
-	NewColor.b = 255;
-	NewColor.g = 0;
-	NewColor.r = 0;
-	NewColorBG.a = 0;
-	NewColorBG.b = 0;
-	NewColorBG.g = 0;
-	NewColorBG.r = 255;
+	NewColor->a = 0;
+	NewColor->b = 255;
+	NewColor->g = 0;
+	NewColor->r = 0;
+	NewColorBG->a = 0;
+	NewColorBG->b = 0;
+	NewColorBG->g = 0;
+	NewColorBG->r = 255;
 
 	mainEngine.InitPhysics();
 	mainEngine.InitObjects(0, 0, 1, 0);
-	mainEngine.InitGraphics(WWIDTH, WHEIGHT, 1, "Test #002.");
+	mainEngine.InitGraphics(WWIDTH, WHEIGHT, "Test #002.");
+
 	mainEngine.Graphics->Start();
-	
+	mainEngine.Graphics->SetTextMaximumTime(K);
 	mainEngine.Physics->AddWorld(&World);
 	STDShape = new b2CircleShape;
 	STDShape->m_p.Set(0.0f, 0.0f);
@@ -134,6 +135,7 @@ void Init()
 	BodyDefinitionBall->type = b2_dynamicBody;
 	b2FixtureDef* FixtureDefBall = new b2FixtureDef;
 	FixtureDefBall->restitution = 1.1f;
+	FixtureDefBall->friction = 0.5f;
 	FixtureDefBall->shape = STDShape;
 	float Rnd1 = (float)RndGen(9)+1.f;
 	float Rnd2 = (float)RndGen(9) + 1.f;
@@ -142,13 +144,16 @@ void Init()
 		BodyDefinitionBall->position.Set(Rnd1, Rnd2);
 		Rnd1 = (float)RndGen(9) + 1.f;
 		Rnd2 = (float)RndGen(9) + 1.f;
-		Balls.at(i) = new ObjectBASE(&World, mainEngine.Objects->ManagerDB.at(0), mainEngine.getEventingEngine(), true, true);
+		Balls.at(i) = new ObjectBASE(&World, mainEngine.getObjects()->ManagerDB.at(0), mainEngine.getEventingEngine(), true, true);
 		Balls.at(i)->CreateBody(BodyDefinitionBall);
 		Balls.at(i)->CreateFixture(FixtureDefBall);
 		Balls.at(i)->SetImageSource("Ball.png");
 		Balls.at(i)->ForceLocalFactor = true;
 		Balls.at(i)->SyncFactor = K;
-
+		Balls.at(i)->SetTextFont(NewFont);
+		Balls.at(i)->SetTextColorFG(NewColor);
+		Balls.at(i)->SetTextColorBG(NewColorBG);
+		Balls.at(i)->SetTextContent(string(1, char(RndGen(255))));
 
 	}
 	b2BodyDef* BodyDefinitionWall = new b2BodyDef;
@@ -157,7 +162,7 @@ void Init()
 	FixtureDefWall->restitution = 1.f;
 	for (int j = 0; j < WallCount; j++)
 	{
-		Walls.at(j) = new ObjectBASE(&World, mainEngine.Objects->ManagerDB.at(0), mainEngine.getEventingEngine(), true, true);
+		Walls.at(j) = new ObjectBASE(&World, mainEngine.getObjects()->ManagerDB.at(0), mainEngine.getEventingEngine(), true, true);
 		Walls.at(j)->SetImageSource("Wall.png");
 		Walls.at(j)->SyncFactor = K;
 		Walls.at(j)->ForceLocalFactor = true;
@@ -181,7 +186,7 @@ void Init()
 	Walls.at(3)->CreateFixture(FixtureDefWall);
 
 	Ev = new SDL_Event;
-	mainEngine.Objects->ManagerDB.at(0)->PushChanges();
+	mainEngine.getObjects()->ManagerDB.at(0)->PushChanges();
 }
 
 
@@ -195,15 +200,10 @@ void RenderPhysics()
 
 void RenderGraphics()
 {
-	
-	mainEngine.Graphics->DrawerGL->StartBuffer();
 	ModColors();
-	GLfloat TextFl = 400.f;
-	string Text = "Text Is changing it's color!";
-	mainEngine.Graphics->DrawerGL->AddToBuffer(TextFl, TextFl, 30.f, 240.f, NewFont, Text, SOLID, NewColor, NewColor);
 	
-	mainEngine.Graphics->DrawerGL->SyncObjects();
-	mainEngine.Graphics->DrawerGL->PushBuffer();
+	mainEngine.Graphics->DrawerGL->SyncObjects(true, SYNCMODE);
+	
 
 }
 
@@ -225,6 +225,18 @@ void RenderCamera()
 	else if (A[SDL_SCANCODE_DOWN])
 	{
 		CamY = CamY - 40;
+	}
+	else if (A[SDL_SCANCODE_1])
+	{
+		SYNCMODE = ALL;
+	}
+	else if (A[SDL_SCANCODE_2])
+	{
+		SYNCMODE = IMAGE;
+	}
+	else if (A[SDL_SCANCODE_3])
+	{
+		SYNCMODE = TEXT;
 	}
 	mainEngine.Graphics->DrawerGL->SetView(CamX, CamY);
 

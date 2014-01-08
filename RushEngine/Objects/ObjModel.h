@@ -3,6 +3,8 @@
 using namespace std;
 #include <Box2D/Box2D.h>
 
+#include "../Graphics/Components.h"
+
 struct IMG
 {
 
@@ -32,57 +34,30 @@ public:
 	float x, y, w, h;
 	float Angle;
 	string Content;
+	TextFont* Font;
+	SDL_Color* Foreground;
+	SDL_Color* Background;
+	Mode DrawMode;
 	TXT()
 	{
-
+		Font = NULL;
+		Content = "No content was added!";
+		DrawMode = SOLID;
 	}
-	TXT(float x, float y, float w, float h, float Angle, string Content)
+	TXT(float x, float y, float w, float h, float Angle,TextFont* Font, Mode DrawMode,string Content)
 	{
 		this->x = x;
 		this->y = y;
 		this->w = w;
 		this->h = h;
 		this->Angle = Angle;
+		this->Font = Font;
 		this->Content = Content;
+		this->DrawMode = DrawMode;
+		Foreground = NULL;
+		Background = NULL;
 	}
 	
-};
-struct IMGDynamic
-{
-
-public:
-	float *x, *y, *w, *h;
-	float* Angle;
-	string Source;
-	IMGDynamic(float* pX, float* pY, float* pW, float* pH, float* pAngle, string Source)
-	{
-		x = pX;
-		y = pY;
-		w = pW;
-		h = pH;
-		Angle = Angle;
-		this->Source = Source;
-	}
-
-};
-
-struct TXTDynamic
-{
-
-public:
-	float *x, *y, *w, *h;
-	float* Angle;
-	string Content;
-	TXTDynamic(float* pX, float* pY, float* pW, float* pH, float* pAngle, string Content)
-	{
-		x = pX;
-		y = pY;
-		w = pW;
-		h = pH;
-		Angle = Angle;
-		this->Content = Content;
-	}
-
 };
 class ObjectBASE;
 
@@ -100,10 +75,16 @@ public:
 	{
 		TextExists = false;
 		ImageExists = false;
-		DrawFactor = 1.f;
+		DrawFactor = 0.f;
 		AllowDraw = true;
 	}
 
 
 };
 
+enum SYNCPATH
+{
+	IMAGE,
+	TEXT,
+	ALL,
+};

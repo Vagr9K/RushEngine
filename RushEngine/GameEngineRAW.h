@@ -9,7 +9,7 @@ class GameEngine
 private:
 	string Title;
 	int h, w, LayerNumber;
-	
+	ObjectsEngine* Objects;
 	string Errors;
 	EventingEngine EventEngine;
 	void InitOldCpp()
@@ -19,9 +19,9 @@ private:
 		Graphics = NULL;
 	}
 
+	
 public:
 	PhysicsEngine* Physics;
-	ObjectsEngine* Objects;
 	GraphicsEngine* Graphics;
 
 	void InitPhysics()
@@ -34,6 +34,7 @@ public:
 		Objects = new ObjectsEngine(InterfaceLayerCount, SpecialLayerCount, WorldCount, BackGroundLayerCount);
 	}
 	
+	
 	void InitObjects(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackGroundLayerCount, int OptimalObjectsCount)
 	{
 		Objects = new ObjectsEngine(InterfaceLayerCount, SpecialLayerCount, WorldCount, BackGroundLayerCount, OptimalObjectsCount);
@@ -43,11 +44,10 @@ public:
 	{ 
 		
 	}
-	void InitGraphics(int Width, int Height, int LayerNumber, string Title)
+	void InitGraphics(int Width, int Height, string Title)
 	{
 		this->h = Height;
 		this->w = Width;
-		this->LayerNumber = LayerNumber;
 		this->Title = Title;
 		Graphics = new GraphicsEngine;
 		if (Objects == NULL)
@@ -70,6 +70,10 @@ public:
 	EventingEngine* getEventingEngine()
 	{
 		return &EventEngine;
+	}
+	ObjectsEngine* getObjects()
+	{
+		return Objects;
 	}
 
 };

@@ -15,6 +15,7 @@ class DrawGL
   int BgkC;
   int WorldLC;
   bool BufferStarted;
+  float GlobalDrawFactor;
 private:
   void InitOldCpp ();
   bool GLErrorTest (string FuntionName);
@@ -27,6 +28,8 @@ public:
   DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height, int Width, EventingEngine * Events);
   ~ DrawGL ();
   void SetView(int X, int Y);
+  void SetSyncFactor(float Factor);
+  float GetSyncFactor();
   void StartBuffer ();
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleZ);
@@ -37,7 +40,7 @@ public:
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Background, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Background, GLfloat AngleZ);
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Background);
-  void SyncObjects(bool AutoPushBuffer = false);
+  void SyncObjects(bool AutoPushBuffer = false, SYNCPATH SyncTo = ALL);
   void PushBuffer ();
   void ClearAll ();
 };

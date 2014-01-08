@@ -20,6 +20,7 @@ int GraphicsManager::GetNearestPowerOfTwo(int OldNumber)
 
 TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
         {
+		bool TwoError = false;
 		bool CleanSurface = false;
 		GLuint Texture;
 		GLuint Colors = 4;
@@ -29,6 +30,7 @@ TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 #define PowerChecker(n) !(n&(n-1))
 		if (!PowerChecker(Surface->w) || !PowerChecker(Surface->h))
 		{
+			
 			ImageW = Surface->w;
 			ImageH = Surface->h;
 			TextureW = GetNearestPowerOfTwo(ImageW);
@@ -120,7 +122,9 @@ TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 		}
 		else
 		{
-			EventEngine->SystemEvents.GraphicsError("Image format not supported at function GenerateTexture().");
+			IMGFormat = GL_RGBA;
+			TwoError = true;
+			
 		}
 		glGenTextures(1, &Texture);
 		glBindTexture(GL_TEXTURE_2D, Texture);
@@ -129,8 +133,13 @@ TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 		glTexImage2D(GL_TEXTURE_2D, 0, Colors, TextureW, TextureH, 0, IMGFormat, GL_UNSIGNED_BYTE, Surface->pixels);
 
 		if (glGetError() != GL_NO_ERROR)
-		{
+		{   if (TwoError)
+			{
+				EventEngine->SystemEvents.GraphicsError("Image format not supported at function GenerateTexture().");
+			}
 			EventEngine->SystemEvents.GraphicsError("OpenGL error in function GenerateTexture() : " + glGetError());
+			
+			
 		}
 		TextureInfo TextureData;
 		TextureData.KxKy.KX = KX;

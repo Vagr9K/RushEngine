@@ -142,7 +142,10 @@ public:
 		return true;
 	}
 	
-	
+	void SetTextMaximumTime(int Time)
+	{
+		ManagerGR->SetMaximumTimeOfText(Time);
+	}
 
 	bool Stop()
 	{

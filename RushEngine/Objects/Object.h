@@ -13,14 +13,10 @@ protected:
 	int PhysicsWorldIndex;
 	int ObjectsIndex;
 	bool ObjElementInDB;
-	EventingEngine* EventingEnginePtr;
+	EventingEngine* EventingEnginePtr; 
+	
 public:
-	enum SYNCPATH
-	{
-		IMAGE,
-		TEXT,
-		ALL,
-	};
+	
 
 
 protected:
@@ -55,6 +51,8 @@ protected:
 		ForceLocalFactor = false;
 		SyncGraphics = false;
 		AllowDraw = false;
+		SizeDataSyncedImage = false;
+		SizeDataSyncedText = false;
 	}
 	void InitObjElement()
 	{
@@ -68,7 +66,7 @@ protected:
 			ObjElement->Image = new IMG();
 			ObjElement->ImageExists = true;
 			ObjElement->Text = new TXT();
-			ObjElement->TextExists = true;
+			ObjElement->TextExists = false;
 			ObjElement->ObjectPtr = this;
 		}
 	}
@@ -116,18 +114,24 @@ protected:
 		switch(SyncTo)
 		{
 			case IMAGE:
-			ObjElement->Image->w = w;
-			ObjElement->Image->h = h;
+				SizeDataSyncedImage = true;
+				ObjElement->Image->w = w;
+				ObjElement->Image->h = h;
+				
 			break;
 			case TEXT:
-			ObjElement->Text->w = w;
-			ObjElement->Text->h = h;
+				SizeDataSyncedText = true;
+				ObjElement->Text->w = w;
+				ObjElement->Text->h = h;
+				
 			break;
 			case ALL:
 			ObjElement->Image->w = w;
 			ObjElement->Image->h = h;
+			SizeDataSyncedImage = true;
 			ObjElement->Text->w = w;
 			ObjElement->Text->h = h;
+			SizeDataSyncedText = true;
 			break;
 		}
 		
@@ -142,7 +146,7 @@ protected:
 			}
 			else
 			{
-				ObjElement->DrawFactor =  1.f;
+				ObjElement->DrawFactor =  0.f;
 			}
 			ObjElement->AllowDraw = AllowDraw;
 			switch(SyncTo)
@@ -172,7 +176,8 @@ protected:
 
 protected:
 	LayerElement *ObjElement;
-	
+	bool SizeDataSyncedImage;
+	bool SizeDataSyncedText;
 public:
 	b2Body* Body;
 	b2Fixture* Fixture;
@@ -181,7 +186,7 @@ public:
 	float SyncFactor;
 	bool ForceLocalFactor;
 	bool AllowDraw;
-
+	
 	
 
 
@@ -355,7 +360,11 @@ public:
 			DeleteText();
 		}
 		ObjElement->Text = Text;
-		ObjElement->TextExists = true;
+		if (Text->Font != NULL)
+		{
+			ObjElement->TextExists = true;
+		}
+		
 	}
 
 	void DeleteImage()
@@ -384,12 +393,35 @@ public:
 		ObjElement->Text = NULL;
 		ObjElement->TextExists = false;
 	}
-	void SyncData()
+	void SetTextFont(TextFont* Font)
 	{
-		SyncObjectSizeData(IMAGE);
-		SyncPhysicsData(IMAGE);
+		ObjElement->Text->Font = Font;
+		ObjElement->TextExists = true;
 	}
-
+	void SyncData(SYNCPATH SyncTo)
+	{
+		if (!SizeDataSyncedImage || !SizeDataSyncedText)
+		{
+			SyncObjectSizeData(SyncTo);
+		}
+		SyncPhysicsData(SyncTo);
+	}
+	void SetTextColorFG(SDL_Color* Foreground)
+	{
+		ObjElement->Text->Foreground = Foreground;
+	}
+	void SetTextColorBG(SDL_Color* Background)
+	{
+		ObjElement->Text->Background = Background;
+	}
+	void SetTextContent(string Content)
+	{
+		ObjElement->Text->Content = Content;
+	}
+	void SetTextDrawMode(Mode DrawMode)
+	{
+		ObjElement->Text->DrawMode = DrawMode;
+	}
 	
 
 };

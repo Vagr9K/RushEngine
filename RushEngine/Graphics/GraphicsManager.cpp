@@ -6,7 +6,7 @@ void GraphicsManager::InitOldCpp ()
 		PreLoadedTextGL = NULL;
 		EventEngine = NULL;
 		OptimalObjectCount = 0;
-		MaximumTimeFromLastUseOfText = 0;
+		MaximumTimeFromLastUseOfText = 10;
 		ObjEngine = NULL;
 	}
 GraphicsManager::GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine, vector <TextureInfo> * PreLoadedTextGL, vector <string> * PreLoadedPathsGL)

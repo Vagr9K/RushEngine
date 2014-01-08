@@ -1,8 +1,7 @@
+#pragma once
+
 #include <string>
-
 #include <windows.h>
-
-
 #include <ctime>
 
 #include <SDL_opengl.h>
