@@ -1,12 +1,12 @@
 #include "ObjModel.h"
 
-
+template <class ElementType>
 class ObjDBManager
 {
 private:
-	vector<LayerElement*>* Source;
-	vector<LayerElement*>* StoreForDelete;
-	vector<LayerElement*>* StoreForAdd;
+	vector<ElementType*>* Source;
+	vector<ElementType*>* StoreForDelete;
+	vector<ElementType*>* StoreForAdd;
 	int AddCount;
 	int DeleteCount;
 	int OptObjCount;
@@ -22,12 +22,12 @@ private:
 
 public:
 
-	ObjDBManager(vector<LayerElement*>* Source)
+	ObjDBManager(vector<ElementType*>* Source)
 	{
 		InitOldCpp();
 		this->Source = Source;
 	}
-	ObjDBManager(vector<LayerElement*>* Source, int OptimalObjectCount)
+	ObjDBManager(vector<ElementType*>* Source, int OptimalObjectCount)
 	{
 		InitOldCpp();
 		this->Source = Source;
@@ -48,7 +48,7 @@ public:
 	{
 		return OptObjCount;
 	}
-	void SetSource(vector<LayerElement*>* Source)
+	void SetSource(vector<ElementType*>* Source)
 	{
 		CleanStore();
 		Init();
@@ -56,15 +56,15 @@ public:
 	}
 	void Init()
 	{
-		StoreForAdd = new vector<LayerElement*>;
+		StoreForAdd = new vector<ElementType*>;
 		StoreForAdd->reserve(OptObjCount);
-		StoreForDelete = new vector<LayerElement*>;
+		StoreForDelete = new vector<ElementType*>;
 		StoreForDelete->reserve(OptObjCount);
 
 		Inited = true;
 
 	}
-	void AddToDelete(LayerElement* DeleteElement)
+	void AddToDelete(ElementType* DeleteElement)
 	{
 		if (Inited == false)
 		{
@@ -75,7 +75,7 @@ public:
 
 	}
 
-	void AddToCreate(LayerElement* NewElement)
+	void AddToCreate(ElementType* NewElement)
 	{
 		if (Inited == false)
 		{

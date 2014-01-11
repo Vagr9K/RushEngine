@@ -8,7 +8,7 @@ using namespace std;
 #define WWIDTH 1000
 
 
-#define  BallCount  30
+#define  BallCount  50
 #define  WallCount  4
 
 #define  K 100
@@ -135,7 +135,7 @@ void Init()
 	BodyDefinitionBall->type = b2_dynamicBody;
 	b2FixtureDef* FixtureDefBall = new b2FixtureDef;
 	FixtureDefBall->restitution = 1.1f;
-	FixtureDefBall->friction = 0.5f;
+	FixtureDefBall->friction = 0.1f;
 	FixtureDefBall->shape = STDShape;
 	float Rnd1 = (float)RndGen(9)+1.f;
 	float Rnd2 = (float)RndGen(9) + 1.f;

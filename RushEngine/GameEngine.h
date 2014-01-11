@@ -17,7 +17,7 @@
 class Object
 {
 	GameEngine* mainEngine;
-	ObjDBManager *DatabaseManager;
+	ObjDBManager<LayerElement> *DatabaseManager;
 	PhysicsEngine *ObjPhysics;
 	b2World *ObjWorld;
 	int PhysicsWorldIndex;
@@ -102,7 +102,7 @@ public:
 		DestroyBody();
 
 	}
-	ObjDBManager *GetDBManager()
+	ObjDBManager<LayerElement> *GetDBManager()
 	{
 		return DatabaseManager;
 	}

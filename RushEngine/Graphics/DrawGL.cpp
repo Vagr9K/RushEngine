@@ -225,53 +225,7 @@ void DrawGL::SyncObjects(bool AutoPushBuffer, SYNCPATH SyncTo)
 			{
 				CurrentElement = Layer->at(LayerElementID);
 				CurrentElement->ObjectPtr->SyncData(SyncTo);
-				if (CurrentElement->DrawFactor > 0.f)
-				{
-					DrawFactor = CurrentElement->DrawFactor;
-				}
-				else
-				{
-					DrawFactor = GlobalDrawFactor;
-				}
-				if (CurrentElement->ImageExists == true && (SyncTo == IMAGE || SyncTo == ALL))
-				{
-					IMG* Image = CurrentElement->Image;
-					float X = WinWidth - (GLfloat)Image->x*DrawFactor;
-					float Y = WinHeight - (GLfloat)Image->y*DrawFactor;
-					float H = (GLfloat)Image->h*DrawFactor;
-					float W = (GLfloat)Image->w*DrawFactor;
-					string Path = Image->Source;
-					AddToBuffer(X, Y, H, W, Path);
-				}
-				if (CurrentElement->TextExists == true && (SyncTo == TEXT || SyncTo == ALL))
-				{
-					TXT* Text = CurrentElement->Text;
-					float X = WinWidth - (GLfloat)Text->x*DrawFactor;
-					float Y = WinHeight - (GLfloat)Text->y*DrawFactor;
-					float H = (GLfloat)Text->h*DrawFactor;
-					float W = (GLfloat)Text->w*DrawFactor;
-					TextFont* Font = Text->Font;
-					string Contents = Text->Content;
-					SDL_Color* Foreground = Text->Foreground;
-					SDL_Color* Background = Text->Background;
-					Mode DrawMode = Text->DrawMode;
-					if (Foreground == NULL)
-					{
-						Foreground = new SDL_Color();
-						Foreground->a = 0;
-						Foreground->g = 255;
-						Foreground->b = 255;
-						Foreground->r = 255;
-					}
-					if (Background == NULL)
-					{
-						Background->a = 0;
-						Background->b = 0;
-						Background->r = 0;
-						Background->g = 0;
-					}
-					AddToBuffer(X, Y, H, W, Font, Contents, DrawMode,  *Foreground, *Background);
-				}
+				DrawFromLayerElement(CurrentElement, DrawFactor, SyncTo);
 				
 			}
 			LayerID++;
@@ -285,6 +239,57 @@ void DrawGL::SyncObjects(bool AutoPushBuffer, SYNCPATH SyncTo)
 		
 
 	}
+
+void DrawGL::DrawFromLayerElement(LayerElement* Element, float DrawFactor, SYNCPATH SyncTo)
+{
+	if (Element->DrawFactor > 0.f)
+	{
+		DrawFactor = Element->DrawFactor;
+	}
+	else
+	{
+		DrawFactor = GlobalDrawFactor;
+	}
+	if (Element->ImageExists == true && (SyncTo == IMAGE || SyncTo == ALL))
+	{
+		IMG* Image = Element->Image;
+		float X = WinWidth - (GLfloat)Image->x*DrawFactor;
+		float Y = WinHeight - (GLfloat)Image->y*DrawFactor;
+		float H = (GLfloat)Image->h*DrawFactor;
+		float W = (GLfloat)Image->w*DrawFactor;
+		string Path = Image->Source;
+		AddToBuffer(X, Y, H, W, Path);
+	}
+	if (Element->TextExists == true && (SyncTo == TEXT || SyncTo == ALL))
+	{
+		TXT* Text = Element->Text;
+		float X = WinWidth - (GLfloat)Text->x*DrawFactor;
+		float Y = WinHeight - (GLfloat)Text->y*DrawFactor;
+		float H = (GLfloat)Text->h*DrawFactor;
+		float W = (GLfloat)Text->w*DrawFactor;
+		TextFont* Font = Text->Font;
+		string Contents = Text->Content;
+		SDL_Color* Foreground = Text->Foreground;
+		SDL_Color* Background = Text->Background;
+		Mode DrawMode = Text->DrawMode;
+		if (Foreground == NULL)
+		{
+			Foreground = new SDL_Color();
+			Foreground->a = 0;
+			Foreground->g = 255;
+			Foreground->b = 255;
+			Foreground->r = 255;
+		}
+		if (Background == NULL)
+		{
+			Background->a = 0;
+			Background->b = 0;
+			Background->r = 0;
+			Background->g = 0;
+		}
+		AddToBuffer(X, Y, H, W, Font, Contents, DrawMode, *Foreground, *Background);
+	}
+}
 void DrawGL::PushBuffer ()
         {
 		glDisableClientState(GL_VERTEX_ARRAY);

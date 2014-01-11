@@ -7,7 +7,7 @@
 class ObjectBASE
 {
 protected:
-	ObjDBManager *DatabaseManager;
+	ObjDBManager<LayerElement> *DatabaseManager;
 	
 	b2World *ObjWorld;
 	int PhysicsWorldIndex;
@@ -191,7 +191,7 @@ public:
 
 
 public:
-	ObjectBASE(b2World* ObjWorld, ObjDBManager* DatabaseManager, EventingEngine* EventsEngine, bool SyncGraphics = true, bool AllowDraw = true)
+	ObjectBASE(b2World* ObjWorld, ObjDBManager<LayerElement>* DatabaseManager, EventingEngine* EventsEngine, bool SyncGraphics = true, bool AllowDraw = true)
 	{
 		InitOldCpp();
 		this->SyncGraphics = SyncGraphics;
@@ -215,7 +215,7 @@ public:
 		DestroyBody();
 
 	}
-	ObjDBManager *GetDBManager()
+	ObjDBManager<LayerElement> *GetDBManager()
 	{
 		return DatabaseManager;
 	}
