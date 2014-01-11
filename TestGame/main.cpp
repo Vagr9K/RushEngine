@@ -8,7 +8,7 @@ using namespace std;
 #define WWIDTH 1000
 
 
-#define  BallCount  50
+#define  BallCount  100
 #define  WallCount  4
 
 #define  K 100
@@ -38,18 +38,8 @@ int Delta = 0;
 
 SYNCPATH SYNCMODE = IMAGE;
 
-bool FPSCheck(float Step)
-{
-	bool Ret = false;
-	Now = GetTickCount();
-	Delta = Now - StartTime;
+FPSTest* Tester;
 
-	if (Delta >= Step * 1000)
-	{
-		Ret = true;
-	}
-	return Ret;
-}
 
 
 
@@ -105,7 +95,8 @@ void ModColors()
 
 void Init()
 {
-	
+	Tester = new FPSTest;
+
 	NewFont = new TextFont("font.ttf");
 	NewFont->PointSize = 30;
 	NewColor->a = 0;
@@ -192,8 +183,8 @@ void Init()
 
 void RenderPhysics()
 {
-	float Step = 1.f / 70.f;
-	World.Step(Step, 10, 3);
+	float Step = 1.f / 120.f;
+	World.Step(Step, 8, 3);
 
 
 }
@@ -202,9 +193,16 @@ void RenderGraphics()
 {
 	ModColors();
 	
-	mainEngine.Graphics->DrawerGL->SyncObjects(true, SYNCMODE);
-	
-
+	mainEngine.Graphics->DrawerGL->SyncObjects(false, SYNCMODE);
+	Tester->PushFrame();
+	double FPS = Tester->getFPS();
+	double Diff = Tester->getLastDiff();
+	if (true)
+	{
+		string NewTitle = "FPS : " + to_string(FPS) + " HZ.";
+		mainEngine.Graphics->DrawerGL->AddToBuffer(100, 50, 30, 200, NewFont, NewTitle, BLENDED, *NewColor, *NewColorBG);
+	}
+	mainEngine.Graphics->DrawerGL->PushBuffer();
 }
 
 void RenderCamera()
@@ -259,6 +257,7 @@ int main(int argc, char** argv)
 
 
 		RenderCamera();
+		
 	}
 
 

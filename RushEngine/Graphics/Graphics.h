@@ -141,7 +141,6 @@ public:
 		IsStarted = true;
 		return true;
 	}
-	
 	void SetTextMaximumTime(int Time)
 	{
 		ManagerGR->SetMaximumTimeOfText(Time);

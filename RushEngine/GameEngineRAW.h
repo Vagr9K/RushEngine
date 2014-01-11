@@ -78,48 +78,48 @@ public:
 
 };
 
-class OPSTester
+class FPSTest
 {
-	time_t startFPS, endFPS;
-	bool FPSStarted;
-	double FPSTestTime;
-	int Frames;
-	EventingEngine event;
-private:
-	void InitOldCpp()
-	{
-		FPSStarted = false;
-		Frames = 0;
-	}
+	double FPS;
+	double StartTime;
+	double Frames;
+	double LastDiff;
+	double MinDiffTime;
 public:
-	void TestOPS(double TestTime)
-	{
-		InitOldCpp();
-		if (FPSStarted == false)
-		{
 
-			time(&startFPS);
-			FPSStarted = true;
-			FPSTestTime = TestTime;
-			Frames = 1;
+	FPSTest(double MinDiffTime = 1000.0)
+	{
+		FPS = 0.0;
+		Frames = 0.0;
+		LastDiff = 0.0;
+		this->MinDiffTime = MinDiffTime;
+		StartTime = SDL_GetTicks();
+		
+	}
+	void PushFrame()
+	{
+		Frames++;
+	}
+	double getFPS()
+	{
+		double EndTime = SDL_GetTicks();
+		double DiffTime = EndTime - StartTime;
+		if (DiffTime < MinDiffTime)
+		{
+			return FPS;
 		}
 		else
 		{
 
-			time(&endFPS);
-			double DiffTime = difftime(endFPS, startFPS);
-			if (DiffTime >= FPSTestTime)
-			{
-				double FPSActual = Frames/DiffTime;
-				std::ostringstream ToString;
-				ToString << FPSActual;
-				event.SystemEvents.OPSLog(ToString.str());
-				FPSStarted = false;
-			}
-			else
-			{
-				Frames++;
-			}
+			FPS = Frames / DiffTime * 1000;
+			LastDiff = DiffTime;
+			Frames = 0;
+			StartTime = SDL_GetTicks();
+			return FPS;
 		}
+	}
+	double getLastDiff()
+	{
+		return LastDiff;
 	}
 };
