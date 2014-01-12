@@ -64,3 +64,4 @@ struct TextureInfo
 	GLuint TextureID;
 	TextureRenderFactor KxKy;
 };
+

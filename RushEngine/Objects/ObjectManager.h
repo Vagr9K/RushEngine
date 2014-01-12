@@ -1,3 +1,5 @@
+#pragma once
+
 #include "ObjModel.h"
 
 template <class ElementType>

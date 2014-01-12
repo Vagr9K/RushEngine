@@ -71,7 +71,7 @@ protected:
 		}
 	}
 
-		void SyncObjectSizeData(SYNCPATH SyncTo)
+		void SyncObjectSizeData(ObjectSyncMode SyncTo)
 	{
 		b2Shape::Type ShapeType = Fixture->GetType();
 		b2Shape *CShape = Fixture->GetShape();
@@ -137,7 +137,7 @@ protected:
 		
 	}
 
-		void SyncPhysicsData(SYNCPATH SyncTo)
+		void SyncPhysicsData(ObjectSyncMode SyncTo)
 		{
 			b2Vec2 Pos = Body->GetPosition();
 			if (ForceLocalFactor)
@@ -398,7 +398,7 @@ public:
 		ObjElement->Text->Font = Font;
 		ObjElement->TextExists = true;
 	}
-	void SyncData(SYNCPATH SyncTo)
+	void SyncData(ObjectSyncMode SyncTo)
 	{
 		if (!SizeDataSyncedImage || !SizeDataSyncedText)
 		{

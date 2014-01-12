@@ -82,9 +82,46 @@ public:
 
 };
 
-enum SYNCPATH
+enum ObjectSyncMode
 {
 	IMAGE,
 	TEXT,
 	ALL,
+};
+class EffectBASE;
+struct Particle
+{
+	bool Active;
+	float Life;
+	float X, Y;
+	float SpeedX, SpeedY;
+	float GravityX, GravityY;
+	float R, G, B;
+	float Fade;
+	Particle()
+	{
+		Active = false;
+	}
+};
+
+struct EffectElement
+{
+	EffectBASE* PtrToEffect;
+	Particle* ParticleArray;
+	string Path;
+	EffectElement(EffectBASE* PtrToEffect, string Path)
+	{
+		this->PtrToEffect = PtrToEffect;
+		this->Path = Path;
+	}
+	~EffectElement()
+	{
+		delete[] ParticleArray;
+	}
+};
+enum EffectSyncMode
+{
+	ACTIVE,
+	INACTIVE,
+	ALL
 };

@@ -224,7 +224,7 @@ void DrawGL::AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont *
 		Foreground.g = 0;
 		AddToBufferFROMTEXT(X, Y, H, W, Font, Text, DrawMode, Foreground, Background, 0, 0, 0);
 	}
-void DrawGL::SyncObjects(bool AutoPushBuffer, SYNCPATH SyncTo)
+void DrawGL::SyncObjects(bool AutoPushBuffer, ObjectSyncMode SyncTo)
 	{
 		float DrawFactor = GlobalDrawFactor;
 		if (BufferStarted == false)
@@ -256,7 +256,7 @@ void DrawGL::SyncObjects(bool AutoPushBuffer, SYNCPATH SyncTo)
 
 	}
 
-void DrawGL::DrawFromLayerElement(ObjectElement* Element, float DrawFactor, SYNCPATH SyncTo)
+void DrawGL::DrawFromLayerElement(ObjectElement* Element, float DrawFactor, ObjectSyncMode SyncTo)
 {
 	if (Element->DrawFactor > 0.f)
 	{

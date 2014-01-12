@@ -3,8 +3,11 @@
 #include <vector>
 #include "Object.h"
 
-typedef vector<ObjDBManager<ObjectElement>*> LayerElementManagers;
-typedef vector<ObjectElement*> LayerElementData;
+typedef vector<ObjDBManager<ObjectElement>*> ObjectElementManagers;
+typedef vector<ObjectElement*> ObjectElementData;
+
+typedef vector<ObjDBManager<EffectElement>*>  EffectElementManagers;
+typedef vector<EffectElement*> EffectElementData;
 
 class ObjectsEngine
 {
@@ -12,7 +15,7 @@ class ObjectsEngine
 	int InterfaceLayerCount;
 	int WorldCount;
 	int BackgroundLayerCount;
-	int SpecialLayerCount;
+	int EffectLayerCount;
 
 
 
@@ -20,12 +23,11 @@ public:
 	int OptObjCount;
 
 private:
-	LayerElementManagers ObjectsManagers;
-	LayerElementData** ObjectsData;
+	ObjectElementManagers ObjectsManagers;
+	ObjectElementData** ObjectsData;
 
-	LayerElementManagers SpecialManagers;
-	LayerElementData** SpecialData;
-
+	EffectElementManagers EffectManagers;
+	EffectElementData** EffectData;
 
 private:
 	void InitOldCpp()
@@ -37,7 +39,7 @@ private:
 	{
 		if (WorldCount != 0)
 		{
-			ObjectsData = new LayerElementData*[WorldCount];
+			ObjectsData = new ObjectElementData*[WorldCount];
 		}
 		else
 		{
@@ -45,40 +47,40 @@ private:
 		}
 		for (int i = 0; i < WorldCount; i++)
 		{
-			ObjectsData[i] = new LayerElementData;
+			ObjectsData[i] = new ObjectElementData;
 			ObjectsManagers.push_back(new ObjDBManager<ObjectElement>(ObjectsData[i]));
 		}
 
 	}
 
-	void InitSpecial(int WorldCount)
+	
+	void InitEffect(int WorldCount)
 	{
 		if (WorldCount != 0)
 		{
-			SpecialData = new LayerElementData*[WorldCount];
+			EffectData = new EffectElementData*[WorldCount];
 		}
 		else
 		{
-			SpecialData = NULL;
+			EffectData = NULL;
 		}
 		for (int i = 0; i < WorldCount; i++)
 		{
-			SpecialData[i] = new LayerElementData;
-			SpecialManagers.push_back(new ObjDBManager<ObjectElement>(SpecialData[i]));
+			EffectData[i] = new EffectElementData;
+			EffectManagers.push_back(new ObjDBManager<EffectElement>(EffectData[i]));
 		}
 	}
-	void DefContructor(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackgroundLayerCount)
+	void DefContructor(int InterfaceLayerCount, int EffectLayerCount, int WorldCount, int BackgroundLayerCount)
 	{
 		InitOldCpp();
 		this->InterfaceLayerCount = InterfaceLayerCount;
 		this->WorldCount = WorldCount;
 		this->BackgroundLayerCount = BackgroundLayerCount;
-		this->SpecialLayerCount = SpecialLayerCount;
+		this->EffectLayerCount = EffectLayerCount;
 
 		/*New API*/
 		InitObjects(WorldCount);
-		InitSpecial(SpecialLayerCount);
-
+		InitEffect(EffectLayerCount);
 
 
 		/*New API END*/
@@ -98,12 +100,12 @@ public:
 
 	int GetCount()
 	{
-		return InterfaceLayerCount + SpecialLayerCount + WorldCount + BackgroundLayerCount;
+		return InterfaceLayerCount + EffectLayerCount + WorldCount + BackgroundLayerCount;
 	}
 
 	int GetSpecialLCount()
 	{
-		return SpecialLayerCount;
+		return EffectLayerCount;
 	}
 	int GetWorldLCount()
 	{
@@ -123,17 +125,17 @@ public:
 	{
 		return ObjectsManagers.at(ID);
 	}
-	LayerElementData* getObjectsLayer(int ID = 0)
+	ObjectElementData* getObjectsLayer(int ID = 0)
 	{
 		return ObjectsData[ID];
 	}
-	ObjDBManager<ObjectElement>* getSpecialManager(int ID = 0)
+	ObjDBManager<EffectElement>* getSpecialManager(int ID = 0)
 	{
-		return SpecialManagers.at(ID);
+		return EffectManagers.at(ID);
 	}
-	LayerElementData* getSpecialLayer(int ID = 0)
+	EffectElementData* getSpecialLayer(int ID = 0)
 	{
-		return SpecialData[ID];
+		return EffectData[ID];
 	}
 	//TODO : Finish this part too.
 };

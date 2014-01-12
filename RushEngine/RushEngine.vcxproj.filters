@@ -88,5 +88,8 @@
     <ClInclude Include="AdvFeatures\Tests.h">
       <Filter>Source Files\AdvFeatures</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\Effects.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
