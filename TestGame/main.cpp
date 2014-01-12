@@ -108,12 +108,16 @@ void Init()
 	NewColorBG->r = 255;
 
 	mainEngine.InitPhysics();
-	mainEngine.InitObjects(0, 0, 1, 0);
-	mainEngine.InitGraphics(WWIDTH, WHEIGHT, "Test #002.");
 
+	mainEngine.InitObjects(0, 0, 1, 0);
+	mainEngine.InitGraphics(WWIDTH, WHEIGHT, "Test #004.");
 	mainEngine.Graphics->Start();
 	mainEngine.Graphics->SetTextMaximumTime(K);
+	mainEngine.Graphics->DrawerGL->CacheImage("Ball.png");
+	mainEngine.Graphics->DrawerGL->CacheImage("Wall.png");
+
 	mainEngine.Physics->AddWorld(&World);
+
 	STDShape = new b2CircleShape;
 	STDShape->m_p.Set(0.0f, 0.0f);
 	STDShape->m_radius = 0.1f;

@@ -3,8 +3,8 @@
 #include <vector>
 #include "Object.h"
 
-typedef vector<ObjDBManager<LayerElement>*> LayerElementManagers;
-typedef vector<LayerElement*> LayerElementData;
+typedef vector<ObjDBManager<ObjectElement>*> LayerElementManagers;
+typedef vector<ObjectElement*> LayerElementData;
 
 class ObjectsEngine
 {
@@ -46,7 +46,7 @@ private:
 		for (int i = 0; i < WorldCount; i++)
 		{
 			ObjectsData[i] = new LayerElementData;
-			ObjectsManagers.push_back(new ObjDBManager<LayerElement>(ObjectsData[i]));
+			ObjectsManagers.push_back(new ObjDBManager<ObjectElement>(ObjectsData[i]));
 		}
 
 	}
@@ -64,7 +64,7 @@ private:
 		for (int i = 0; i < WorldCount; i++)
 		{
 			SpecialData[i] = new LayerElementData;
-			SpecialManagers.push_back(new ObjDBManager<LayerElement>(SpecialData[i]));
+			SpecialManagers.push_back(new ObjDBManager<ObjectElement>(SpecialData[i]));
 		}
 	}
 	void DefContructor(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackgroundLayerCount)
@@ -119,7 +119,7 @@ public:
 	}
 
 	/*NEW API*/
-	ObjDBManager<LayerElement>* getObjectManager(int ID = 0)
+	ObjDBManager<ObjectElement>* getObjectManager(int ID = 0)
 	{
 		return ObjectsManagers.at(ID);
 	}
@@ -127,7 +127,7 @@ public:
 	{
 		return ObjectsData[ID];
 	}
-	ObjDBManager<LayerElement>* getSpecialManager(int ID = 0)
+	ObjDBManager<ObjectElement>* getSpecialManager(int ID = 0)
 	{
 		return SpecialManagers.at(ID);
 	}

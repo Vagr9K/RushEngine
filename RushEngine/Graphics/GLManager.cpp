@@ -37,39 +37,6 @@ TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 			TextureH = GetNearestPowerOfTwo(ImageH);
 			KX = (GLfloat)ImageW / (GLfloat)TextureW;
 			KY = (GLfloat)ImageH / (GLfloat)TextureH;
-			/*
-			Uint32 MinPixel = SDL_MapRGB(Surface->format, 0, 0, 0);
-			Uint32* NewPixelArray = new Uint32[TextureH*TextureW];
-			Uint32* PixelArray = (Uint32*)Surface->pixels;
-
-
-			
-			unsigned int OldIter = 0;
-			unsigned int NewIter = 0;
-			for (int i = 0; i < ImageH; i++)
-			{
-				for (int j = 0; j < ImageW; j++)
-				{
-
-					NewPixelArray[NewIter] = PixelArray[OldIter];
-					NewIter++;
-					OldIter++;
-				}
-				for (int k = 0; k < TextureW - ImageW; k++)
-				{
-					NewPixelArray[NewIter] = MinPixel;
-					NewIter++;
-				}
-
-			}
-			unsigned int NewIterMax = TextureW*TextureH;
-			while (NewIter < NewIterMax)
-			{
-				NewPixelArray[NewIter] = MinPixel;
-				NewIter++;
-			}
-			Surface->pixels = NewPixelArray;
-			*/
 			SDL_Color Background = { 0, 0, 0, 0 };
 			SDL_SetSurfaceAlphaMod(Surface, 0xFF);
 			//SDL_SetSurfaceBlendMode(Surface, SDL_BLENDMODE_BLEND);

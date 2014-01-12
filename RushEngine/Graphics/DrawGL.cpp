@@ -40,9 +40,10 @@ bool DrawGL::InitOpenGL ()
 
 
 		glClearColor(0, 0, 0, 0);
-
+		glClearDepth(1.f);
+		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_TEXTURE_2D);
-
+		glShadeModel(GL_SMOOTH);
 		glViewport(0, 0, WinWidth, WinHeight);
 
 		glMatrixMode(GL_PROJECTION);
@@ -56,7 +57,8 @@ bool DrawGL::InitOpenGL ()
 		glEnable(GL_BLEND);
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		return GLErrorTest("InitOpenGL()");
@@ -165,7 +167,7 @@ void DrawGL::SetView(int X, int Y)
 void DrawGL::StartBuffer ()
         {
 		
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -230,11 +232,11 @@ void DrawGL::SyncObjects(bool AutoPushBuffer, SYNCPATH SyncTo)
 			StartBuffer();
 		}
 		int LayerID = 0;
-		LayerElement* CurrentElement = NULL;
+		ObjectElement* CurrentElement = NULL;
 		for (LayerID = BgkC; LayerID < BgkC + WorldLC; LayerID++)
 		{
 			
-			vector<LayerElement*>* Layer = ObjEngine->getObjectsLayer(LayerID);
+			vector<ObjectElement*>* Layer = ObjEngine->getObjectsLayer(LayerID);
 			for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
 			{
 				CurrentElement = Layer->at(LayerElementID);
@@ -254,7 +256,7 @@ void DrawGL::SyncObjects(bool AutoPushBuffer, SYNCPATH SyncTo)
 
 	}
 
-void DrawGL::DrawFromLayerElement(LayerElement* Element, float DrawFactor, SYNCPATH SyncTo)
+void DrawGL::DrawFromLayerElement(ObjectElement* Element, float DrawFactor, SYNCPATH SyncTo)
 {
 	if (Element->DrawFactor > 0.f)
 	{

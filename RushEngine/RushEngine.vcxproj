@@ -112,6 +112,7 @@
     <ClCompile Include="Graphics\TextManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AdvFeatures\Tests.h" />
     <ClInclude Include="Eventing\EventComponents.h" />
     <ClInclude Include="Eventing\Eventing.h" />
     <ClInclude Include="Eventing\EventManagers.h" />

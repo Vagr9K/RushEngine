@@ -61,7 +61,7 @@ public:
 };
 class ObjectBASE;
 
-struct LayerElement
+struct ObjectElement
 {
 public:
 	ObjectBASE* ObjectPtr;
@@ -71,7 +71,7 @@ public:
 	bool TextExists;
 	bool ImageExists;
 	bool AllowDraw;
-	LayerElement()
+	ObjectElement()
 	{
 		TextExists = false;
 		ImageExists = false;

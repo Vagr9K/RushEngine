@@ -7,7 +7,7 @@
 class ObjectBASE
 {
 protected:
-	ObjDBManager<LayerElement> *DatabaseManager;
+	ObjDBManager<ObjectElement> *DatabaseManager;
 	
 	b2World *ObjWorld;
 	int PhysicsWorldIndex;
@@ -62,7 +62,7 @@ protected:
 		}
 		else
 		{
-			ObjElement = new LayerElement;
+			ObjElement = new ObjectElement;
 			ObjElement->Image = new IMG();
 			ObjElement->ImageExists = true;
 			ObjElement->Text = new TXT();
@@ -175,7 +175,7 @@ protected:
 	}
 
 protected:
-	LayerElement *ObjElement;
+	ObjectElement *ObjElement;
 	bool SizeDataSyncedImage;
 	bool SizeDataSyncedText;
 public:
@@ -191,7 +191,7 @@ public:
 
 
 public:
-	ObjectBASE(b2World* ObjWorld, ObjDBManager<LayerElement>* DatabaseManager, EventingEngine* EventsEngine, bool SyncGraphics = true, bool AllowDraw = true)
+	ObjectBASE(b2World* ObjWorld, ObjDBManager<ObjectElement>* DatabaseManager, EventingEngine* EventsEngine, bool SyncGraphics = true, bool AllowDraw = true)
 	{
 		InitOldCpp();
 		this->SyncGraphics = SyncGraphics;
@@ -215,7 +215,7 @@ public:
 		DestroyBody();
 
 	}
-	ObjDBManager<LayerElement> *GetDBManager()
+	ObjDBManager<ObjectElement> *GetDBManager()
 	{
 		return DatabaseManager;
 	}

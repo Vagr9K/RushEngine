@@ -21,6 +21,9 @@
     <Filter Include="Source Files\Physics">
       <UniqueIdentifier>{5cba256c-3ddd-450c-96c4-b585d9bfd019}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\AdvFeatures">
+      <UniqueIdentifier>{0e00946c-261f-4e3a-bfba-193464f11120}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\Components.cpp">
@@ -81,6 +84,9 @@
     </ClInclude>
     <ClInclude Include="Eventing\Eventing.h">
       <Filter>Source Files\Eventing</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvFeatures\Tests.h">
+      <Filter>Source Files\AdvFeatures</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

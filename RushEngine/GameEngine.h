@@ -17,7 +17,7 @@
 class Object
 {
 	GameEngine* mainEngine;
-	ObjDBManager<LayerElement> *DatabaseManager;
+	ObjDBManager<ObjectElement> *DatabaseManager;
 	PhysicsEngine *ObjPhysics;
 	b2World *ObjWorld;
 	int PhysicsWorldIndex;
@@ -72,7 +72,7 @@ public:
 	b2FixtureDef* FixtureDefinition;
 	b2Body* Body;
 	b2Fixture* Fixture;
-	LayerElement *ObjElement;
+	ObjectElement *ObjElement;
 	IMG *Image;
 	TXT *Text;
 	bool InstantPush;
@@ -102,7 +102,7 @@ public:
 		DestroyBody();
 
 	}
-	ObjDBManager<LayerElement> *GetDBManager()
+	ObjDBManager<ObjectElement> *GetDBManager()
 	{
 		return DatabaseManager;
 	}
@@ -170,7 +170,7 @@ public:
 			throw "ObjElement already initialized.";
 			EventingEngine->SystemEvents.ObjectsError("ObjElement already initialized.");
 		}
-		ObjElement = new LayerElement;
+		ObjElement = new ObjectElement;
 		Image = ObjElement->Image;
 		Text = ObjElement->Text;
 	}
