@@ -35,7 +35,7 @@ int StartTime = GetTickCount();
 int Now = GetTickCount();
 int Delta = 0;
 
-SYNCPATH SYNCMODE = IMAGE;
+ObjectSyncMode SYNCMODE = IMAGE;
 
 FPSTest* Tester;
 

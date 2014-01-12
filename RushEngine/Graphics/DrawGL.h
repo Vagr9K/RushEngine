@@ -14,6 +14,7 @@ class DrawGL
   int DeltaY;
   int BgkC;
   int WorldLC;
+  int EffectLC;
   bool BufferStarted;
   float GlobalDrawFactor;
 private:
@@ -25,6 +26,7 @@ private:
   void AddToBufferFROMPATH (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
   void AddToBufferFROMTEXT (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
   void DrawFromLayerElement(ObjectElement* Element, float DrawFactor, ObjectSyncMode SyncTo);
+  void DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncMode);
 inline  bool CheckScreenZone(float x, float y, float h, float w);
 public:
   DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height, int Width, EventingEngine * Events);
@@ -45,6 +47,7 @@ public:
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Background, GLfloat AngleZ);
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Background);
   void SyncObjects(bool AutoPushBuffer = false, ObjectSyncMode SyncTo = ALL);
+  void SyncEffects(bool AutoPushBuffer = false, EffectSyncMode SyncMode = ALLEFFECTS);
   void PushBuffer ();
   void ClearAll ();
 };

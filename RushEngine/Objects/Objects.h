@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Object.h"
+#include "Effects.h"
 
 typedef vector<ObjDBManager<ObjectElement>*> ObjectElementManagers;
 typedef vector<ObjectElement*> ObjectElementData;
@@ -103,7 +104,7 @@ public:
 		return InterfaceLayerCount + EffectLayerCount + WorldCount + BackgroundLayerCount;
 	}
 
-	int GetSpecialLCount()
+	int GetEffectLCount()
 	{
 		return EffectLayerCount;
 	}
@@ -129,11 +130,11 @@ public:
 	{
 		return ObjectsData[ID];
 	}
-	ObjDBManager<EffectElement>* getSpecialManager(int ID = 0)
+	ObjDBManager<EffectElement>* getEffectManager(int ID = 0)
 	{
 		return EffectManagers.at(ID);
 	}
-	EffectElementData* getSpecialLayer(int ID = 0)
+	EffectElementData* getEffectLayer(int ID = 0)
 	{
 		return EffectData[ID];
 	}

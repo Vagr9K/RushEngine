@@ -94,6 +94,8 @@ struct Particle
 	bool Active;
 	float Life;
 	float X, Y;
+	float H, W;
+	float Angle;
 	float SpeedX, SpeedY;
 	float GravityX, GravityY;
 	float R, G, B;
@@ -109,10 +111,12 @@ struct EffectElement
 	EffectBASE* PtrToEffect;
 	Particle* ParticleArray;
 	string Path;
+	int ParticleCount;
 	EffectElement(EffectBASE* PtrToEffect, string Path)
 	{
 		this->PtrToEffect = PtrToEffect;
 		this->Path = Path;
+		ParticleCount = 0;
 	}
 	~EffectElement()
 	{
@@ -123,5 +127,5 @@ enum EffectSyncMode
 {
 	ACTIVE,
 	INACTIVE,
-	ALL
+	ALLEFFECTS
 };

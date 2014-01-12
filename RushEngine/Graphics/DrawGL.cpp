@@ -152,6 +152,7 @@ DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height
 		}
 		BgkC = ObjEngine->GetBackgroundLCount();
 		WorldLC = ObjEngine->GetWorldLCount();
+		EffectLC = ObjEngine->GetEffectLCount();
 	}
 DrawGL::~ DrawGL ()
         {
@@ -233,7 +234,7 @@ void DrawGL::SyncObjects(bool AutoPushBuffer, ObjectSyncMode SyncTo)
 		}
 		int LayerID = 0;
 		ObjectElement* CurrentElement = NULL;
-		for (LayerID = BgkC; LayerID < BgkC + WorldLC; LayerID++)
+		for (LayerID = 0; LayerID < WorldLC; LayerID++)
 		{
 			
 			vector<ObjectElement*>* Layer = ObjEngine->getObjectsLayer(LayerID);
@@ -255,6 +256,51 @@ void DrawGL::SyncObjects(bool AutoPushBuffer, ObjectSyncMode SyncTo)
 		
 
 	}
+void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncMode)
+{
+	string Path = EffectEl->Path;
+	Particle* CurrentParticle = NULL;
+	for (int i = 0; i < EffectEl->ParticleCount; i++)
+	{
+		CurrentParticle = &EffectEl->ParticleArray[i];
+		if (CurrentParticle->Active == true && (SyncMode == ACTIVE || SyncMode == ALLEFFECTS))
+		{
+			AddToBuffer(CurrentParticle->X, CurrentParticle->Y, CurrentParticle->H, CurrentParticle->W, Path);
+		}
+		if (CurrentParticle->Active == false && (SyncMode == INACTIVE || SyncMode == ALLEFFECTS))
+		{
+			AddToBuffer(CurrentParticle->X, CurrentParticle->Y, CurrentParticle->H, CurrentParticle->W, Path);
+		}
+	}
+}
+void DrawGL::SyncEffects(bool AutoPushBuffer /* = false */, EffectSyncMode SyncMode /* = ALLEFFECTS */)
+{
+	if (BufferStarted == false)
+	{
+		StartBuffer();
+	}
+	int LayerID = 0;
+	EffectElement* CurrentElement = NULL;
+	for (LayerID = BgkC; LayerID < BgkC + WorldLC; LayerID++)
+	{
+
+		vector<EffectElement*>* Layer = ObjEngine->getEffectLayer(LayerID);
+		for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
+		{
+			CurrentElement = Layer->at(LayerElementID);
+			CurrentElement->PtrToEffect->RefreshPosition();
+			DrawFromEffectElement(CurrentElement, SyncMode);
+
+		}
+		LayerID++;
+
+	}
+
+	if (AutoPushBuffer == true)
+	{
+		PushBuffer();
+	}
+}
 
 void DrawGL::DrawFromLayerElement(ObjectElement* Element, float DrawFactor, ObjectSyncMode SyncTo)
 {
