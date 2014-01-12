@@ -62,13 +62,27 @@ bool DrawGL::InitOpenGL ()
 		return GLErrorTest("InitOpenGL()");
 
 	}
+inline bool DrawGL::CheckScreenZone(float x, float y, float h, float w)
+	{
+		
+		float ActX = x - DeltaX;
+		float ActY = y + DeltaY;
+		h = h / 2;
+		w = w / 2;
+		if ((ActX - w) <= WinWidth && (ActX + w) >= 0 && (ActY - h) <= WinHeight && (ActY + h) >= 0)
+		{
+			return true;
+		}
+		
+		return false;
+	}
 
 void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData,GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
         {
         	float KX = TextureData.KxKy.KX;
         	float KY = TextureData.KxKy.KY;
         	GLuint TextureID = TextureData.TextureID;
-			glTranslatef(X + DeltaX, Y + DeltaY, 0.0);
+			glTranslatef(X - DeltaX, Y + DeltaY, 0.0);
 
 			glRotatef(AngleX, 1.0, 0.0, 0.0);
 			glRotatef(AngleY, 0.0, 1.0, 0.0);
@@ -257,8 +271,13 @@ void DrawGL::DrawFromLayerElement(LayerElement* Element, float DrawFactor, SYNCP
 		float Y = WinHeight - (GLfloat)Image->y*DrawFactor;
 		float H = (GLfloat)Image->h*DrawFactor;
 		float W = (GLfloat)Image->w*DrawFactor;
-		string Path = Image->Source;
-		AddToBuffer(X, Y, H, W, Path);
+		if (CheckScreenZone(X, Y, H, W))
+		{
+			string Path = Image->Source;
+			AddToBuffer(X, Y, H, W, Path);
+		}
+		
+		
 	}
 	if (Element->TextExists == true && (SyncTo == TEXT || SyncTo == ALL))
 	{
@@ -267,27 +286,32 @@ void DrawGL::DrawFromLayerElement(LayerElement* Element, float DrawFactor, SYNCP
 		float Y = WinHeight - (GLfloat)Text->y*DrawFactor;
 		float H = (GLfloat)Text->h*DrawFactor;
 		float W = (GLfloat)Text->w*DrawFactor;
-		TextFont* Font = Text->Font;
-		string Contents = Text->Content;
-		SDL_Color* Foreground = Text->Foreground;
-		SDL_Color* Background = Text->Background;
-		Mode DrawMode = Text->DrawMode;
-		if (Foreground == NULL)
+		if (CheckScreenZone(X, Y, H, W))
 		{
-			Foreground = new SDL_Color();
-			Foreground->a = 0;
-			Foreground->g = 255;
-			Foreground->b = 255;
-			Foreground->r = 255;
+			TextFont* Font = Text->Font;
+			string Contents = Text->Content;
+			SDL_Color* Foreground = Text->Foreground;
+			SDL_Color* Background = Text->Background;
+			Mode DrawMode = Text->DrawMode;
+			if (Foreground == NULL)
+			{
+				Foreground = new SDL_Color();
+				Foreground->a = 0;
+				Foreground->g = 255;
+				Foreground->b = 255;
+				Foreground->r = 255;
+			}
+			if (Background == NULL)
+			{
+				Background->a = 0;
+				Background->b = 0;
+				Background->r = 0;
+				Background->g = 0;
+			}
+			AddToBuffer(X, Y, H, W, Font, Contents, DrawMode, *Foreground, *Background);
 		}
-		if (Background == NULL)
-		{
-			Background->a = 0;
-			Background->b = 0;
-			Background->r = 0;
-			Background->g = 0;
-		}
-		AddToBuffer(X, Y, H, W, Font, Contents, DrawMode, *Foreground, *Background);
+		
+		
 	}
 }
 void DrawGL::PushBuffer ()

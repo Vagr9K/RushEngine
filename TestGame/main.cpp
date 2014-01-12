@@ -13,7 +13,6 @@ using namespace std;
 
 #define  K 100
 
-const float FPS = 1.f / 120.f;
 
 GameEngine mainEngine;
 
