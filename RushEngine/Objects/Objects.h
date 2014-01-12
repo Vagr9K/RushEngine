@@ -15,16 +15,9 @@ class ObjectsEngine
 	int SpecialLayerCount;
 
 
-	
+
 public:
-	
-	/*OLD API*/
-	vector<vector<LayerElement*>*> GrLayers;
-
-	vector<ObjDBManager<LayerElement>*> ManagerDB; 
-
 	int OptObjCount;
-	/*END OF OLD API*/
 
 private:
 	LayerElementManagers ObjectsManagers;
@@ -39,7 +32,7 @@ private:
 	{
 		OptObjCount = 0;
 	}
-	
+
 	void InitObjects(int WorldCount)
 	{
 		if (WorldCount != 0)
@@ -50,12 +43,12 @@ private:
 		{
 			ObjectsData = NULL;
 		}
-		for (int i = 0; i < WorldCount;i++)
+		for (int i = 0; i < WorldCount; i++)
 		{
 			ObjectsData[i] = new LayerElementData;
 			ObjectsManagers.push_back(new ObjDBManager<LayerElement>(ObjectsData[i]));
 		}
-		
+
 	}
 
 	void InitSpecial(int WorldCount)
@@ -74,51 +67,34 @@ private:
 			SpecialManagers.push_back(new ObjDBManager<LayerElement>(SpecialData[i]));
 		}
 	}
-public:
-	ObjectsEngine(int InterfaceLayerCount,int SpecialLayerCount ,int WorldCount, int BackgroundLayerCount)
+	void DefContructor(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackgroundLayerCount)
 	{
 		InitOldCpp();
 		this->InterfaceLayerCount = InterfaceLayerCount;
 		this->WorldCount = WorldCount;
 		this->BackgroundLayerCount = BackgroundLayerCount;
 		this->SpecialLayerCount = SpecialLayerCount;
-		
-		for (int i = 0; i <InterfaceLayerCount + SpecialLayerCount + WorldCount + BackgroundLayerCount; i++)
-		{
-			GrLayers.push_back(new vector<LayerElement*>);
-			ManagerDB.push_back(new ObjDBManager<LayerElement>(GrLayers.at(i)));
-		}
 
-		// TODO : Finish new API
 		/*New API*/
 		InitObjects(WorldCount);
 		InitSpecial(SpecialLayerCount);
 
+
+
 		/*New API END*/
+	}
+public:
+	ObjectsEngine(int InterfaceLayerCount,int SpecialLayerCount ,int WorldCount, int BackgroundLayerCount)
+	{
+		DefContructor(InterfaceLayerCount, SpecialLayerCount, WorldCount, BackgroundLayerCount);
 
 	}
 	ObjectsEngine(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackgroundLayerCount, int OptimalObjectsCount)
 	{
-		InitOldCpp();
-		this->InterfaceLayerCount = InterfaceLayerCount;
-		this->WorldCount = WorldCount;
-		this->BackgroundLayerCount = BackgroundLayerCount;
-		this->SpecialLayerCount = SpecialLayerCount;
+		DefContructor(InterfaceLayerCount, SpecialLayerCount, WorldCount, BackgroundLayerCount);
 		this->OptObjCount = OptimalObjectsCount;
-
-		for (int i = 0; i < InterfaceLayerCount + SpecialLayerCount + WorldCount + BackgroundLayerCount; i++)
-		{
-			GrLayers.push_back(new vector<LayerElement*>);
-			ManagerDB.push_back(new ObjDBManager<LayerElement>(GrLayers.at(i), OptimalObjectsCount));
-		}
-
-
-
 	}
-	vector<vector<LayerElement*>*>* GetLayers()
-	{
-		return &GrLayers;
-	}
+
 
 	int GetCount()
 	{

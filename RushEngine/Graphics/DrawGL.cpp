@@ -220,7 +220,7 @@ void DrawGL::SyncObjects(bool AutoPushBuffer, SYNCPATH SyncTo)
 		for (LayerID = BgkC; LayerID < BgkC + WorldLC; LayerID++)
 		{
 			
-			vector<LayerElement*>* Layer = ObjEngine->GetLayers()->at(LayerID);
+			vector<LayerElement*>* Layer = ObjEngine->getObjectsLayer(LayerID);
 			for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
 			{
 				CurrentElement = Layer->at(LayerElementID);

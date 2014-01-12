@@ -86,7 +86,7 @@ public:
 		mainEngine = Engine;
 		this->ObjectsIndex = ObjectsIndex;
 		this->PhysicsWorldIndex = PhysicsWorldIndex;
-		DatabaseManager = mainEngine->getObjects()->ManagerDB.at(ObjectsIndex);
+		DatabaseManager = mainEngine->getObjects()->getObjectManager(ObjectsIndex);
 		ObjPhysics = mainEngine->Physics;
 		ObjWorld = ObjPhysics->GetWorlds()->at(PhysicsWorldIndex);
 		EventingEngine = Engine->getEventingEngine();
