@@ -64,7 +64,7 @@ bool DrawGL::InitOpenGL ()
 		return GLErrorTest("InitOpenGL()");
 
 	}
-inline bool DrawGL::CheckScreenZone(float x, float y, float h, float w)
+bool DrawGL::CheckScreenZone(float x, float y, float h, float w)
 	{
 		
 		float ActX = x - DeltaX;
@@ -78,8 +78,19 @@ inline bool DrawGL::CheckScreenZone(float x, float y, float h, float w)
 		
 		return false;
 	}
-
-void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData,GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
+void DrawGL::SetEffectMode(bool Status)
+{
+	if (Status)
+	{
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	} 
+	else
+	{
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+	
+}
+void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData,GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ, RGBColor* TextureColor)
         {
         	float KX = TextureData.KxKy.KX;
         	float KY = TextureData.KxKy.KY;
@@ -121,7 +132,11 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
 			
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 			
-
+			if (TextureColor != NULL)
+			{
+				glColor4f(TextureColor->R, TextureColor->G, TextureColor->B, TextureColor->Fade);
+			}
+			
 			glLoadIdentity();
 
 
@@ -256,22 +271,60 @@ void DrawGL::SyncObjects(bool AutoPushBuffer, ObjectSyncMode SyncTo)
 		
 
 	}
-void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncMode)
+void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncMode, RGBColor* ParticleColor)
 {
 	string Path = EffectEl->Path;
 	Particle* CurrentParticle = NULL;
+	
 	for (int i = 0; i < EffectEl->ParticleCount; i++)
 	{
 		CurrentParticle = &EffectEl->ParticleArray[i];
 		if (CurrentParticle->Active == true && (SyncMode == ACTIVE || SyncMode == ALLEFFECTS))
 		{
-			AddToBuffer(CurrentParticle->X, CurrentParticle->Y, CurrentParticle->H, CurrentParticle->W, Path);
+			if (CheckScreenZone(CurrentParticle->X, CurrentParticle->Y, CurrentParticle->H, CurrentParticle->W))
+			{
+				ParticleColor->R = CurrentParticle->R;
+				ParticleColor->G = CurrentParticle->G;
+				ParticleColor->B = CurrentParticle->B;
+				ParticleColor->Fade = CurrentParticle->Fade;
+				TextureInfo TextureID = ManagerGR->LoaderGL(Path);
+				AddToBufferFROMTEXTURE(
+					CurrentParticle->X,
+					CurrentParticle->Y,
+					CurrentParticle->H,
+					CurrentParticle->W,
+					TextureID,
+					0.f,
+					0.f,
+					CurrentParticle->Angle,
+					ParticleColor
+					);
+			}
 		}
 		if (CurrentParticle->Active == false && (SyncMode == INACTIVE || SyncMode == ALLEFFECTS))
 		{
-			AddToBuffer(CurrentParticle->X, CurrentParticle->Y, CurrentParticle->H, CurrentParticle->W, Path);
+			if (CheckScreenZone(CurrentParticle->X, CurrentParticle->Y, CurrentParticle->H, CurrentParticle->W))
+			{
+				ParticleColor->R = CurrentParticle->R;
+				ParticleColor->G = CurrentParticle->G;
+				ParticleColor->B = CurrentParticle->B;
+				ParticleColor->Fade = CurrentParticle->Fade;
+				TextureInfo TextureID = ManagerGR->LoaderGL(Path);
+				AddToBufferFROMTEXTURE(
+					CurrentParticle->X,
+					CurrentParticle->Y,
+					CurrentParticle->H,
+					CurrentParticle->W,
+					TextureID,
+					0.f,
+					0.f,
+					CurrentParticle->Angle,
+					ParticleColor
+					);
+			}
 		}
 	}
+	
 }
 void DrawGL::SyncEffects(bool AutoPushBuffer /* = false */, EffectSyncMode SyncMode /* = ALLEFFECTS */)
 {
@@ -279,8 +332,10 @@ void DrawGL::SyncEffects(bool AutoPushBuffer /* = false */, EffectSyncMode SyncM
 	{
 		StartBuffer();
 	}
+	SetEffectMode(true);
 	int LayerID = 0;
 	EffectElement* CurrentElement = NULL;
+	RGBColor* ParticleColor = new RGBColor;
 	for (LayerID = BgkC; LayerID < BgkC + WorldLC; LayerID++)
 	{
 
@@ -289,13 +344,14 @@ void DrawGL::SyncEffects(bool AutoPushBuffer /* = false */, EffectSyncMode SyncM
 		{
 			CurrentElement = Layer->at(LayerElementID);
 			CurrentElement->PtrToEffect->RefreshPosition();
-			DrawFromEffectElement(CurrentElement, SyncMode);
+			DrawFromEffectElement(CurrentElement, SyncMode, ParticleColor);
 
 		}
 		LayerID++;
 
 	}
-
+	delete ParticleColor;
+	SetEffectMode(false);
 	if (AutoPushBuffer == true)
 	{
 		PushBuffer();

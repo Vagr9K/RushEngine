@@ -65,3 +65,7 @@ struct TextureInfo
 	TextureRenderFactor KxKy;
 };
 
+struct RGBColor
+{
+	float Fade, R, G, B;
+};
