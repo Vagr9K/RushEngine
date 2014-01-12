@@ -30,8 +30,10 @@ public:
   DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height, int Width, EventingEngine * Events);
   ~ DrawGL ();
   void SetView(int X, int Y);
-  void SetSyncFactor(float Factor);
-  float GetSyncFactor();
+  void setSyncFactor(float Factor);
+  float getSyncFactor();
+  void CacheImage(string Path);
+  void CacheText(TextFont* Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background);
   void StartBuffer ();
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleZ);

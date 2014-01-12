@@ -327,7 +327,7 @@ void DrawGL::ClearAll ()
 		ManagerGR->ClearPreLoadGL(1.0);
 	}
 
-void DrawGL::SetSyncFactor(float Factor)
+void DrawGL::setSyncFactor(float Factor)
 {
 	if (Factor > 0)
 	{
@@ -339,7 +339,15 @@ void DrawGL::SetSyncFactor(float Factor)
 	}
 	
 }
-float DrawGL::GetSyncFactor()
+float DrawGL::getSyncFactor()
 {
 	return GlobalDrawFactor;
+}
+void DrawGL::CacheImage(string Path)
+{
+	ManagerGR->GenerateTexture(Path);
+}
+void DrawGL::CacheText(TextFont* Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background)
+{
+	ManagerGR->GetTextImageGL(Font, Text, DrawMode, Foreground, Background);
 }
