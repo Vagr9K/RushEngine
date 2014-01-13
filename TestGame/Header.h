@@ -1,6 +1,6 @@
 #include "GameEngine.h"
 
-const static GLfloat colors[12][3] =		// Rainbow Of Colors
+const static GLfloat colors[12][3] =		
 {
 	{ 1.0f, 0.5f, 0.5f }, { 1.0f, 0.75f, 0.5f }, { 1.0f, 1.0f, 0.5f }, { 0.75f, 1.0f, 0.5f },
 	{ 0.5f, 1.0f, 0.5f }, { 0.5f, 1.0f, 0.75f }, { 0.5f, 1.0f, 1.0f }, { 0.5f, 0.75f, 1.0f },
@@ -13,33 +13,32 @@ class EngineFireEffect : public EffectBASE
 public:
 	float xspeed;
 	float yspeed;
+	float X=0.f, Y=0.f;
 	unsigned int col;
 	EngineFireEffect(int ParticleCount, ObjDBManager<EffectElement>* EffectManager, string Path) :EffectBASE(EffectManager, ParticleCount, Path)
 	{
-		xspeed = 200.f;
-		yspeed = 200.f;
-		col = 2;
+		xspeed = 0.f;
+		yspeed = 2000.f;
+		
 	}
 
 	virtual void Init()
 	{
-		for (int loop = 0; loop < ParticleCount; loop++)				// Initials All The Textures
+		for (int loop = 0; loop < ParticleCount; loop++)				
 		{
-			ParticleArray[loop].X = 0.f;
-			ParticleArray[loop].Y = 0.f;
+			ParticleArray[loop].X = X;
+			ParticleArray[loop].Y = Y;
 			ParticleArray[loop].Angle = 0.f;
-			ParticleArray[loop].Active = true;								// Make All The Particles Active
-			ParticleArray[loop].Fade = 1.0f;								// Give All The Particles Full Life
-			ParticleArray[loop].Life = float(rand() % 100) / 1000.0f + 0.003f;	// Random Fade Speed
-			ParticleArray[loop].R = colors[loop*(12 / ParticleCount)][0];	// Select Red Rainbow Color
-			ParticleArray[loop].G = colors[loop*(12 / ParticleCount)][1];	// Select Red Rainbow Color
-			ParticleArray[loop].B = colors[loop*(12 / ParticleCount)][2];	// Select Red Rainbow Color
-			ParticleArray[loop].SpeedX = float((rand() % 50) - 26.0f)*100.0f;		// Random Speed On X Axis
-			ParticleArray[loop].SpeedY = float((rand() % 50) - 25.0f)*100.0f;		// Random Speed On Y Axis
-			//ParticleArray[loop].zi = float((rand() % 50) - 25.0f)*10.0f;		// Random Speed On Z Axis
-			ParticleArray[loop].GravityX = 0.0f;									// Set Horizontal Pull To Zero
-			ParticleArray[loop].GravityY = -0.8f;								// Set Vertical Pull Downward
-			//ParticleArray[loop].zg = 0.0f;								// Set Pull On Z Axis To Zero
+			ParticleArray[loop].Active = true;								
+			ParticleArray[loop].Fade = 1.0f;								
+			ParticleArray[loop].Life = float(rand() % 1000) / 1000.0f + 0.003f;	
+			ParticleArray[loop].R = colors[loop*(12 / ParticleCount)][0];	
+			ParticleArray[loop].G = colors[loop*(12 / ParticleCount)][1];	
+			ParticleArray[loop].B = colors[loop*(12 / ParticleCount)][2];	
+			ParticleArray[loop].SpeedX = float((rand() % 50) - 26.0f)*100.0f;		
+			ParticleArray[loop].SpeedY = float((rand() % 50) - 25.0f)*100.0f;		
+			ParticleArray[loop].GravityX = 0.0f;									
+			ParticleArray[loop].GravityY = 0.98f;								
 			ParticleArray[loop].H = 10.f;
 			ParticleArray[loop].W = 10.f;
 		}
@@ -51,35 +50,24 @@ public:
 		{
 			if (ParticleArray[loop].Active)
 			{
-				ParticleArray[loop].X += ParticleArray[loop].SpeedX / (slowdown * 1000);// Move On The X Axis By X Speed
-				ParticleArray[loop].Y += ParticleArray[loop].SpeedY / (slowdown * 1000);// Move On The Y Axis By Y Speed
-				//ParticleArray[loop].Z += ParticleArray[loop].zi / (slowdown * 1000);// Move On The Z Axis By Z Speed
-
-				ParticleArray[loop].SpeedX += ParticleArray[loop].GravityX;			// Take Pull On X Axis Into Account
-				ParticleArray[loop].SpeedY += ParticleArray[loop].GravityY;			// Take Pull On Y Axis Into Account
-				//ParticleArray[loop].zi += ParticleArray[loop].zg;			// Take Pull On Z Axis Into Account
-				ParticleArray[loop].Fade -= ParticleArray[loop].Life;		// Reduce Particles Life By 'Fade'
+				ParticleArray[loop].X += ParticleArray[loop].SpeedX / (slowdown * 1000);
+				ParticleArray[loop].Y += ParticleArray[loop].SpeedY / (slowdown * 1000);
+				ParticleArray[loop].SpeedX += ParticleArray[loop].GravityX;			
+				ParticleArray[loop].SpeedY += ParticleArray[loop].GravityY;			
+				ParticleArray[loop].Fade -= ParticleArray[loop].Life;	
 				srand(SDL_GetTicks());
 				col = rand() % 3;
-				if (ParticleArray[loop].Fade < 0.0f)					// If ParticleArray Is Burned Out
+				if (ParticleArray[loop].Fade < 0.0f)					
 				{
-					ParticleArray[loop].Fade = 1.0f;					// Give It New Life
-					ParticleArray[loop].Life = float(rand() % 100) / 1000.0f + 0.003f;	// Random Fade Value
-					ParticleArray[loop].X = 0.0f;						// Center On X Axis
-					ParticleArray[loop].Y = 0.0f;						// Center On Y Axis
-					//ParticleArray[loop].z = 0.0f;						// Center On Z Axis
-					ParticleArray[loop].SpeedX = xspeed + float((rand() % 60) - 32.0f);	// X Axis Speed And Direction
-					ParticleArray[loop].SpeedY = yspeed + float((rand() % 60) - 30.0f);	// Y Axis Speed And Direction
-					//ParticleArray[loop].zi = float((rand() % 60) - 30.0f);	// Z Axis Speed And Direction
-					srand(SDL_GetTicks());
-					col = rand() % 3;
-					ParticleArray[loop].R = colors[col][0];			// Select Red From Color Table
-					srand(SDL_GetTicks());
-					col = rand() % 3;
-					ParticleArray[loop].G = colors[col][1];			// Select Green From Color Table
-					srand(SDL_GetTicks());
-					col = rand() % 3;
-					ParticleArray[loop].B = colors[col][2];			// Select Blue From Color Table
+					ParticleArray[loop].Fade = 1.0f;				
+					ParticleArray[loop].Life = float(rand() % 100) / 1000.0f + 0.003f;	
+					ParticleArray[loop].X = X;						
+					ParticleArray[loop].Y = Y;						
+					ParticleArray[loop].SpeedX = xspeed + float((rand() % 600) - 320.0f);	
+					ParticleArray[loop].SpeedY = yspeed + float((rand() % 600) - 300.0f);	
+					ParticleArray[loop].R = colors[col][0];
+					ParticleArray[loop].G = colors[col][1];	
+					ParticleArray[loop].B = colors[col][2];			
 				}
 			}
 		}

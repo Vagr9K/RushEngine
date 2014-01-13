@@ -90,13 +90,12 @@ void DrawGL::SetEffectMode(bool Status)
 	}
 	
 }
-void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData,GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ, RGBColor* TextureColor)
+void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData,GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ, RGBColor* TextureColor, bool BindAll)
         {
         	float KX = TextureData.KxKy.KX;
         	float KY = TextureData.KxKy.KY;
         	GLuint TextureID = TextureData.TextureID;
 			glTranslatef(X - DeltaX, Y + DeltaY, 0.0);
-
 			glRotatef(AngleX, 1.0, 0.0, 0.0);
 			glRotatef(AngleY, 0.0, 1.0, 0.0);
 			glRotatef(AngleZ, 0.0, 0.0, 1.0);
@@ -120,30 +119,25 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
 							 W/2,  H/2, 0
 						   };
 			GLfloat Trg2Crd[] = {0,0 ,KX,0 ,KX,KY};
-
-		
-			glBindTexture(GL_TEXTURE_2D, 0);
-			
-			glBindTexture(GL_TEXTURE_2D, TextureID);
-			
+			if (BindAll == false && PrevTextureID != TextureID)
+			{
+					glBindTexture(GL_TEXTURE_2D, 0);
+					glBindTexture(GL_TEXTURE_2D, TextureID);
+					PrevTextureID = TextureID;
+			}
+			if (BindAll == true)
+			{
+				glBindTexture(GL_TEXTURE_2D, 0);
+				glBindTexture(GL_TEXTURE_2D, TextureID);
+				PrevTextureID = TextureID;
+			}
 			glVertexPointer(3, GL_FLOAT, 0, &Trg1Sz);
-			
 			glTexCoordPointer(2, GL_FLOAT, 0, &Trg1Crd);
-			
 			glDrawArrays(GL_TRIANGLES, 0, 3);
-			
-
 			glVertexPointer(3, GL_FLOAT, 0, &Trg2Sz);
-			
 			glTexCoordPointer(2, GL_FLOAT, 0, &Trg2Crd);
-			
 			glDrawArrays(GL_TRIANGLES, 0, 3);
-			
-			
-			
 			glLoadIdentity();
-
-			
 			GLErrorTest("AddToBufferFROMTEXTURE()");
 	}
 void DrawGL::AddToBufferFROMPATH (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
@@ -285,7 +279,12 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 		CurrentParticle = &EffectEl->ParticleArray[i];
 		if (CurrentParticle->Active == true && (SyncMode == ACTIVE || SyncMode == ALLEFFECTS))
 		{
-			if (CheckScreenZone(CurrentParticle->X, CurrentParticle->Y, CurrentParticle->H, CurrentParticle->W))
+			float X = CurrentParticle->X;
+			float Y = CurrentParticle->Y;
+			float H = CurrentParticle->H;
+			float W = CurrentParticle->W;
+
+			if (CheckScreenZone(X, Y, H, W))
 			{
 				ParticleColor->R = CurrentParticle->R;
 				ParticleColor->G = CurrentParticle->G;
@@ -293,37 +292,44 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 				ParticleColor->Fade = CurrentParticle->Fade;
 				
 				AddToBufferFROMTEXTURE(
-					CurrentParticle->X,
-					CurrentParticle->Y,
-					CurrentParticle->H,
-					CurrentParticle->W,
+					X,
+					Y,
+					H,
+					W,
 					*TInfo,
 					0.f,
 					0.f,
 					CurrentParticle->Angle,
-					ParticleColor
+					ParticleColor,
+					false
 					);
 			}
 		}
 		if (CurrentParticle->Active == false && (SyncMode == INACTIVE || SyncMode == ALLEFFECTS))
 		{
-			if (CheckScreenZone(CurrentParticle->X, CurrentParticle->Y, CurrentParticle->H, CurrentParticle->W))
+			float X = CurrentParticle->X;
+			float Y = CurrentParticle->Y;
+			float H = CurrentParticle->H;
+			float W = CurrentParticle->W;
+
+			if (CheckScreenZone(X, Y, H, W))
 			{
 				ParticleColor->R = CurrentParticle->R;
 				ParticleColor->G = CurrentParticle->G;
 				ParticleColor->B = CurrentParticle->B;
 				ParticleColor->Fade = CurrentParticle->Fade;
-				TextureInfo TextureID = ManagerGR->LoaderGL(Path);
+
 				AddToBufferFROMTEXTURE(
-					CurrentParticle->X,
-					CurrentParticle->Y,
-					CurrentParticle->H,
-					CurrentParticle->W,
-					TextureID,
+					X,
+					Y,
+					H,
+					W,
+					*TInfo,
 					0.f,
 					0.f,
 					CurrentParticle->Angle,
-					ParticleColor
+					ParticleColor,
+					false
 					);
 			}
 		}

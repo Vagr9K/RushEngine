@@ -121,7 +121,7 @@ void Init()
 
 	mainEngine.Physics->AddWorld(&World);
 
-	EffectTest = new EngineFireEffect(1000, mainEngine.getObjects()->getEffectManager(0), "Particle.png");
+	EffectTest = new EngineFireEffect(250, mainEngine.getObjects()->getEffectManager(0), "Particle.png");
 	mainEngine.getObjects()->getEffectManager(0)->PushChanges();
 
 	STDShape = new b2CircleShape;
@@ -194,15 +194,16 @@ void RenderPhysics()
 {
 	float Step = 1.f / 120.f;
 	World.Step(Step, 8, 3);
-
-
+	b2Vec2 Pos = Balls.at(5)->Body->GetPosition();
+	EffectTest->X =WWIDTH - Pos.x*K;
+	EffectTest->Y =WHEIGHT -Pos.y*K;
 }
 
 void RenderGraphics()
 {
 	ModColors();
 	mainEngine.Graphics->DrawerGL->StartBuffer();
-	//mainEngine.Graphics->DrawerGL->SyncObjects(false, SYNCMODE);
+	mainEngine.Graphics->DrawerGL->SyncObjects(false, SYNCMODE);
 	mainEngine.Graphics->DrawerGL->SyncEffects(false, ACTIVE);
 	Tester->PushFrame();
 	double FPS = Tester->getFPS();
@@ -221,30 +222,22 @@ void RenderCamera()
 	if (A[SDL_SCANCODE_RIGHT])
 	{
 		CamX += 40;
+		
 	}
 	else if (A[SDL_SCANCODE_LEFT])
 	{
 		CamX -= 40;
+		
 	}
 	else if (A[SDL_SCANCODE_UP])
 	{
 		CamY += 40;
+		
 	}
 	else if (A[SDL_SCANCODE_DOWN])
 	{
 		CamY = CamY - 40;
-	}
-	else if (A[SDL_SCANCODE_1])
-	{
-		SYNCMODE = ALL;
-	}
-	else if (A[SDL_SCANCODE_2])
-	{
-		SYNCMODE = IMAGE;
-	}
-	else if (A[SDL_SCANCODE_3])
-	{
-		SYNCMODE = TEXT;
+		
 	}
 	mainEngine.Graphics->DrawerGL->SetView(CamX, CamY);
 
@@ -261,7 +254,7 @@ int main(int argc, char** argv)
 		{
 			Close = true;
 		}
-		//RenderPhysics();
+		RenderPhysics();
 
 		RenderGraphics();
 

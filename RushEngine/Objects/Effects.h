@@ -3,14 +3,17 @@
 class EffectBASE
 {
 	bool Inited;
+	bool Paused;
 protected:
 	EffectElement* EffElement;
+private:
 	ObjDBManager<EffectElement>* EffectManager;
 protected:
 	int FrameNumber;
 	int ParticleCount;
 protected:
 	Particle* ParticleArray;
+
 	void AddToManager()
 	{
 		EffectManager->AddToCreate(EffElement);
@@ -36,6 +39,7 @@ public:
 		this->EffectManager = EffectManager;
 		this->ParticleArray = EffElement->ParticleArray;
 		this->ParticleCount = ParticleCount;
+		Paused = false;
 		Inited = false;
 		AddToManager();
 	}
@@ -52,9 +56,19 @@ public:
 			Init();
 			Inited = true;
 		}
-		RefreshPosition();
+		if (Paused == false)
+		{
+			RefreshPosition();
+		}
 	}
-	
+	void Pause()
+	{
+		Paused = true;
+	}
+	void Resume()
+	{
+		Paused = false;
+	}
 	
 
 };
