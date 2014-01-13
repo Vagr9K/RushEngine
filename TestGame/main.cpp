@@ -2,6 +2,9 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+
+#include "Header.h"
+
 using namespace std;
 
 #define WHEIGHT 900
@@ -40,7 +43,7 @@ ObjectSyncMode SYNCMODE = IMAGE;
 FPSTest* Tester;
 
 
-
+EngineFireEffect* EffectTest;
 
 
 int RndGen(int Max)
@@ -109,7 +112,7 @@ void Init()
 
 	mainEngine.InitPhysics();
 
-	mainEngine.InitObjects(0, 0, 1, 0);
+	mainEngine.InitObjects(0, 1, 1, 0);
 	mainEngine.InitGraphics(WWIDTH, WHEIGHT, "Test #004.");
 	mainEngine.Graphics->Start();
 	mainEngine.Graphics->SetTextMaximumTime(K);
@@ -117,6 +120,9 @@ void Init()
 	mainEngine.Graphics->DrawerGL->CacheImage("Wall.png");
 
 	mainEngine.Physics->AddWorld(&World);
+
+	EffectTest = new EngineFireEffect(1000, mainEngine.getObjects()->getEffectManager(0), "Particle.png");
+	mainEngine.getObjects()->getEffectManager(0)->PushChanges();
 
 	STDShape = new b2CircleShape;
 	STDShape->m_p.Set(0.0f, 0.0f);
@@ -195,8 +201,9 @@ void RenderPhysics()
 void RenderGraphics()
 {
 	ModColors();
-	
-	mainEngine.Graphics->DrawerGL->SyncObjects(false, SYNCMODE);
+	mainEngine.Graphics->DrawerGL->StartBuffer();
+	//mainEngine.Graphics->DrawerGL->SyncObjects(false, SYNCMODE);
+	mainEngine.Graphics->DrawerGL->SyncEffects(false, ACTIVE);
 	Tester->PushFrame();
 	double FPS = Tester->getFPS();
 	double Diff = Tester->getLastDiff();
@@ -254,7 +261,7 @@ int main(int argc, char** argv)
 		{
 			Close = true;
 		}
-		RenderPhysics();
+		//RenderPhysics();
 
 		RenderGraphics();
 

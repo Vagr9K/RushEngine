@@ -100,7 +100,14 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
 			glRotatef(AngleX, 1.0, 0.0, 0.0);
 			glRotatef(AngleY, 0.0, 1.0, 0.0);
 			glRotatef(AngleZ, 0.0, 0.0, 1.0);
-
+			if (TextureColor != NULL)
+			{
+				glColor4f(TextureColor->R, TextureColor->G, TextureColor->B, TextureColor->Fade);
+			}
+			else
+			{
+				glColor4f(1.f, 1.f, 1.f, 1.f);
+			}
 			GLfloat Trg1Sz[] = {
 							-W/2, -H/2, 0,
 							-W/2,  H/2, 0,
@@ -132,14 +139,11 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
 			
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 			
-			if (TextureColor != NULL)
-			{
-				glColor4f(TextureColor->R, TextureColor->G, TextureColor->B, TextureColor->Fade);
-			}
+			
 			
 			glLoadIdentity();
 
-
+			
 			GLErrorTest("AddToBufferFROMTEXTURE()");
 	}
 void DrawGL::AddToBufferFROMPATH (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
@@ -271,7 +275,7 @@ void DrawGL::SyncObjects(bool AutoPushBuffer, ObjectSyncMode SyncTo)
 		
 
 	}
-void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncMode, RGBColor* ParticleColor)
+void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncMode, RGBColor* ParticleColor, TextureInfo* TInfo)
 {
 	string Path = EffectEl->Path;
 	Particle* CurrentParticle = NULL;
@@ -287,13 +291,13 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 				ParticleColor->G = CurrentParticle->G;
 				ParticleColor->B = CurrentParticle->B;
 				ParticleColor->Fade = CurrentParticle->Fade;
-				TextureInfo TextureID = ManagerGR->LoaderGL(Path);
+				
 				AddToBufferFROMTEXTURE(
 					CurrentParticle->X,
 					CurrentParticle->Y,
 					CurrentParticle->H,
 					CurrentParticle->W,
-					TextureID,
+					*TInfo,
 					0.f,
 					0.f,
 					CurrentParticle->Angle,
@@ -336,15 +340,16 @@ void DrawGL::SyncEffects(bool AutoPushBuffer /* = false */, EffectSyncMode SyncM
 	int LayerID = 0;
 	EffectElement* CurrentElement = NULL;
 	RGBColor* ParticleColor = new RGBColor;
-	for (LayerID = BgkC; LayerID < BgkC + WorldLC; LayerID++)
+	for (LayerID = 0; LayerID < EffectLC; LayerID++)
 	{
 
 		vector<EffectElement*>* Layer = ObjEngine->getEffectLayer(LayerID);
 		for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
 		{
 			CurrentElement = Layer->at(LayerElementID);
-			CurrentElement->PtrToEffect->RefreshPosition();
-			DrawFromEffectElement(CurrentElement, SyncMode, ParticleColor);
+			CurrentElement->PtrToEffect->Refresh();
+			TextureInfo TInfo = ManagerGR->GenerateTexture(CurrentElement->Path);
+			DrawFromEffectElement(CurrentElement, SyncMode, ParticleColor, &TInfo);
 
 		}
 		LayerID++;
