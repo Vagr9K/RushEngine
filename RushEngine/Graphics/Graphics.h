@@ -19,7 +19,8 @@ using namespace std;
 #ifdef __WINDOWS__
 #include <SDL_opengl.h>
 #elif __ANDROID__
-#include <SDL_opengles2.h>
+#include <SDL_opengles.h>
+typedef glOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar) glOrthof(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar)
 #endif 
 
 
@@ -163,10 +164,26 @@ public:
 		IsStarted = false;
 		return true;
 	}
-	void Delay(int Milliseconds)
+	void ShowMessageBox(string Title, string Message, MSGBOXMODE Type)
 	{
-		SDL_Delay(Milliseconds);
+		switch (Type)
+		{
+		case ERRORMessage:
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, Title.c_str(), Message.c_str(), NULL);
+			break;
+		case WARNINGMessage:
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, Title.c_str(), Message.c_str(), NULL);
+			break;
+		case INFORMATIONMessage:
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, Title.c_str(), Message.c_str(), NULL);
+			break;
+		default:
+			break;
+		}
+		
 	}
+
+
 
 	WindowInfo getWindowSize()
 	{

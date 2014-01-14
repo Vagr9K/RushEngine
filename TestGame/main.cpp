@@ -192,7 +192,7 @@ void Init()
 
 void RenderPhysics()
 {
-	float Step = 1.f / 120.f;
+	float Step = 1.f / 60.f;
 	World.Step(Step, 8, 3);
 	b2Vec2 Pos = Balls.at(5)->Body->GetPosition();
 	EffectTest->X =WWIDTH - Pos.x*K;

@@ -69,3 +69,10 @@ struct RGBColor
 {
 	float Fade, R, G, B;
 };
+
+enum MSGBOXMODE
+{
+	ERRORMessage,
+	WARNINGMessage,
+	INFORMATIONMessage
+};
