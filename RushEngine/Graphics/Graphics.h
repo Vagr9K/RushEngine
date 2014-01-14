@@ -107,31 +107,31 @@ public:
 	{
 		if (IsReady == false)
 		{
-			EventEngine->SystemEvents.GraphicsError("GraphicsEngine class is not initialized properly.");
+			EventEngine->SystemEvents->GraphicsError("GraphicsEngine class is not initialized properly.");
 			return false;
 		}
 
 		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 		{
-			EventEngine->SystemEvents.GraphicsError(SDL_GetError());
+			EventEngine->SystemEvents->GraphicsError(SDL_GetError());
 			return false;
 		}
 		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 		if (mainWindow == NULL)
 		{
-			EventEngine->SystemEvents.GraphicsError(SDL_GetError());
+			EventEngine->SystemEvents->GraphicsError(SDL_GetError());
 			return false;
 		}
 		if (TTF_Init() < 0)
 		{
-			EventEngine->SystemEvents.GraphicsError(TTF_GetError());
+			EventEngine->SystemEvents->GraphicsError(TTF_GetError());
 		}
 
 		int IMGFlags = IMG_INIT_PNG;
 		int InitStat = IMG_Init(IMGFlags);
 		if (InitStat != IMGFlags)
 		{
-			EventEngine->SystemEvents.GraphicsError(IMG_GetError());
+			EventEngine->SystemEvents->GraphicsError(IMG_GetError());
 			return false;
 		}
 		
@@ -183,7 +183,17 @@ public:
 		
 	}
 
-
+	void TrapMouse(bool Status)
+	{
+		if (Status)
+		{
+			SDL_SetRelativeMouseMode(SDL_TRUE);
+		}
+		else
+		{
+			SDL_SetRelativeMouseMode(SDL_FALSE);
+		}
+	}
 
 	WindowInfo getWindowSize()
 	{

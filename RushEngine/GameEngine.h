@@ -120,7 +120,7 @@ public:
 		if (BodyDefinition == NULL)
 		{
 			throw "Body definition not initialized.";
-			EventingEngine->SystemEvents.ObjectsError("Body definition not initialized.");
+			EventingEngine->SystemEvents->ObjectsError("Body definition not initialized.");
 		}
 		Body = ObjPhysics->GetWorlds()->at(PhysicsWorldIndex)->CreateBody(BodyDefinition);
 	}
@@ -130,7 +130,7 @@ public:
 		if (Body == NULL)
 		{
 			throw "Body not initialized.";
-			EventingEngine->SystemEvents.ObjectsError("Body not initialized.");
+			EventingEngine->SystemEvents->ObjectsError("Body not initialized.");
 		}
 		ObjPhysics->GetWorlds()->at(PhysicsWorldIndex)->DestroyBody(Body);
 		Body = NULL;
@@ -140,12 +140,12 @@ public:
 		if (Body == NULL)
 		{
 			throw "Body not initialized.";
-			EventingEngine->SystemEvents.ObjectsError("Body not initialized.");
+			EventingEngine->SystemEvents->ObjectsError("Body not initialized.");
 		}
 		if (FixtureDefinition == NULL)
 		{
 			throw "Fixture definition not initialized.";
-			EventingEngine->SystemEvents.ObjectsError("Fixture definition not initialized.");
+			EventingEngine->SystemEvents->ObjectsError("Fixture definition not initialized.");
 		}
 		Fixture = Body->CreateFixture(FixtureDefinition);
 
@@ -157,7 +157,7 @@ public:
 		if (Fixture == NULL)
 		{
 			throw "Fixture not initialized.";
-			EventingEngine->SystemEvents.ObjectsError("Fixture not initialized.");
+			EventingEngine->SystemEvents->ObjectsError("Fixture not initialized.");
 		}
 		Body->DestroyFixture(Fixture);
 		Fixture = NULL;
@@ -168,7 +168,7 @@ public:
 		if (ObjElement != NULL)
 		{
 			throw "ObjElement already initialized.";
-			EventingEngine->SystemEvents.ObjectsError("ObjElement already initialized.");
+			EventingEngine->SystemEvents->ObjectsError("ObjElement already initialized.");
 		}
 		ObjElement = new ObjectElement;
 		Image = ObjElement->Image;
@@ -232,7 +232,7 @@ public:
 		if (ObjElement == NULL)
 		{
 			throw "ObjElement is NULL";
-			EventingEngine->SystemEvents.ObjectsError("ObjElement is NULL");
+			EventingEngine->SystemEvents->ObjectsError("ObjElement is NULL");
 		}
 		ObjElement->Image = Image;
 	}
@@ -242,12 +242,12 @@ public:
 		if (Text == NULL)
 		{
 			throw "TXT pointer is NULL.";
-			EventingEngine->SystemEvents.ObjectsError("TXT pointer is NULL.");
+			EventingEngine->SystemEvents->ObjectsError("TXT pointer is NULL.");
 		}
 		if (ObjElement == NULL)
 		{
 			throw "ObjElement is NULL";
-			EventingEngine->SystemEvents.ObjectsError("ObjElement is NULL");
+			EventingEngine->SystemEvents->ObjectsError("ObjElement is NULL");
 		}
 		ObjElement->Text = Text;
 	}
@@ -257,7 +257,7 @@ public:
 		if (ObjElement->Image == NULL)
 		{
 			throw "IMG pointer is NULL.";
-			EventingEngine->SystemEvents.ObjectsError("IMG pointer is NULL.");
+			EventingEngine->SystemEvents->ObjectsError("IMG pointer is NULL.");
 		}
 		delete Image;
 		Image = NULL;
@@ -268,7 +268,7 @@ public:
 		if (ObjElement->Text == NULL)
 		{
 			throw "TXT pointer is NULL.";
-			EventingEngine->SystemEvents.ObjectsError("TXT pointer is NULL.");
+			EventingEngine->SystemEvents->ObjectsError("TXT pointer is NULL.");
 		}
 		delete Text;
 		Text = NULL;

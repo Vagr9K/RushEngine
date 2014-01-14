@@ -213,6 +213,9 @@ void RenderGraphics()
 		string NewTitle = "FPS : " + to_string(FPS) + " HZ.";
 		mainEngine.Graphics->DrawerGL->AddToBuffer(100, 50, 30, 200, NewFont, NewTitle, BLENDED, *NewColor, *NewColorBG);
 	}
+	mainEngine.Eventing->Input->Mouse->Refresh();
+	string Pos = to_string(mainEngine.Eventing->Input->Mouse->Status.X) + " : " + to_string(mainEngine.Eventing->Input->Mouse->Status.Y);
+	mainEngine.Graphics->DrawerGL->AddToBuffer(100, 100, 30, 200, NewFont, Pos, BLENDED, *NewColor, *NewColorBG);
 	mainEngine.Graphics->DrawerGL->PushBuffer();
 }
 

@@ -124,3 +124,8 @@ protected:
 
 };
 
+enum MouseButton
+{
+	LEFT,
+	RIGHT
+};

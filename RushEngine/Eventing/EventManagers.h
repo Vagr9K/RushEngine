@@ -67,3 +67,14 @@ public:
 	}
 };
 
+class GlobalEventManager
+{
+public:
+	SDL_Event GlobalEvent;
+public:
+	void Update()
+	{
+		//TODO: Check performance problems.
+		SDL_PollEvent(&GlobalEvent);
+	}
+};

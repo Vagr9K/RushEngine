@@ -1,16 +1,23 @@
 #pragma once
 
 #include "EventManagers.h"
-#include "SDL.h"
+#include "Input.h"
 using namespace std;
 
 
 
-class EventingEngine
+class EventingEngine : public GlobalEventManager
 {
 public:
-	SDL_Event GlobalEvent;
+
 public:
-	SystemEventing SystemEvents;
+	SystemEventing* SystemEvents;
+	InputController* Input;
+	EventingEngine()
+	{
+		SystemEvents = new SystemEventing();
+		Input = new InputController(this);
+	}
+	
 };
 

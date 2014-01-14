@@ -17,7 +17,7 @@ bool DrawGL::GLErrorTest (string FuntionName)
 		GLenum Error = glGetError();
 		if (Error != GL_NO_ERROR)
 		{
-			EventEngine->SystemEvents.GraphicsError("OpenGL error in function " + FuntionName + " : " + to_string(static_cast<long long>(static_cast<int>(Error))));
+			EventEngine->SystemEvents->GraphicsError("OpenGL error in function " + FuntionName + " : " + to_string(static_cast<long long>(static_cast<int>(Error))));
 			return false;
 		}
 		return true;
@@ -161,7 +161,7 @@ DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height
 		this->WinWidth = Width;
 		if (InitOpenGL() == false)
 		{
-			EventEngine->SystemEvents.GraphicsError("OpenGL initialization error in function DrawGL().");
+			EventEngine->SystemEvents->GraphicsError("OpenGL initialization error in function DrawGL().");
 		}
 		BgkC = ObjEngine->GetBackgroundLCount();
 		WorldLC = ObjEngine->GetWorldLCount();

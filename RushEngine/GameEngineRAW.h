@@ -11,7 +11,7 @@ private:
 	int h, w, LayerNumber;
 	ObjectsEngine* Objects;
 	string Errors;
-	EventingEngine EventEngine;
+	
 	void InitOldCpp()
 	{
 		Physics = NULL;
@@ -23,6 +23,7 @@ private:
 public:
 	PhysicsEngine* Physics;
 	GraphicsEngine* Graphics;
+	EventingEngine* Eventing;
 
 	void InitPhysics()
 	{
@@ -42,7 +43,7 @@ public:
 
 	GameEngine()
 	{ 
-		
+		Eventing = new EventingEngine();
 	}
 	void InitGraphics(int Width, int Height, string Title)
 	{
@@ -52,10 +53,10 @@ public:
 		Graphics = new GraphicsEngine;
 		if (Objects == NULL)
 		{
-			EventEngine.SystemEvents.GraphicsError("Objects engine is not initialized.");
+			Eventing->SystemEvents->GraphicsError("Objects engine is not initialized.");
 		}
 		
-		Graphics->Init(Width, Height, LayerNumber, Title, &EventEngine, Objects);
+		Graphics->Init(Width, Height, LayerNumber, Title, Eventing, Objects);
 		
 
 	}
@@ -69,7 +70,7 @@ public:
 
 	EventingEngine* getEventingEngine()
 	{
-		return &EventEngine;
+		return Eventing;
 	}
 	ObjectsEngine* getObjects()
 	{

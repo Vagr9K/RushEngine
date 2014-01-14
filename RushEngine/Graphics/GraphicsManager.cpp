@@ -67,7 +67,7 @@ SDL_Surface * GraphicsManager::IMGLoad (string Path)
 		SDL_Surface* Surface = IMG_Load(Path.c_str());
 		if (Surface == NULL)
 		{
-			EventEngine->SystemEvents.GraphicsError(IMG_GetError());
+			EventEngine->SystemEvents->GraphicsError(IMG_GetError());
 		}
 
 

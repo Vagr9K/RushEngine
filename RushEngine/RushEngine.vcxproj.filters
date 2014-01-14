@@ -91,5 +91,8 @@
     <ClInclude Include="Objects\Effects.h">
       <Filter>Source Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="Eventing\Input.h">
+      <Filter>Source Files\Eventing</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

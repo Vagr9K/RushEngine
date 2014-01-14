@@ -63,7 +63,7 @@ TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 
 			if (NewSurf == NULL)
 			{
-				EventEngine->SystemEvents.GraphicsError("Can't create new surface for OpenGL in function GenerateTexture().");
+				EventEngine->SystemEvents->GraphicsError("Can't create new surface for OpenGL in function GenerateTexture().");
 			}
 
 			SDL_BlitSurface(Surface, &BlitArea, NewSurf, NULL);
@@ -102,9 +102,9 @@ TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 		if (glGetError() != GL_NO_ERROR)
 		{   if (TwoError)
 			{
-				EventEngine->SystemEvents.GraphicsError("Image format not supported at function GenerateTexture().");
+				EventEngine->SystemEvents->GraphicsError("Image format not supported at function GenerateTexture().");
 			}
-			EventEngine->SystemEvents.GraphicsError("OpenGL error in function GenerateTexture() : " + glGetError());
+			EventEngine->SystemEvents->GraphicsError("OpenGL error in function GenerateTexture() : " + glGetError());
 			
 			
 		}
