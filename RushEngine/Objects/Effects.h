@@ -4,6 +4,7 @@ class EffectBASE
 {
 	bool Inited;
 	bool Paused;
+	bool Ended;
 protected:
 	EffectElement* EffElement;
 private:
@@ -41,6 +42,7 @@ public:
 		this->ParticleCount = ParticleCount;
 		Paused = false;
 		Inited = false;
+		Ended = false;
 		AddToManager();
 	}
 	~EffectBASE()
@@ -56,7 +58,7 @@ public:
 			Init();
 			Inited = true;
 		}
-		if (Paused == false)
+		if (Paused == false || Ended == true)
 		{
 			RefreshPosition();
 		}
@@ -69,7 +71,21 @@ public:
 	{
 		Paused = false;
 	}
-	
+	void Start()
+	{
+		Ended = false;
+	}
+
+	void Stop()
+	{
+		Ended = true;
+		Init();
+	}
+	void ReStart()
+	{
+		Init();
+		Ended = false;
+	}
 
 };
 
