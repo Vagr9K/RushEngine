@@ -26,7 +26,7 @@ protected:
 		float ActY = y;
 		h = h / 2;
 		w = w / 2;
-		if ((ActX - w) >= MouseX && (ActX + w) <= MouseX && (ActY - h) >= MouseY && (ActY + h) <= MouseY)
+		if (((ActX - w) <= MouseX) && ((ActX + w) >= MouseX) && ((ActY + h) >= MouseY) && ((ActY - h) <= MouseY))
 		{
 			return true;
 		}
