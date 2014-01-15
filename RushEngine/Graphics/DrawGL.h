@@ -30,6 +30,7 @@ private:
   void DrawFromLayerElement(ObjectElement* Element, float DrawFactor, ObjectSyncMode SyncTo);
   void DrawFromInterfaceElement(InterfaceElement* CurrentElement);
   void DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncMode, RGBColor* ParticleColor, TextureInfo* TInfo);
+  void DrawFromBackgroundElement(BackgroundElement* Element);
 inline  bool CheckScreenZone(float x, float y, float h, float w, bool NoDelta = false);
 inline void SetEffectMode(bool Status);
 public:
@@ -53,6 +54,8 @@ public:
   void SyncObjects(bool AutoPushBuffer = false, ObjectSyncMode SyncTo = IMAGE);
   void SyncEffects(bool AutoPushBuffer = false, EffectSyncMode SyncMode = ACTIVE);
   void SyncInterface(bool AutoPushBuffer = false);
+  void SyncBackground(bool AutoPushBuffer = false);
+  void SyncAll(bool AutoPushBuffer = false);
   void PushBuffer ();
   void ClearAll ();
 };

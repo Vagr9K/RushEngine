@@ -150,3 +150,21 @@ public:
 
 
 };
+
+struct BackgroundElement
+{
+public:
+	IMG* Image;
+	TXT* Text;
+	bool TextExists;
+	bool ImageExists;
+	bool AllowDraw;
+	BackgroundElement()
+	{
+		TextExists = false;
+		ImageExists = false;
+		AllowDraw = true;
+	}
+
+
+};

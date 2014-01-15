@@ -8,18 +8,20 @@ const static GLfloat colors[12][3] =
 };
 class EngineFireEffect : public EffectBASE
 {
-	float slowdown = 2.f;
+	float slowdown;
 
 public:
 	float xspeed;
 	float yspeed;
-	float X=0.f, Y=0.f;
+	float X, Y;
 	unsigned int col;
 	EngineFireEffect(int ParticleCount, ObjDBManager<EffectElement>* EffectManager, string Path) :EffectBASE(EffectManager, ParticleCount, Path)
 	{
 		xspeed = 0.f;
 		yspeed = 2000.f;
-		
+		slowdown = 2.f;
+		X = 0.f;
+		Y = 0.f;
 	}
 
 	virtual void Init()

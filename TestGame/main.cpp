@@ -112,7 +112,7 @@ void Init()
 
 	mainEngine.InitPhysics();
 
-	mainEngine.InitObjects(1, 1, 1, 0);
+	mainEngine.InitObjects(1, 1, 1, 1);
 	mainEngine.InitGraphics(WWIDTH, WHEIGHT, "Test #004.");
 	mainEngine.Graphics->Start();
 	mainEngine.Graphics->SetTextMaximumTime(K);
@@ -189,7 +189,19 @@ void Init()
 	Walls.at(3)->CreateFixture(FixtureDefWall);
 
 	Ev = new SDL_Event;
+
+	BackgroundBASE* BgkWood = new BackgroundBASE(mainEngine.getObjects()->getBackgroundManager(), mainEngine.Eventing, true);
+	IMG* Wood = new IMG;
+	Wood->h = 1000;
+	Wood->w = 1100;
+	Wood->Source = "Wood.png";
+	Wood->x = 500;
+	Wood->y = 450;
+	Wood->Angle = 0.f;
+	BgkWood->AddImage(Wood);
+
 	mainEngine.getObjects()->getObjectManager(0)->PushChanges();
+	mainEngine.getObjects()->getBackgroundManager()->PushChanges();
 }
 
 
@@ -205,10 +217,7 @@ void RenderPhysics()
 void RenderGraphics()
 {
 	ModColors();
-	mainEngine.Graphics->DrawerGL->StartBuffer();
-	mainEngine.Graphics->DrawerGL->SyncObjects(false, SYNCMODE);
-	mainEngine.Graphics->DrawerGL->SyncEffects(false, ACTIVE);
-	mainEngine.Graphics->DrawerGL->SyncInterface(false);
+	mainEngine.Graphics->DrawerGL->SyncAll(false);
 	Tester->PushFrame();
 	double FPS = Tester->getFPS();
 	double Diff = Tester->getLastDiff();

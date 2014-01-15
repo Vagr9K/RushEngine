@@ -4,6 +4,7 @@
 #include "Object.h"
 #include "Effects.h"
 #include "Interface.h"
+#include "Background.h"
 
 typedef vector<ObjDBManager<ObjectElement>*> ObjectElementManagers;
 typedef vector<ObjectElement*> ObjectElementData;
@@ -13,6 +14,9 @@ typedef vector<EffectElement*> EffectElementData;
 
 typedef vector<ObjDBManager<InterfaceElement>*> InterfaceElementManagers;
 typedef vector<InterfaceElement*> InterfaceElementData;
+
+typedef vector<ObjDBManager<BackgroundElement>*> BackgroundElementManagers;
+typedef vector<BackgroundElement*> BackgroundElementData;
 
 class ObjectsEngine
 {
@@ -36,6 +40,9 @@ private:
 
 	InterfaceElementManagers InterfaceManagers;
 	InterfaceElementData** InterfaceData;
+
+	BackgroundElementManagers BackgroundManagers;
+	BackgroundElementData** BackgroundData;
 
 private:
 	void InitOldCpp()
@@ -95,6 +102,22 @@ private:
 			InterfaceManagers.push_back(new ObjDBManager<InterfaceElement>(InterfaceData[i]));
 		}
 	}
+	void InitBackground(int BackgroundCount)
+	{
+		if (BackgroundCount != 0)
+		{
+			BackgroundData = new BackgroundElementData*[BackgroundCount];
+		}
+		else
+		{
+			BackgroundData = NULL;
+		}
+		for (int i = 0; i < BackgroundCount; i++)
+		{
+			BackgroundData[i] = new BackgroundElementData;
+			BackgroundManagers.push_back(new ObjDBManager<BackgroundElement>(BackgroundData[i]));
+		}
+	}
 
 	void DefContructor(int InterfaceLayerCount, int EffectLayerCount, int WorldCount, int BackgroundLayerCount)
 	{
@@ -104,12 +127,12 @@ private:
 		this->BackgroundLayerCount = BackgroundLayerCount;
 		this->EffectLayerCount = EffectLayerCount;
 
-		/*New API*/
+
 		InitObjects(WorldCount);
 		InitEffect(EffectLayerCount);
 		InitInterface(InterfaceLayerCount);
+		InitBackground(BackgroundLayerCount);
 
-		/*New API END*/
 	}
 public:
 	ObjectsEngine(int InterfaceLayerCount,int EffectsLayerCount ,int WorldCount, int BackgroundLayerCount)
@@ -146,7 +169,7 @@ public:
 		return BackgroundLayerCount;
 	}
 
-	/*NEW API*/
+
 	ObjDBManager<ObjectElement>* getObjectManager(int ID = 0)
 	{
 		return ObjectsManagers.at(ID);
@@ -174,7 +197,15 @@ public:
 		return InterfaceData[ID];
 	}
 
-	//TODO : Finish this part too.
+	ObjDBManager<BackgroundElement>* getBackgroundManager(int ID = 0)
+	{
+		return BackgroundManagers.at(ID);
+	}
+	BackgroundElementData* getBackgroundLayer(int ID = 0)
+	{
+		return BackgroundData[ID];
+	}
+
 };
 
 
