@@ -124,6 +124,7 @@
     <ClInclude Include="Graphics\GraphicsManager.h" />
     <ClInclude Include="GameEngineRAW.h" />
     <ClInclude Include="Objects\Effects.h" />
+    <ClInclude Include="Objects\Interface.h" />
     <ClInclude Include="Objects\Object.h" />
     <ClInclude Include="Objects\ObjectManager.h" />
     <ClInclude Include="Objects\Objects.h" />

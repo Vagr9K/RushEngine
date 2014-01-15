@@ -15,6 +15,7 @@ class DrawGL
   int BgkC;
   int WorldLC;
   int EffectLC;
+  int InterfaceLC;
   bool BufferStarted;
   float GlobalDrawFactor;
   GLuint PrevTextureID;
@@ -27,6 +28,7 @@ private:
   void AddToBufferFROMPATH (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
   void AddToBufferFROMTEXT (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
   void DrawFromLayerElement(ObjectElement* Element, float DrawFactor, ObjectSyncMode SyncTo);
+  void DrawFromInterfaceElement(InterfaceElement* CurrentElement);
   void DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncMode, RGBColor* ParticleColor, TextureInfo* TInfo);
 inline  bool CheckScreenZone(float x, float y, float h, float w);
 inline void SetEffectMode(bool Status);
@@ -50,6 +52,7 @@ public:
   void AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Background);
   void SyncObjects(bool AutoPushBuffer = false, ObjectSyncMode SyncTo = IMAGE);
   void SyncEffects(bool AutoPushBuffer = false, EffectSyncMode SyncMode = ACTIVE);
+  void SyncInterface(bool AutoPushBuffer = false);
   void PushBuffer ();
   void ClearAll ();
 };

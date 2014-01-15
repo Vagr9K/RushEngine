@@ -3,12 +3,16 @@
 #include <vector>
 #include "Object.h"
 #include "Effects.h"
+#include "Interface.h"
 
 typedef vector<ObjDBManager<ObjectElement>*> ObjectElementManagers;
 typedef vector<ObjectElement*> ObjectElementData;
 
 typedef vector<ObjDBManager<EffectElement>*>  EffectElementManagers;
 typedef vector<EffectElement*> EffectElementData;
+
+typedef vector<ObjDBManager<InterfaceElement>*> InterfaceElementManagers;
+typedef vector<InterfaceElement*> InterfaceElementData;
 
 class ObjectsEngine
 {
@@ -29,6 +33,9 @@ private:
 
 	EffectElementManagers EffectManagers;
 	EffectElementData** EffectData;
+
+	InterfaceElementManagers InterfaceManagers;
+	InterfaceElementData** InterfaceData;
 
 private:
 	void InitOldCpp()
@@ -71,6 +78,24 @@ private:
 			EffectManagers.push_back(new ObjDBManager<EffectElement>(EffectData[i]));
 		}
 	}
+
+	void InitInterface(int WorldCount)
+	{
+		if (WorldCount != 0)
+		{
+			InterfaceData = new InterfaceElementData*[WorldCount];
+		}
+		else
+		{
+			InterfaceData = NULL;
+		}
+		for (int i = 0; i < WorldCount; i++)
+		{
+			InterfaceData[i] = new InterfaceElementData;
+			InterfaceManagers.push_back(new ObjDBManager<InterfaceElement>(InterfaceData[i]));
+		}
+	}
+
 	void DefContructor(int InterfaceLayerCount, int EffectLayerCount, int WorldCount, int BackgroundLayerCount)
 	{
 		InitOldCpp();
@@ -82,7 +107,7 @@ private:
 		/*New API*/
 		InitObjects(WorldCount);
 		InitEffect(EffectLayerCount);
-
+		InitInterface(InterfaceLayerCount);
 
 		/*New API END*/
 	}
@@ -130,6 +155,7 @@ public:
 	{
 		return ObjectsData[ID];
 	}
+
 	ObjDBManager<EffectElement>* getEffectManager(int ID = 0)
 	{
 		return EffectManagers.at(ID);
@@ -138,6 +164,16 @@ public:
 	{
 		return EffectData[ID];
 	}
+
+	ObjDBManager<InterfaceElement>* getInterfaceManager(int ID = 0)
+	{
+		return InterfaceManagers.at(ID);
+	}
+	InterfaceElementData* getInterfaceLayer(int ID = 0)
+	{
+		return InterfaceData[ID];
+	}
+
 	//TODO : Finish this part too.
 };
 

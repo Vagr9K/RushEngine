@@ -129,3 +129,23 @@ enum EffectSyncMode
 	INACTIVE,
 	ALLEFFECTS
 };
+
+class InterfaceBASE;
+struct InterfaceElement
+{
+public:
+	InterfaceBASE* InterfacePtr;
+	IMG* Image;
+	TXT* Text;
+	bool TextExists;
+	bool ImageExists;
+	bool Hidden;
+	InterfaceElement()
+	{
+		TextExists = false;
+		ImageExists = false;
+		Hidden = false;
+	}
+
+
+};

@@ -11,6 +11,8 @@ void DrawGL::InitOldCpp ()
 		BufferStarted = false;
 		BgkC = 0;
 		WorldLC = 0;
+		EffectLC = 0;
+		InterfaceLC = 0;
 	}
 bool DrawGL::GLErrorTest (string FuntionName)
         {
@@ -166,6 +168,7 @@ DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height
 		BgkC = ObjEngine->GetBackgroundLCount();
 		WorldLC = ObjEngine->GetWorldLCount();
 		EffectLC = ObjEngine->GetEffectLCount();
+		InterfaceLC = ObjEngine->GetBackgroundLCount();
 	}
 DrawGL::~ DrawGL ()
         {
@@ -269,6 +272,38 @@ void DrawGL::SyncObjects(bool AutoPushBuffer, ObjectSyncMode SyncTo)
 		
 
 	}
+void DrawGL::SyncInterface(bool AutoPushBuffer)
+{
+
+	if (BufferStarted == false)
+	{
+		StartBuffer();
+	}
+	int LayerID = 0;
+	InterfaceElement* CurrentElement = NULL;
+	for (LayerID = 0; LayerID < InterfaceLC; LayerID++)
+	{
+
+		vector<InterfaceElement*>* Layer = ObjEngine->getInterfaceLayer(LayerID);
+		for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
+		{
+			CurrentElement = Layer->at(LayerElementID);
+			CurrentElement->InterfacePtr->Refresh();
+			DrawFromInterfaceElement(CurrentElement);
+
+		}
+		LayerID++;
+
+	}
+	if (AutoPushBuffer == true)
+	{
+		PushBuffer();
+	}
+
+
+
+}
+
 void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncMode, RGBColor* ParticleColor, TextureInfo* TInfo)
 {
 	string Path = EffectEl->Path;
@@ -335,6 +370,58 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 		}
 	}
 	
+}
+void DrawGL::DrawFromInterfaceElement(InterfaceElement* Element)
+{
+	if (Element->ImageExists == true)
+	{
+		IMG* Image = Element->Image;
+		float X = WinWidth - (GLfloat)Image->x;
+		float Y = WinHeight - (GLfloat)Image->y;
+		float H = (GLfloat)Image->h;
+		float W = (GLfloat)Image->w;
+		if (CheckScreenZone(X, Y, H, W))
+		{
+			string Path = Image->Source;
+			AddToBuffer(X, Y, H, W, Path);
+		}
+
+
+	}
+	if (Element->TextExists == true)
+	{
+		TXT* Text = Element->Text;
+		float X = WinWidth - (GLfloat)Text->x;
+		float Y = WinHeight - (GLfloat)Text->y;
+		float H = (GLfloat)Text->h;
+		float W = (GLfloat)Text->w;
+		if (CheckScreenZone(X, Y, H, W))
+		{
+			TextFont* Font = Text->Font;
+			string Contents = Text->Content;
+			SDL_Color* Foreground = Text->Foreground;
+			SDL_Color* Background = Text->Background;
+			Mode DrawMode = Text->DrawMode;
+			if (Foreground == NULL)
+			{
+				Foreground = new SDL_Color();
+				Foreground->a = 0;
+				Foreground->g = 255;
+				Foreground->b = 255;
+				Foreground->r = 255;
+			}
+			if (Background == NULL)
+			{
+				Background->a = 0;
+				Background->b = 0;
+				Background->r = 0;
+				Background->g = 0;
+			}
+			AddToBuffer(X, Y, H, W, Font, Contents, DrawMode, *Foreground, *Background);
+		}
+
+
+	}
 }
 void DrawGL::SyncEffects(bool AutoPushBuffer /* = false */, EffectSyncMode SyncMode /* = ALLEFFECTS */)
 {

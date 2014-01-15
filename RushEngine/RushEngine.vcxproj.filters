@@ -94,5 +94,8 @@
     <ClInclude Include="Eventing\Input.h">
       <Filter>Source Files\Eventing</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\Interface.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
