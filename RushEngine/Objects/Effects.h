@@ -2,19 +2,17 @@
 
 class EffectBASE
 {
+
+private:
 	bool Inited;
 	bool Paused;
 	bool Ended;
-protected:
-	EffectElement* EffElement;
-private:
 	ObjDBManager<EffectElement>* EffectManager;
 protected:
-	int FrameNumber;
 	int ParticleCount;
-protected:
 	Particle* ParticleArray;
-
+	EffectElement* EffElement;
+private:
 	void AddToManager()
 	{
 		EffectManager->AddToCreate(EffElement);
@@ -24,7 +22,7 @@ protected:
 	{
 		EffectManager->AddToCreate(EffElement);
 	}
-
+protected:
 	virtual void Init() = 0;
 
 	virtual void RefreshPosition() = 0;
@@ -33,7 +31,6 @@ protected:
 public:
 	EffectBASE(ObjDBManager<EffectElement>* EffectManager, int ParticleCount,string Path)
 	{
-		FrameNumber = 0;
 		EffElement = new EffectElement(this, Path);
 		EffElement->ParticleArray = new Particle[ParticleCount];
 		EffElement->ParticleCount = ParticleCount;
