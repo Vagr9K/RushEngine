@@ -105,11 +105,22 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Eventing\EventComponents.cpp" />
+    <ClCompile Include="Eventing\Eventing.cpp" />
+    <ClCompile Include="Eventing\EventManagers.cpp" />
+    <ClCompile Include="Eventing\Input.cpp" />
     <ClCompile Include="Graphics\Components.cpp" />
     <ClCompile Include="Graphics\DrawGL.cpp" />
     <ClCompile Include="Graphics\GLManager.cpp" />
     <ClCompile Include="Graphics\GraphicsManager.cpp" />
     <ClCompile Include="Graphics\TextManager.cpp" />
+    <ClCompile Include="Objects\Background.cpp" />
+    <ClCompile Include="Objects\Effects.cpp" />
+    <ClCompile Include="Objects\Interface.cpp" />
+    <ClCompile Include="Objects\Object.cpp" />
+    <ClCompile Include="Objects\Objects.cpp" />
+    <ClCompile Include="Objects\ObjModel.cpp" />
+    <ClCompile Include="Physics\Physics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdvFeatures\Tests.h" />

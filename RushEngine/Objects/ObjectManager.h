@@ -2,62 +2,82 @@
 
 #include "ObjModel.h"
 
-template <class ElementType>
+
+template <typename ElementType>
 class ObjDBManager
 {
 private:
-	vector<ElementType*>* Source;
-	vector<ElementType*>* StoreForDelete;
-	vector<ElementType*>* StoreForAdd;
-	int AddCount;
-	int DeleteCount;
-	int OptObjCount;
-	bool Inited;
+  vector <ElementType*> * Source;
+  vector <ElementType*> * StoreForDelete;
+  vector <ElementType*> * StoreForAdd;
+  int AddCount;
+  int DeleteCount;
+  int OptObjCount;
+  bool Inited;
 private:
-	void InitOldCpp()
-	{
+  void InitOldCpp ();
+public:
+  ObjDBManager (vector <ElementType*> * Source);
+  ObjDBManager (vector <ElementType*> * Source, int OptimalObjectCount);
+  ~ ObjDBManager ();
+  void SetOptimalObjectCount (int OptimalObjectCount);
+  int GetOptimalObjectCount ();
+  void SetSource (vector <ElementType*> * Source);
+  void Init ();
+  void AddToDelete (ElementType * DeleteElement);
+  void AddToCreate (ElementType * NewElement);
+  bool PushChanges ();
+  void CleanStore ();
+};
+template <typename ElementType>
+void ObjDBManager <ElementType>::InitOldCpp ()
+        {
 		AddCount = 0;
 		DeleteCount = 0;
 		OptObjCount = 0;
 		Inited = false;
 	}
-
-public:
-
-	ObjDBManager(vector<ElementType*>* Source)
-	{
+template <typename ElementType>
+ObjDBManager <ElementType>::ObjDBManager (vector <ElementType*> * Source)
+        {
 		InitOldCpp();
 		this->Source = Source;
 	}
-	ObjDBManager(vector<ElementType*>* Source, int OptimalObjectCount)
-	{
+template <typename ElementType>
+ObjDBManager <ElementType>::ObjDBManager (vector <ElementType*> * Source, int OptimalObjectCount)
+        {
 		InitOldCpp();
 		this->Source = Source;
 		this->OptObjCount = OptimalObjectCount;
 	}
-	~ObjDBManager()
-	{
+template <typename ElementType>
+ObjDBManager <ElementType>::~ ObjDBManager ()
+        {
 		delete StoreForDelete;
 		delete StoreForAdd;
 		delete Source;
 
 	}
-	void SetOptimalObjectCount(int OptimalObjectCount)
-	{
+template <typename ElementType>
+void ObjDBManager <ElementType>::SetOptimalObjectCount (int OptimalObjectCount)
+        {
 		this->OptObjCount = OptimalObjectCount;
 	}
-	int GetOptimalObjectCount()
-	{
+template <typename ElementType>
+int ObjDBManager <ElementType>::GetOptimalObjectCount ()
+        {
 		return OptObjCount;
 	}
-	void SetSource(vector<ElementType*>* Source)
-	{
+template <typename ElementType>
+void ObjDBManager <ElementType>::SetSource (vector <ElementType*> * Source)
+        {
 		CleanStore();
 		Init();
 		this->Source = Source;
 	}
-	void Init()
-	{
+template <typename ElementType>
+void ObjDBManager <ElementType>::Init ()
+        {
 		StoreForAdd = new vector<ElementType*>;
 		StoreForAdd->reserve(OptObjCount);
 		StoreForDelete = new vector<ElementType*>;
@@ -66,8 +86,9 @@ public:
 		Inited = true;
 
 	}
-	void AddToDelete(ElementType* DeleteElement)
-	{
+template <typename ElementType>
+void ObjDBManager <ElementType>::AddToDelete (ElementType * DeleteElement)
+        {
 		if (Inited == false)
 		{
 			Init();
@@ -76,9 +97,9 @@ public:
 		DeleteCount++;
 
 	}
-
-	void AddToCreate(ElementType* NewElement)
-	{
+template <typename ElementType>
+void ObjDBManager <ElementType>::AddToCreate (ElementType * NewElement)
+        {
 		if (Inited == false)
 		{
 			Init();
@@ -86,9 +107,9 @@ public:
 		StoreForAdd->push_back(NewElement);
 		AddCount++;
 	}
-
-	bool PushChanges()
-	{
+template <typename ElementType>
+bool ObjDBManager <ElementType>::PushChanges ()
+        {
 		if (Inited == false)
 		{
 			return false;
@@ -131,8 +152,9 @@ public:
 		CleanStore();
 		return true;
 	}
-	void CleanStore()
-	{
+template <typename ElementType>
+void ObjDBManager <ElementType>::CleanStore ()
+        {
 		AddCount = 0;
 		DeleteCount = 0;
 		Inited = false;
@@ -141,5 +163,3 @@ public:
 		delete StoreForDelete;
 		StoreForDelete = NULL;
 	}
-
-};

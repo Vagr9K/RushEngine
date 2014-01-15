@@ -6,206 +6,53 @@
 #include "Interface.h"
 #include "Background.h"
 
-typedef vector<ObjDBManager<ObjectElement>*> ObjectElementManagers;
-typedef vector<ObjectElement*> ObjectElementData;
 
-typedef vector<ObjDBManager<EffectElement>*>  EffectElementManagers;
-typedef vector<EffectElement*> EffectElementData;
-
-typedef vector<ObjDBManager<InterfaceElement>*> InterfaceElementManagers;
-typedef vector<InterfaceElement*> InterfaceElementData;
-
-typedef vector<ObjDBManager<BackgroundElement>*> BackgroundElementManagers;
-typedef vector<BackgroundElement*> BackgroundElementData;
-
+typedef vector <ObjDBManager<ObjectElement>*> ObjectElementManagers;
+typedef vector <ObjectElement*> ObjectElementData;
+typedef vector <ObjDBManager<EffectElement>*> EffectElementManagers;
+typedef vector <EffectElement*> EffectElementData;
+typedef vector <ObjDBManager<InterfaceElement>*> InterfaceElementManagers;
+typedef vector <InterfaceElement*> InterfaceElementData;
+typedef vector <ObjDBManager<BackgroundElement>*> BackgroundElementManagers;
+typedef vector <BackgroundElement*> BackgroundElementData;
 class ObjectsEngine
 {
-
-	int InterfaceLayerCount;
-	int WorldCount;
-	int BackgroundLayerCount;
-	int EffectLayerCount;
-
-
-
+  int InterfaceLayerCount;
+  int WorldCount;
+  int BackgroundLayerCount;
+  int EffectLayerCount;
 public:
-	int OptObjCount;
-
+  int OptObjCount;
 private:
-	ObjectElementManagers ObjectsManagers;
-	ObjectElementData** ObjectsData;
-
-	EffectElementManagers EffectManagers;
-	EffectElementData** EffectData;
-
-	InterfaceElementManagers InterfaceManagers;
-	InterfaceElementData** InterfaceData;
-
-	BackgroundElementManagers BackgroundManagers;
-	BackgroundElementData** BackgroundData;
-
+  ObjectElementManagers ObjectsManagers;
+  ObjectElementData * * ObjectsData;
+  EffectElementManagers EffectManagers;
+  EffectElementData * * EffectData;
+  InterfaceElementManagers InterfaceManagers;
+  InterfaceElementData * * InterfaceData;
+  BackgroundElementManagers BackgroundManagers;
+  BackgroundElementData * * BackgroundData;
 private:
-	void InitOldCpp()
-	{
-		OptObjCount = 0;
-	}
-
-	void InitObjects(int WorldCount)
-	{
-		if (WorldCount != 0)
-		{
-			ObjectsData = new ObjectElementData*[WorldCount];
-		}
-		else
-		{
-			ObjectsData = NULL;
-		}
-		for (int i = 0; i < WorldCount; i++)
-		{
-			ObjectsData[i] = new ObjectElementData;
-			ObjectsManagers.push_back(new ObjDBManager<ObjectElement>(ObjectsData[i]));
-		}
-
-	}
-
-	
-	void InitEffect(int WorldCount)
-	{
-		if (WorldCount != 0)
-		{
-			EffectData = new EffectElementData*[WorldCount];
-		}
-		else
-		{
-			EffectData = NULL;
-		}
-		for (int i = 0; i < WorldCount; i++)
-		{
-			EffectData[i] = new EffectElementData;
-			EffectManagers.push_back(new ObjDBManager<EffectElement>(EffectData[i]));
-		}
-	}
-
-	void InitInterface(int InterfaceCount)
-	{
-		if (InterfaceCount != 0)
-		{
-			InterfaceData = new InterfaceElementData*[InterfaceCount];
-		}
-		else
-		{
-			InterfaceData = NULL;
-		}
-		for (int i = 0; i < InterfaceCount; i++)
-		{
-			InterfaceData[i] = new InterfaceElementData;
-			InterfaceManagers.push_back(new ObjDBManager<InterfaceElement>(InterfaceData[i]));
-		}
-	}
-	void InitBackground(int BackgroundCount)
-	{
-		if (BackgroundCount != 0)
-		{
-			BackgroundData = new BackgroundElementData*[BackgroundCount];
-		}
-		else
-		{
-			BackgroundData = NULL;
-		}
-		for (int i = 0; i < BackgroundCount; i++)
-		{
-			BackgroundData[i] = new BackgroundElementData;
-			BackgroundManagers.push_back(new ObjDBManager<BackgroundElement>(BackgroundData[i]));
-		}
-	}
-
-	void DefContructor(int InterfaceLayerCount, int EffectLayerCount, int WorldCount, int BackgroundLayerCount)
-	{
-		InitOldCpp();
-		this->InterfaceLayerCount = InterfaceLayerCount;
-		this->WorldCount = WorldCount;
-		this->BackgroundLayerCount = BackgroundLayerCount;
-		this->EffectLayerCount = EffectLayerCount;
-
-
-		InitObjects(WorldCount);
-		InitEffect(EffectLayerCount);
-		InitInterface(InterfaceLayerCount);
-		InitBackground(BackgroundLayerCount);
-
-	}
+  void InitOldCpp ();
+  void InitObjects (int WorldCount);
+  void InitEffect (int WorldCount);
+  void InitInterface (int InterfaceCount);
+  void InitBackground (int BackgroundCount);
+  void DefContructor (int InterfaceLayerCount, int EffectLayerCount, int WorldCount, int BackgroundLayerCount);
 public:
-	ObjectsEngine(int InterfaceLayerCount,int EffectsLayerCount ,int WorldCount, int BackgroundLayerCount)
-	{
-		DefContructor(InterfaceLayerCount, EffectsLayerCount, WorldCount, BackgroundLayerCount);
-
-	}
-	ObjectsEngine(int InterfaceLayerCount, int EffectsLayerCount, int WorldCount, int BackgroundLayerCount, int OptimalObjectsCount)
-	{
-		DefContructor(InterfaceLayerCount, EffectsLayerCount, WorldCount, BackgroundLayerCount);
-		this->OptObjCount = OptimalObjectsCount;
-	}
-
-
-	int GetCount()
-	{
-		return InterfaceLayerCount + EffectLayerCount + WorldCount + BackgroundLayerCount;
-	}
-
-	int GetEffectLCount()
-	{
-		return EffectLayerCount;
-	}
-	int GetWorldLCount()
-	{
-		return WorldCount;
-	}
-	int GetInterfaceLCount()
-	{
-		return InterfaceLayerCount;
-	}
-	int GetBackgroundLCount()
-	{
-		return BackgroundLayerCount;
-	}
-
-
-	ObjDBManager<ObjectElement>* getObjectManager(int ID = 0)
-	{
-		return ObjectsManagers.at(ID);
-	}
-	ObjectElementData* getObjectsLayer(int ID = 0)
-	{
-		return ObjectsData[ID];
-	}
-
-	ObjDBManager<EffectElement>* getEffectManager(int ID = 0)
-	{
-		return EffectManagers.at(ID);
-	}
-	EffectElementData* getEffectLayer(int ID = 0)
-	{
-		return EffectData[ID];
-	}
-
-	ObjDBManager<InterfaceElement>* getInterfaceManager(int ID = 0)
-	{
-		return InterfaceManagers.at(ID);
-	}
-	InterfaceElementData* getInterfaceLayer(int ID = 0)
-	{
-		return InterfaceData[ID];
-	}
-
-	ObjDBManager<BackgroundElement>* getBackgroundManager(int ID = 0)
-	{
-		return BackgroundManagers.at(ID);
-	}
-	BackgroundElementData* getBackgroundLayer(int ID = 0)
-	{
-		return BackgroundData[ID];
-	}
-
+  ObjectsEngine (int InterfaceLayerCount, int EffectsLayerCount, int WorldCount, int BackgroundLayerCount);
+  ObjectsEngine (int InterfaceLayerCount, int EffectsLayerCount, int WorldCount, int BackgroundLayerCount, int OptimalObjectsCount);
+  int GetCount ();
+  int GetEffectLCount ();
+  int GetWorldLCount ();
+  int GetInterfaceLCount ();
+  int GetBackgroundLCount ();
+  ObjDBManager <ObjectElement> * getObjectManager (int ID = 0);
+  ObjectElementData * getObjectsLayer (int ID = 0);
+  ObjDBManager <EffectElement> * getEffectManager (int ID = 0);
+  EffectElementData * getEffectLayer (int ID = 0);
+  ObjDBManager <InterfaceElement> * getInterfaceManager (int ID = 0);
+  InterfaceElementData * getInterfaceLayer (int ID = 0);
+  ObjDBManager <BackgroundElement> * getBackgroundManager (int ID = 0);
+  BackgroundElementData * getBackgroundLayer (int ID = 0);
 };
-
-

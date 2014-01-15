@@ -41,6 +41,39 @@
     <ClCompile Include="Graphics\TextManager.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Eventing\EventComponents.cpp">
+      <Filter>Source Files\Eventing</Filter>
+    </ClCompile>
+    <ClCompile Include="Eventing\Eventing.cpp">
+      <Filter>Source Files\Eventing</Filter>
+    </ClCompile>
+    <ClCompile Include="Eventing\EventManagers.cpp">
+      <Filter>Source Files\Eventing</Filter>
+    </ClCompile>
+    <ClCompile Include="Eventing\Input.cpp">
+      <Filter>Source Files\Eventing</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Interface.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Object.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Objects.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\ObjModel.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Background.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Effects.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Physics.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngineRAW.h">
@@ -58,38 +91,20 @@
     <ClInclude Include="Graphics\GraphicsManager.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Eventing\EventComponents.h">
-      <Filter>Source Files\Eventing</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\ObjectManager.h">
-      <Filter>Source Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\ObjModel.h">
-      <Filter>Source Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Object.h">
-      <Filter>Source Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Physics.h">
-      <Filter>Source Files\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Eventing\EventManagers.h">
-      <Filter>Source Files\Eventing</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Objects.h">
-      <Filter>Source Files\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\Graphics.h">
       <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Eventing\Eventing.h">
-      <Filter>Source Files\Eventing</Filter>
     </ClInclude>
     <ClInclude Include="AdvFeatures\Tests.h">
       <Filter>Source Files\AdvFeatures</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Effects.h">
-      <Filter>Source Files\Objects</Filter>
+    <ClInclude Include="Eventing\EventComponents.h">
+      <Filter>Source Files\Eventing</Filter>
+    </ClInclude>
+    <ClInclude Include="Eventing\Eventing.h">
+      <Filter>Source Files\Eventing</Filter>
+    </ClInclude>
+    <ClInclude Include="Eventing\EventManagers.h">
+      <Filter>Source Files\Eventing</Filter>
     </ClInclude>
     <ClInclude Include="Eventing\Input.h">
       <Filter>Source Files\Eventing</Filter>
@@ -97,8 +112,26 @@
     <ClInclude Include="Objects\Interface.h">
       <Filter>Source Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\Object.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\ObjectManager.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Objects.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\ObjModel.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
     <ClInclude Include="Objects\Background.h">
       <Filter>Source Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Effects.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Physics.h">
+      <Filter>Source Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

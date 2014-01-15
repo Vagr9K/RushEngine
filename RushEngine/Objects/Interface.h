@@ -2,39 +2,33 @@
 #include "../Eventing/Eventing.h"
 using namespace std;
 
+
 class InterfaceBASE
 {
-	bool Inited;
+  bool Inited;
 private:
-	void AddToManager()
-	{
-		ManagerDB->AddToCreate(InterElement);
-	}
-	void DeleteFromManager()
-	{
-		ManagerDB->AddToDelete(InterElement);
-	}
+  void AddToManager ();
+  void DeleteFromManager ();
 protected:
-	InterfaceElement* InterElement;
-	ObjDBManager<InterfaceElement>* ManagerDB;
-	EventingEngine* EventSystem;
+  InterfaceElement * InterElement;
+  ObjDBManager <InterfaceElement> * ManagerDB;
+  EventingEngine * EventSystem;
 protected:
-	bool CheckScreenZone(float x, float y, float h, float w, int MouseX, int MouseY)
-	{
-
-		float ActX = x;
-		float ActY = y;
-		h = h / 2;
-		w = w / 2;
-		if (((ActX - w) <= MouseX) && ((ActX + w) >= MouseX) && ((ActY + h) >= MouseY) && ((ActY - h) <= MouseY))
-		{
-			return true;
-		}
-
-		return false;
-	}
-	inline virtual bool CheckHover()
-	{
+  bool CheckScreenZone (float x, float y, float h, float w, int MouseX, int MouseY);
+  virtual bool CheckHover ();
+  virtual bool CheckClick ();
+  virtual void Init () = 0;
+  virtual void OnHover ();
+  virtual void OnClick ();
+  virtual void OnNULL ();
+  virtual void StateTest ();
+public:
+  InterfaceBASE (ObjDBManager <InterfaceElement> * ManagerDB, EventingEngine * EventSystem);
+  ~ InterfaceBASE ();
+  void Refresh ();
+};
+inline bool InterfaceBASE::CheckHover ()
+        {
 		
 		int MouseX = EventSystem->Input->Mouse->Status.X;
 		int MouseY = EventSystem->Input->Mouse->Status.Y;
@@ -50,8 +44,8 @@ protected:
 		}
 		return false;
 	}
-	inline virtual bool CheckClick()
-	{
+inline bool InterfaceBASE::CheckClick ()
+        {
 		if (CheckHover())
 		{
 			if (EventSystem->Input->Mouse->Status.Motion == false)
@@ -63,68 +57,15 @@ protected:
 		}
 		return false;
 	}
-
-	virtual void Init() = 0;
-
-
-	inline virtual void OnHover()
-	{
+inline void InterfaceBASE::OnHover ()
+        {
 		//Do nothing by default.
 	}
-	inline virtual void OnClick()
-	{
+inline void InterfaceBASE::OnClick ()
+        {
 		//Do nothing by default.
 	}
-	inline virtual void OnNULL()
-	{
+inline void InterfaceBASE::OnNULL ()
+        {
 
 	}
-	virtual void StateTest()
-	{
-		EventSystem->Input->Mouse->Refresh();
-		if (CheckHover())
-		{
-			OnHover();
-		}
-		else if (CheckClick())
-		{
-			OnClick();
-		}
-		else
-		{
-			OnNULL();
-		}
-	}
-public:
-	InterfaceBASE(ObjDBManager<InterfaceElement>* ManagerDB, EventingEngine* EventSystem)
-	{
-		this->ManagerDB = ManagerDB;
-		this->EventSystem = EventSystem;
-		InterElement = new InterfaceElement();
-		InterElement->InterfacePtr = this;
-		AddToManager();
-		Inited = false;
-	}
-	~InterfaceBASE()
-	{
-		if (InterElement->TextExists)
-		{
-			delete InterElement->Text;
-		}
-		if (InterElement->ImageExists)
-		{
-			delete InterElement->Image;
-		}
-		delete InterElement;
-		DeleteFromManager();
-	}
-	void Refresh()
-	{
-		if (Inited == false)
-		{
-			Init();
-		}
-		StateTest();
-	}
-
-};

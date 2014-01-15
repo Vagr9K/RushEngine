@@ -2,169 +2,112 @@
 #include <vector>
 using namespace std;
 #include <Box2D/Box2D.h>
+#include "SDL.h"
 
 #include "../Graphics/Components.h"
 
+
 struct IMG
 {
-
 public:
-	float x, y, w, h;
-	float Angle;
-	string Source;
-	IMG()
-	{
-
-	}
-	IMG(float x, float y, float w, float h, float Angle, string Source)
-	{
-		this->x = x;
-		this->y = y;
-		this->w = w;
-		this->h = h;
-		this->Angle = Angle;
-		this->Source = Source;
-	}
-	
+  float x;
+  float y;
+  float w;
+  float h;
+  float Angle;
+  string Source;
+  IMG ();
+  IMG (float x, float y, float w, float h, float Angle, string Source);
 };
-
 struct TXT
 {
 public:
-	float x, y, w, h;
-	float Angle;
-	string Content;
-	TextFont* Font;
-	SDL_Color* Foreground;
-	SDL_Color* Background;
-	Mode DrawMode;
-	TXT()
-	{
-		Font = NULL;
-		Content = "No content was added!";
-		DrawMode = SOLID;
-	}
-	TXT(float x, float y, float w, float h, float Angle,TextFont* Font, Mode DrawMode,string Content)
-	{
-		this->x = x;
-		this->y = y;
-		this->w = w;
-		this->h = h;
-		this->Angle = Angle;
-		this->Font = Font;
-		this->Content = Content;
-		this->DrawMode = DrawMode;
-		Foreground = NULL;
-		Background = NULL;
-	}
-	
+  float x;
+  float y;
+  float w;
+  float h;
+  float Angle;
+  string Content;
+  TextFont * Font;
+  SDL_Color * Foreground;
+  SDL_Color * Background;
+  Mode DrawMode;
+  TXT ();
+  TXT (float x, float y, float w, float h, float Angle, TextFont * Font, Mode DrawMode, string Content);
 };
 class ObjectBASE;
-
 struct ObjectElement
 {
 public:
-	ObjectBASE* ObjectPtr;
-	IMG* Image;
-	TXT* Text;
-	float DrawFactor;
-	bool TextExists;
-	bool ImageExists;
-	bool AllowDraw;
-	ObjectElement()
-	{
-		TextExists = false;
-		ImageExists = false;
-		DrawFactor = 0.f;
-		AllowDraw = true;
-	}
-
-
+  ObjectBASE * ObjectPtr;
+  IMG * Image;
+  TXT * Text;
+  float DrawFactor;
+  bool TextExists;
+  bool ImageExists;
+  bool AllowDraw;
+  ObjectElement ();
 };
-
 enum ObjectSyncMode
 {
-	IMAGE,
-	TEXT,
-	ALL,
+  IMAGE,
+  TEXT,
+  ALL
 };
 class EffectBASE;
 struct Particle
 {
-	bool Active;
-	float Life;
-	float X, Y;
-	float H, W;
-	float Angle;
-	float SpeedX, SpeedY;
-	float GravityX, GravityY;
-	float R, G, B;
-	float Fade;
-	Particle()
-	{
-		Active = false;
-	}
+  bool Active;
+  float Life;
+  float X;
+  float Y;
+  float H;
+  float W;
+  float Angle;
+  float SpeedX;
+  float SpeedY;
+  float GravityX;
+  float GravityY;
+  float R;
+  float G;
+  float B;
+  float Fade;
+  Particle ();
 };
-
 struct EffectElement
 {
-	EffectBASE* PtrToEffect;
-	Particle* ParticleArray;
-	string Path;
-	int ParticleCount;
-	EffectElement(EffectBASE* PtrToEffect, string Path)
-	{
-		this->PtrToEffect = PtrToEffect;
-		this->Path = Path;
-		ParticleCount = 0;
-	}
-	~EffectElement()
-	{
-		delete[] ParticleArray;
-	}
+  EffectBASE * PtrToEffect;
+  Particle * ParticleArray;
+  string Path;
+  int ParticleCount;
+  EffectElement (EffectBASE * PtrToEffect, string Path);
+  ~ EffectElement ();
 };
 enum EffectSyncMode
 {
-	ACTIVE,
-	INACTIVE,
-	ALLEFFECTS
+  ACTIVE,
+  INACTIVE,
+  ALLEFFECTS
 };
-
 class InterfaceBASE;
 struct InterfaceElement
 {
 public:
-	InterfaceBASE* InterfacePtr;
-	IMG* Image;
-	TXT* Text;
-	bool TextExists;
-	bool ImageExists;
-	bool Hidden;
-	InterfaceElement()
-	{
-		TextExists = false;
-		ImageExists = false;
-		Hidden = false;
-		InterfacePtr = NULL;
-	}
-
-
+  InterfaceBASE * InterfacePtr;
+  IMG * Image;
+  TXT * Text;
+  bool TextExists;
+  bool ImageExists;
+  bool Hidden;
+  InterfaceElement ();
 };
-
 struct BackgroundElement
 {
 public:
-	IMG* Image;
-	TXT* Text;
-	bool TextExists;
-	bool ImageExists;
-	bool AllowDraw;
-	BackgroundElement()
-	{
-		TextExists = false;
-		ImageExists = false;
-		AllowDraw = true;
-	}
-
-
+  IMG * Image;
+  TXT * Text;
+  bool TextExists;
+  bool ImageExists;
+  bool AllowDraw;
+  BackgroundElement ();
 };
