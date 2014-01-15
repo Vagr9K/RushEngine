@@ -145,6 +145,7 @@ public:
 		TextExists = false;
 		ImageExists = false;
 		Hidden = false;
+		InterfacePtr = NULL;
 	}
 
 

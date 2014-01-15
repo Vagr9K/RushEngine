@@ -61,6 +61,7 @@ protected:
 			}
 
 		}
+		return false;
 	}
 
 	virtual void Init() = 0;
@@ -74,6 +75,10 @@ protected:
 	{
 		//Do nothing by default.
 	}
+	inline virtual void OnNULL()
+	{
+
+	}
 	virtual void StateTest()
 	{
 		EventSystem->Input->Mouse->Refresh();
@@ -81,9 +86,13 @@ protected:
 		{
 			OnHover();
 		}
-		if (CheckClick())
+		else if (CheckClick())
 		{
 			OnClick();
+		}
+		else
+		{
+			OnNULL();
 		}
 	}
 public:
@@ -92,6 +101,7 @@ public:
 		this->ManagerDB = ManagerDB;
 		this->EventSystem = EventSystem;
 		InterElement = new InterfaceElement();
+		InterElement->InterfacePtr = this;
 		AddToManager();
 		Inited = false;
 	}

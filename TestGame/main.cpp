@@ -44,7 +44,7 @@ FPSTest* Tester;
 
 
 EngineFireEffect* EffectTest;
-
+Button* TestButton;
 
 int RndGen(int Max)
 {
@@ -112,7 +112,7 @@ void Init()
 
 	mainEngine.InitPhysics();
 
-	mainEngine.InitObjects(0, 1, 1, 0);
+	mainEngine.InitObjects(1, 1, 1, 0);
 	mainEngine.InitGraphics(WWIDTH, WHEIGHT, "Test #004.");
 	mainEngine.Graphics->Start();
 	mainEngine.Graphics->SetTextMaximumTime(K);
@@ -123,6 +123,9 @@ void Init()
 
 	EffectTest = new EngineFireEffect(250, mainEngine.getObjects()->getEffectManager(0), "Particle.png");
 	mainEngine.getObjects()->getEffectManager(0)->PushChanges();
+
+	TestButton = new Button(mainEngine.getObjects()->getInterfaceManager(0), mainEngine.Eventing);
+	mainEngine.getObjects()->getInterfaceManager(0)->PushChanges();
 
 	STDShape = new b2CircleShape;
 	STDShape->m_p.Set(0.0f, 0.0f);
@@ -205,6 +208,7 @@ void RenderGraphics()
 	mainEngine.Graphics->DrawerGL->StartBuffer();
 	mainEngine.Graphics->DrawerGL->SyncObjects(false, SYNCMODE);
 	mainEngine.Graphics->DrawerGL->SyncEffects(false, ACTIVE);
+	mainEngine.Graphics->DrawerGL->SyncInterface(false);
 	Tester->PushFrame();
 	double FPS = Tester->getFPS();
 	double Diff = Tester->getLastDiff();
@@ -252,8 +256,7 @@ int main(int argc, char** argv)
 	bool Close = false;
 	while (Close == false)
 	{
-		SDL_PollEvent(Ev);
-		if (Ev->type == SDL_QUIT)
+		if (mainEngine.Eventing->GlobalEvent.type == SDL_QUIT)
 		{
 			Close = true;
 		}

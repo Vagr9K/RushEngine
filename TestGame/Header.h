@@ -73,3 +73,40 @@ public:
 		}
 	}
 };
+
+class Button : public InterfaceBASE
+{
+	string Path1;
+	string Path2;
+	void SetPath(int Num)
+	{
+		if (Num == 1)
+		{
+			InterElement->Image->Source = Path1;
+		}
+		else
+		{
+			InterElement->Image->Source = Path2;
+		}
+	}
+public:
+
+	Button(ObjDBManager<InterfaceElement>* ManagerDB, EventingEngine* EventSystem) :InterfaceBASE(ManagerDB, EventSystem)
+	{
+		Path1 = "Button2.png";
+		Path2 = "Button2.png";
+	}
+	virtual void Init()
+	{
+		InterElement->ImageExists = true; 
+		InterElement->Image = new IMG(50.f, 50.f, 64.f, 64.f, 12.f, "Button1.png");
+	}
+	virtual void OnHover()
+	{
+		SetPath(2);
+	}
+	virtual void OnNULL()
+	{
+		SetPath(1);
+	}
+};

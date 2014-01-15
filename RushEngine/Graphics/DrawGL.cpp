@@ -66,11 +66,20 @@ bool DrawGL::InitOpenGL ()
 		return GLErrorTest("InitOpenGL()");
 
 	}
-bool DrawGL::CheckScreenZone(float x, float y, float h, float w)
+bool DrawGL::CheckScreenZone(float x, float y, float h, float w, bool NoDelta)
 	{
-		
-		float ActX = x - DeltaX;
-		float ActY = y + DeltaY;
+		float ActX;
+		float ActY;
+		if (NoDelta)
+		{
+			float ActX = x;
+			float ActY = y;
+		}
+		else
+		{
+			ActX = x - DeltaX;
+			ActY = y + DeltaY;
+		}
 		h = h / 2;
 		w = w / 2;
 		if ((ActX - w) <= WinWidth && (ActX + w) >= 0 && (ActY - h) <= WinHeight && (ActY + h) >= 0)
@@ -92,12 +101,19 @@ void DrawGL::SetEffectMode(bool Status)
 	}
 	
 }
-void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData,GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ, RGBColor* TextureColor, bool BindAll)
+void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData,GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ, bool NoDelta, RGBColor* TextureColor, bool BindAll)
         {
         	float KX = TextureData.KxKy.KX;
         	float KY = TextureData.KxKy.KY;
         	GLuint TextureID = TextureData.TextureID;
-			glTranslatef(X - DeltaX, Y + DeltaY, 0.0);
+			if (NoDelta)
+			{
+				glTranslatef(X, Y, 0.0);
+			}
+			else
+			{
+				glTranslatef(X - DeltaX, Y + DeltaY, 0.0);
+			}
 			glRotatef(AngleX, 1.0, 0.0, 0.0);
 			glRotatef(AngleY, 0.0, 1.0, 0.0);
 			glRotatef(AngleZ, 0.0, 0.0, 1.0);
@@ -168,7 +184,7 @@ DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height
 		BgkC = ObjEngine->GetBackgroundLCount();
 		WorldLC = ObjEngine->GetWorldLCount();
 		EffectLC = ObjEngine->GetEffectLCount();
-		InterfaceLC = ObjEngine->GetBackgroundLCount();
+		InterfaceLC = ObjEngine->GetInterfaceLCount();
 	}
 DrawGL::~ DrawGL ()
         {
@@ -335,6 +351,7 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 					0.f,
 					0.f,
 					CurrentParticle->Angle,
+					false,
 					ParticleColor,
 					false
 					);
@@ -363,6 +380,7 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 					0.f,
 					0.f,
 					CurrentParticle->Angle,
+					false,
 					ParticleColor,
 					false
 					);
@@ -373,17 +391,22 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 }
 void DrawGL::DrawFromInterfaceElement(InterfaceElement* Element)
 {
+	if (Element->Hidden == false)
+	{
+	
 	if (Element->ImageExists == true)
 	{
 		IMG* Image = Element->Image;
-		float X = WinWidth - (GLfloat)Image->x;
-		float Y = WinHeight - (GLfloat)Image->y;
+		float X = (GLfloat)Image->x;
+		float Y = (GLfloat)Image->y;
 		float H = (GLfloat)Image->h;
 		float W = (GLfloat)Image->w;
-		if (CheckScreenZone(X, Y, H, W))
+		float Angle = (GLfloat)Image->Angle;
+		if (CheckScreenZone(X, Y, H, W, true))
 		{
 			string Path = Image->Source;
-			AddToBuffer(X, Y, H, W, Path);
+			TextureInfo TInfo = ManagerGR->GenerateTexture(Path);
+			AddToBufferFROMTEXTURE(X, Y, H, W, TInfo, 0.f, 0.f, Angle, true);
 		}
 
 
@@ -391,10 +414,11 @@ void DrawGL::DrawFromInterfaceElement(InterfaceElement* Element)
 	if (Element->TextExists == true)
 	{
 		TXT* Text = Element->Text;
-		float X = WinWidth - (GLfloat)Text->x;
-		float Y = WinHeight - (GLfloat)Text->y;
+		float X = (GLfloat)Text->x;
+		float Y = (GLfloat)Text->y;
 		float H = (GLfloat)Text->h;
 		float W = (GLfloat)Text->w;
+		float Angle = (GLfloat)Text->Angle;
 		if (CheckScreenZone(X, Y, H, W))
 		{
 			TextFont* Font = Text->Font;
@@ -417,8 +441,10 @@ void DrawGL::DrawFromInterfaceElement(InterfaceElement* Element)
 				Background->r = 0;
 				Background->g = 0;
 			}
-			AddToBuffer(X, Y, H, W, Font, Contents, DrawMode, *Foreground, *Background);
+			TextureInfo TInfo = ManagerGR->GetTextImageGL(Font, Contents, DrawMode, *Foreground, *Background);
+			AddToBufferFROMTEXTURE(X, Y, H, W, TInfo, 0.f, 0.f, Angle, true);
 		}
+	}
 
 
 	}

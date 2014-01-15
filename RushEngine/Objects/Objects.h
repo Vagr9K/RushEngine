@@ -79,17 +79,17 @@ private:
 		}
 	}
 
-	void InitInterface(int WorldCount)
+	void InitInterface(int InterfaceCount)
 	{
-		if (WorldCount != 0)
+		if (InterfaceCount != 0)
 		{
-			InterfaceData = new InterfaceElementData*[WorldCount];
+			InterfaceData = new InterfaceElementData*[InterfaceCount];
 		}
 		else
 		{
 			InterfaceData = NULL;
 		}
-		for (int i = 0; i < WorldCount; i++)
+		for (int i = 0; i < InterfaceCount; i++)
 		{
 			InterfaceData[i] = new InterfaceElementData;
 			InterfaceManagers.push_back(new ObjDBManager<InterfaceElement>(InterfaceData[i]));
@@ -112,14 +112,14 @@ private:
 		/*New API END*/
 	}
 public:
-	ObjectsEngine(int InterfaceLayerCount,int SpecialLayerCount ,int WorldCount, int BackgroundLayerCount)
+	ObjectsEngine(int InterfaceLayerCount,int EffectsLayerCount ,int WorldCount, int BackgroundLayerCount)
 	{
-		DefContructor(InterfaceLayerCount, SpecialLayerCount, WorldCount, BackgroundLayerCount);
+		DefContructor(InterfaceLayerCount, EffectsLayerCount, WorldCount, BackgroundLayerCount);
 
 	}
-	ObjectsEngine(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackgroundLayerCount, int OptimalObjectsCount)
+	ObjectsEngine(int InterfaceLayerCount, int EffectsLayerCount, int WorldCount, int BackgroundLayerCount, int OptimalObjectsCount)
 	{
-		DefContructor(InterfaceLayerCount, SpecialLayerCount, WorldCount, BackgroundLayerCount);
+		DefContructor(InterfaceLayerCount, EffectsLayerCount, WorldCount, BackgroundLayerCount);
 		this->OptObjCount = OptimalObjectsCount;
 	}
 
