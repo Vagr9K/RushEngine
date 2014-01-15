@@ -72,8 +72,8 @@ bool DrawGL::CheckScreenZone(float x, float y, float h, float w, bool NoDelta)
 		float ActY;
 		if (NoDelta)
 		{
-			float ActX = x;
-			float ActY = y;
+			ActX = x;
+			ActY = y;
 		}
 		else
 		{
