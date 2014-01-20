@@ -2,18 +2,14 @@
 using namespace std;
 
 class AudioEngine;
-class AudioEffectBASE
-{
 
-};
-
-class AudioMusicBASE
+class AudioMusic
 {
 	Mix_Music* Element;
 	bool WasNotPlaying;
 	int Volume;
 public:
-	AudioMusicBASE(string PathToFile)
+	AudioMusic(string PathToFile)
 	{
 		
 		Element = NULL;
@@ -22,7 +18,7 @@ public:
 		Volume = 64;
 		
 	}
-	~AudioMusicBASE()
+	~AudioMusic()
 	{
 		Mix_FreeMusic(Element);
 	}

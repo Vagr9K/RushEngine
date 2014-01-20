@@ -45,7 +45,7 @@ public:
 	GameEngine()
 	{ 
 		Eventing = new EventingEngine();
-		//Audio = new AudioEngine(Eventing);
+		Audio = new AudioEngine(Eventing);
 	}
 	void InitGraphics(int Width, int Height, string Title)
 	{

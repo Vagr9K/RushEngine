@@ -3,7 +3,8 @@
 #include "SDL.h"
 #include "SDL_mixer.h"
 #include "../Eventing/Eventing.h"
-#include "GameAudio.h"
+#include "AudioMusic.h"
+#include "AudioEffect.h"
 
 class AudioEngine
 {

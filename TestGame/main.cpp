@@ -46,7 +46,8 @@ FPSTest* Tester;
 EngineFireEffect* EffectTest;
 Button* TestButton;
 
-AudioMusicBASE* Music;
+AudioMusic* Music;
+AudioEffect* Eff;
 
 int RndGen(int Max)
 {
@@ -130,8 +131,10 @@ void Init()
 	mainEngine.getObjects()->getInterfaceManager(0)->PushChanges();
 
 
-	//Music = new AudioMusicBASE("Music.wav");
-	//Music->Play(0);
+	Music = new AudioMusic("Music.wav");
+	Music->Play(0);
+
+	Eff = new AudioEffect("Effect.wav");
 
 	STDShape = new b2CircleShape;
 	STDShape->m_p.Set(0.0f, 0.0f);
@@ -231,6 +234,7 @@ void RenderGraphics()
 	{
 		string NewTitle = "FPS : " + to_string(FPS) + " HZ.";
 		mainEngine.Graphics->DrawerGL->AddToBuffer(100, 50, 30, 200, NewFont, NewTitle, BLENDED, *NewColor, *NewColorBG);
+		Eff->Play();
 	}
 	mainEngine.Eventing->Input->Mouse->Refresh();
 	string Pos = to_string(mainEngine.Eventing->Input->Mouse->Status.X) + " : " + to_string(mainEngine.Eventing->Input->Mouse->Status.Y);

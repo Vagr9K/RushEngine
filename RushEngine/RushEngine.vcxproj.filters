@@ -139,7 +139,10 @@
     <ClInclude Include="Audio\Audio.h">
       <Filter>Source Files\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\GameAudio.h">
+    <ClInclude Include="Audio\AudioMusic.h">
+      <Filter>Source Files\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioEffect.h">
       <Filter>Source Files\Audio</Filter>
     </ClInclude>
   </ItemGroup>
