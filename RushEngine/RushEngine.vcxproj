@@ -124,6 +124,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdvFeatures\Tests.h" />
+    <ClInclude Include="Audio\Audio.h" />
+    <ClInclude Include="Audio\GameAudio.h" />
     <ClInclude Include="Eventing\EventComponents.h" />
     <ClInclude Include="Eventing\Eventing.h" />
     <ClInclude Include="Eventing\EventManagers.h" />

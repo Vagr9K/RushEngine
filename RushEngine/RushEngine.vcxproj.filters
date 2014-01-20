@@ -24,6 +24,9 @@
     <Filter Include="Source Files\AdvFeatures">
       <UniqueIdentifier>{0e00946c-261f-4e3a-bfba-193464f11120}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Audio">
+      <UniqueIdentifier>{4cec6f27-aa40-4a60-8e15-24dd1e9b1b65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\Components.cpp">
@@ -132,6 +135,12 @@
     </ClInclude>
     <ClInclude Include="Physics\Physics.h">
       <Filter>Source Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\Audio.h">
+      <Filter>Source Files\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\GameAudio.h">
+      <Filter>Source Files\Audio</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
