@@ -409,7 +409,7 @@ void DrawGL::DrawFromInterfaceElement(InterfaceElement* Element)
 		if (CheckScreenZone(X, Y, H, W, true))
 		{
 			string Path = Image->Source;
-			TextureInfo TInfo = ManagerGR->GenerateTexture(Path);
+			TextureInfo TInfo = ManagerGR->LoaderGL(Path);
 			AddToBufferFROMTEXTURE(X, Y, H, W, TInfo, 0.f, 0.f, Angle, true);
 		}
 
@@ -471,7 +471,7 @@ void DrawGL::SyncEffects(bool AutoPushBuffer /* = false */, EffectSyncMode SyncM
 		{
 			CurrentElement = Layer->at(LayerElementID);
 			CurrentElement->PtrToEffect->Refresh();
-			TextureInfo TInfo = ManagerGR->GenerateTexture(CurrentElement->Path);
+			TextureInfo TInfo = ManagerGR->LoaderGL(CurrentElement->Path);
 			DrawFromEffectElement(CurrentElement, SyncMode, ParticleColor, &TInfo);
 
 		}
@@ -577,7 +577,7 @@ float DrawGL::getSyncFactor()
 }
 void DrawGL::CacheImage(string Path)
 {
-	ManagerGR->GenerateTexture(Path);
+	ManagerGR->LoaderGL(Path);
 }
 void DrawGL::CacheText(TextFont* Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background)
 {
