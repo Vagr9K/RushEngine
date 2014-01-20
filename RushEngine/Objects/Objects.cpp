@@ -69,7 +69,7 @@ void ObjectsEngine::InitBackground (int BackgroundCount)
 			BackgroundManagers.push_back(new ObjDBManager<BackgroundElement>(BackgroundData[i]));
 		}
 	}
-void ObjectsEngine::DefContructor (int InterfaceLayerCount, int EffectLayerCount, int WorldCount, int BackgroundLayerCount, bool StartAudio)
+void ObjectsEngine::DefContructor (int InterfaceLayerCount, int EffectLayerCount, int WorldCount, int BackgroundLayerCount)
         {
 		InitOldCpp();
 		this->InterfaceLayerCount = InterfaceLayerCount;
@@ -82,10 +82,7 @@ void ObjectsEngine::DefContructor (int InterfaceLayerCount, int EffectLayerCount
 		InitEffect(EffectLayerCount);
 		InitInterface(InterfaceLayerCount);
 		InitBackground(BackgroundLayerCount);
-		if (StartAudio)
-		{
-			InitAudio();
-		}
+		
 
 	}
 ObjectsEngine::ObjectsEngine (int InterfaceLayerCount, int EffectsLayerCount, int WorldCount, int BackgroundLayerCount)
@@ -151,19 +148,4 @@ BackgroundElementData * ObjectsEngine::getBackgroundLayer (int ID)
 		return BackgroundData[ID];
 	}
 
-void ObjectsEngine::InitAudio()
-{
-	AudioData = new AudioElementData;
-	AudioManager = new AudioElementManager(AudioData);
-}
-
-AudioElementManager* ObjectsEngine::getAudioManager()
-{
-	return AudioManager;
-}
-
-AudioElementData* ObjectsEngine::getAudioData()
-{
-	return AudioData;
-}
 

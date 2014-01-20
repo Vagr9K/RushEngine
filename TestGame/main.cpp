@@ -46,6 +46,8 @@ FPSTest* Tester;
 EngineFireEffect* EffectTest;
 Button* TestButton;
 
+AudioMusicBASE* Music;
+
 int RndGen(int Max)
 {
 	
@@ -126,6 +128,10 @@ void Init()
 
 	TestButton = new Button(mainEngine.getObjects()->getInterfaceManager(0), mainEngine.Eventing);
 	mainEngine.getObjects()->getInterfaceManager(0)->PushChanges();
+
+
+	//Music = new AudioMusicBASE("Music.wav");
+	//Music->Play(0);
 
 	STDShape = new b2CircleShape;
 	STDShape->m_p.Set(0.0f, 0.0f);

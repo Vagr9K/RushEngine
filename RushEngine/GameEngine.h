@@ -6,6 +6,7 @@
 #pragma comment(lib, "SDL2main.lib")
 #pragma comment(lib, "SDL2_image.lib")
 #pragma comment(lib, "SDL2_ttf.lib")
+#pragma comment(lib, "SDL2_mixer.lib")
 #pragma comment(lib, "opengl32.lib")
 #endif
 

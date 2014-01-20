@@ -67,11 +67,3 @@ BackgroundElement::BackgroundElement ()
 		AllowDraw = true;
 	}
 
-AudioElement::AudioElement(string PathToFile, AudioType Type)
-{
-	this->PathToFile = PathToFile;
-	this->Type = Type;
-	this->CState = STOPPED;
-	LoopCount = 0;
-
-}

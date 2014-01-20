@@ -1,54 +1,75 @@
 #include "iostream"
 using namespace std;
 
-#include "../Objects/ObjectManager.h"
-
-
-class GameAudio
+class AudioEngine;
+class AudioEffectBASE
 {
-	ObjDBManager<AudioElement>* ManagerDB;
-	AudioElement* AuElement;
+
+};
+
+class AudioMusicBASE
+{
+	Mix_Music* Element;
+	bool WasNotPlaying;
+	int Volume;
 public:
-	GameAudio(string Path, AudioType Type, ObjDBManager<AudioElement>* ManagerDB)
+	AudioMusicBASE(string PathToFile)
 	{
-		this->ManagerDB = ManagerDB;
-		AuElement = new AudioElement(Path, Type);
-		ManagerDB->AddToCreate(AuElement);
+		
+		Element = NULL;
+		Element = Mix_LoadMUS(PathToFile.c_str());
+		WasNotPlaying = true;
+		Volume = 64;
+		
 	}
-	void Play(int LoopCount = 0)
+	~AudioMusicBASE()
 	{
-		AuElement->RePlay = true;
-		AuElement->LoopCount = LoopCount;
+		Mix_FreeMusic(Element);
+	}
+	void TrackState(void (*Fuction)())
+	{
+		Mix_HookMusicFinished(Fuction);
+	}
+	void Play(int Loops = 0)
+	{
+		Mix_PlayMusic(Element, Loops);
+		
+		if (WasNotPlaying)
+		{
+			SetMusicVolume(Volume);
+			WasNotPlaying = false;
+		}
 	}
 	void Pause()
 	{
-		AuElement->Playing = false;
+
+		Mix_PauseMusic();
+		WasNotPlaying = true;
 	}
-	void RePlay()
+	void Resume()
 	{
-		AuElement->RePlay = true;
+		Mix_ResumeMusic();
+		WasNotPlaying = false;
 	}
-	int getVolume()
+	void Restart()
 	{
-		if (AuElement->Type == EFFECT)
-		{
-			return Mix_VolumeChunk(AuElement->Effect, -1);
-		}
-		else
-		{
-			return Mix_VolumeMusic(-1);
-		}
+
+		Mix_RewindMusic();
+		WasNotPlaying = false;
 	}
-	void setVolume(int Volume)
+	void Stop()
 	{
-		if (AuElement->Type == EFFECT)
-		{
-			Mix_VolumeChunk(AuElement->Effect, Volume);
-		}
-		else
+		
+		Mix_HaltMusic();
+		WasNotPlaying = true;
+	}
+	void SetMusicVolume(int Volume)
+	{
+		this->Volume = Volume;
+		if (!WasNotPlaying)
 		{
 			Mix_VolumeMusic(Volume);
 		}
 	}
-
 };
+

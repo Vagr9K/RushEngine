@@ -112,37 +112,3 @@ public:
   BackgroundElement ();
 };
 
-enum AudioType
-{
-	MUSIC,
-	EFFECT
-};
-enum FurtherAction
-{
-	PLAY,
-	PAUSE,
-	RESTART,
-	STOP
-};
-
-enum CurrentState
-{
-	PLAYING,
-	PAUSED,
-	STOPPED
-};
-
-struct AudioElement
-{
-	AudioType Type;
-	FurtherAction FAction;
-	CurrentState CState;
-	string PathToFile;
-	Mix_Music* Music;
-	Mix_Chunk* Effect;
-
-	int LoopCount;
-	int Channel;
-	AudioElement(string PathToFile, AudioType Type);
-};
-

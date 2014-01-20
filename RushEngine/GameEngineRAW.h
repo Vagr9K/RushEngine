@@ -1,6 +1,7 @@
 #include "Graphics/Graphics.h"
 #include "Physics/Physics.h"
 #include "Objects/Objects.h"
+#include "Audio/Audio.h"
 
 #include "AdvFeatures/Tests.h"
 
@@ -24,7 +25,7 @@ public:
 	PhysicsEngine* Physics;
 	GraphicsEngine* Graphics;
 	EventingEngine* Eventing;
-
+	AudioEngine* Audio;
 	void InitPhysics()
 	{
 		Physics = new PhysicsEngine;
@@ -44,6 +45,7 @@ public:
 	GameEngine()
 	{ 
 		Eventing = new EventingEngine();
+		//Audio = new AudioEngine(Eventing);
 	}
 	void InitGraphics(int Width, int Height, string Title)
 	{

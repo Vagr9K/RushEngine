@@ -2,24 +2,26 @@
 
 #include "SDL.h"
 #include "SDL_mixer.h"
-
 #include "../Eventing/Eventing.h"
+#include "GameAudio.h"
 
-class Audio
+class AudioEngine
 {
 	EventingEngine* EventSys;
+	Mix_Music* LastMusic;
 public:
-	Audio(EventingEngine* EventSys, int ChanellNumber)
+	AudioEngine(EventingEngine* EventSys)
 	{
 		this->EventSys = EventSys;
-		Start(ChanellNumber);
+		Start(2);
+		LastMusic = NULL;
 	}
 	bool Start(int ChanellNumber)
 	{
-		int Flags = MIX_INIT_FLAC | MIX_INIT_OGG;
+		int Flags = MIX_INIT_FLAC | MIX_INIT_OGG | MIX_INIT_MP3;
 		int Status = Mix_Init(Flags);
 
-		if (Status&Flags != Flags)
+		if ((Status&Flags) != Flags)
 		{
 			EventSys->SystemEvents->AudioError("Audio can't be initialized : " + string(Mix_GetError()));
 			return false;
@@ -37,4 +39,53 @@ public:
 		Mix_CloseAudio();
 		Mix_Quit();
 	}
+
+	void PlayEffect(Mix_Chunk* Effect)
+	{
+
+	}
+	
+	void PlayMusic(Mix_Music* Music, int Loops)
+	{
+		if (LastMusic != Music)
+		{
+			Mix_PlayMusic(Music, Loops);
+			LastMusic = Music;
+		}
+	}
+
+	void PauseMusic(Mix_Music* Music)
+	{
+		if (LastMusic == Music)
+		{
+			Mix_PauseMusic();
+		}
+	}
+	void ResumeMusic(Mix_Music* Music)
+	{
+		if (LastMusic == Music)
+		{
+			Mix_ResumeMusic();
+		}
+	}
+	void RestartMusic(Mix_Music* Music)
+	{
+		if (LastMusic == Music)
+		{
+			Mix_RewindMusic();
+		}
+	}
+	void StopMusic(Mix_Music* Music)
+	{
+		if (LastMusic == Music)
+		{
+			Mix_HaltMusic();
+		}
+	}
+
+	void SetMusicVolume(int Volume)
+	{
+		Mix_VolumeMusic(Volume);
+	}
+
 };
