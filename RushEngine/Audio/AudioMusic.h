@@ -14,6 +14,11 @@ public:
 		
 		Element = NULL;
 		Element = Mix_LoadMUS(PathToFile.c_str());
+		if (Element == NULL)
+		{
+			string Error = string(Mix_GetError());
+			throw Error;
+		}
 		WasNotPlaying = true;
 		Volume = 64;
 		

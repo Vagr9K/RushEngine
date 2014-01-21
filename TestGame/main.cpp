@@ -134,7 +134,7 @@ void Init()
 	Music = new AudioMusic("Music.wav");
 	Music->Play(0);
 
-	Eff = new AudioEffect("Effect.wav");
+	Eff = new AudioEffect("Effect.wav", 6.1);
 
 	STDShape = new b2CircleShape;
 	STDShape->m_p.Set(0.0f, 0.0f);
@@ -234,12 +234,14 @@ void RenderGraphics()
 	{
 		string NewTitle = "FPS : " + to_string(FPS) + " HZ.";
 		mainEngine.Graphics->DrawerGL->AddToBuffer(100, 50, 30, 200, NewFont, NewTitle, BLENDED, *NewColor, *NewColorBG);
-		Eff->Play();
+		
 	}
 	mainEngine.Eventing->Input->Mouse->Refresh();
 	string Pos = to_string(mainEngine.Eventing->Input->Mouse->Status.X) + " : " + to_string(mainEngine.Eventing->Input->Mouse->Status.Y);
 	mainEngine.Graphics->DrawerGL->AddToBuffer(100, 100, 30, 200, NewFont, Pos, BLENDED, *NewColor, *NewColorBG);
 	mainEngine.Graphics->DrawerGL->PushBuffer();
+
+	Eff->Play(0);
 }
 
 void RenderCamera()
