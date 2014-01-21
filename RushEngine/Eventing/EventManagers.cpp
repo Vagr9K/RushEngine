@@ -1,8 +1,5 @@
-// EventManagers.cpp
-//
-
 #include "EventManagers.h"
-#define LZZ_INLINE inline
+
 void SystemEventing::LogData (string Type, string Data, bool Throw)
         {
 
@@ -50,9 +47,15 @@ void SystemEventing::ObjectsError (string Error)
         {
 		LogData("Objects error", Error, true);
 	}
-void GlobalEventManager::Update ()
+
+void SystemEventing::AudioError(string Error)
+{
+	LogData("Audio error", Error, true);
+}
+
+void GlobalEventManager::Update()
         {
 		//TODO: Check performance problems.
 		SDL_PollEvent(&GlobalEvent);
 	}
-#undef LZZ_INLINE
+

@@ -23,6 +23,7 @@ public:
   void GraphicsError (string Error);
   void OPSLog (string OPS);
   void ObjectsError (string Error);
+  void AudioError(string Error);
 };
 class GlobalEventManager
 {

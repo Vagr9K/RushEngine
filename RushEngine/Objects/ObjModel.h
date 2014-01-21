@@ -3,7 +3,7 @@
 using namespace std;
 #include <Box2D/Box2D.h>
 #include "SDL.h"
-
+#include "SDL_mixer.h"
 #include "../Graphics/Components.h"
 
 
@@ -111,3 +111,4 @@ public:
   bool AllowDraw;
   BackgroundElement ();
 };
+

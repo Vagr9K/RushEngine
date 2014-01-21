@@ -82,6 +82,7 @@ void ObjectsEngine::DefContructor (int InterfaceLayerCount, int EffectLayerCount
 		InitEffect(EffectLayerCount);
 		InitInterface(InterfaceLayerCount);
 		InitBackground(BackgroundLayerCount);
+		
 
 	}
 ObjectsEngine::ObjectsEngine (int InterfaceLayerCount, int EffectsLayerCount, int WorldCount, int BackgroundLayerCount)
@@ -146,4 +147,5 @@ BackgroundElementData * ObjectsEngine::getBackgroundLayer (int ID)
         {
 		return BackgroundData[ID];
 	}
+
 

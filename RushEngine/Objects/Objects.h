@@ -9,12 +9,17 @@
 
 typedef vector <ObjDBManager<ObjectElement>*> ObjectElementManagers;
 typedef vector <ObjectElement*> ObjectElementData;
+
 typedef vector <ObjDBManager<EffectElement>*> EffectElementManagers;
 typedef vector <EffectElement*> EffectElementData;
+
 typedef vector <ObjDBManager<InterfaceElement>*> InterfaceElementManagers;
 typedef vector <InterfaceElement*> InterfaceElementData;
+
 typedef vector <ObjDBManager<BackgroundElement>*> BackgroundElementManagers;
 typedef vector <BackgroundElement*> BackgroundElementData;
+
+
 class ObjectsEngine
 {
   int InterfaceLayerCount;
@@ -26,12 +31,17 @@ public:
 private:
   ObjectElementManagers ObjectsManagers;
   ObjectElementData * * ObjectsData;
+
   EffectElementManagers EffectManagers;
   EffectElementData * * EffectData;
+
   InterfaceElementManagers InterfaceManagers;
   InterfaceElementData * * InterfaceData;
+
   BackgroundElementManagers BackgroundManagers;
   BackgroundElementData * * BackgroundData;
+
+
 private:
   void InitOldCpp ();
   void InitObjects (int WorldCount);
@@ -55,4 +65,5 @@ public:
   InterfaceElementData * getInterfaceLayer (int ID = 0);
   ObjDBManager <BackgroundElement> * getBackgroundManager (int ID = 0);
   BackgroundElementData * getBackgroundLayer (int ID = 0);
+
 };
