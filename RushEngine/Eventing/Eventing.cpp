@@ -7,3 +7,9 @@ EventingEngine::EventingEngine ()
 		Input = new InputController(this);
 	}
 
+EventingEngine::~EventingEngine()
+{
+	delete SystemEvents;
+	delete Input;
+}
+

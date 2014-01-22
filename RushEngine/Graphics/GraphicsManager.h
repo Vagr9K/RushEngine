@@ -28,6 +28,7 @@ public:
   GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine,vector <TextureInfo> * PreLoadedTextGL, vector <string> * PreLoadedPathsGL);
   GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine);
   GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine, int OptimalObjectCount);
+  ~GraphicsManager();
   void SetOptimalObjectCount (int OptimalObjectCount);
   int GetOptimalObjectCount ();
   void SetMaximumTimeOfText (int Time);

@@ -47,6 +47,7 @@ public:
   bool ImageExists;
   bool AllowDraw;
   ObjectElement ();
+  ~ObjectElement();
 };
 enum ObjectSyncMode
 {
@@ -100,6 +101,7 @@ public:
   bool ImageExists;
   bool Hidden;
   InterfaceElement ();
+  ~InterfaceElement();
 };
 struct BackgroundElement
 {
@@ -110,5 +112,10 @@ public:
   bool ImageExists;
   bool AllowDraw;
   BackgroundElement ();
+  ~BackgroundElement()
+  {
+	  delete Image;
+	  delete Text;
+  }
 };
 

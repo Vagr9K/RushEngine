@@ -74,4 +74,11 @@ SDL_Surface * GraphicsManager::IMGLoad (string Path)
 		return Surface;
 	}
 
+GraphicsManager::~GraphicsManager()
+{
+	delete[] PreLoadedPathsGL;
+	delete[] PreLoadedTextGL;
+}
+
+
 

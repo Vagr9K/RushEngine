@@ -39,7 +39,14 @@ ObjectElement::ObjectElement ()
 		DrawFactor = 0.f;
 		AllowDraw = true;
 	}
-Particle::Particle ()
+
+ObjectElement::~ObjectElement()
+{
+	delete Image;
+	delete Text;
+}
+
+Particle::Particle()
         {
 		Active = false;
 	}
@@ -60,7 +67,14 @@ InterfaceElement::InterfaceElement ()
 		Hidden = false;
 		InterfacePtr = NULL;
 	}
-BackgroundElement::BackgroundElement ()
+
+InterfaceElement::~InterfaceElement()
+{
+	delete Image;
+	delete Text;
+}
+
+BackgroundElement::BackgroundElement()
         {
 		TextExists = false;
 		ImageExists = false;
