@@ -69,7 +69,13 @@ string KeyboardInput::GetKeyName (SDL_Keycode Key)
         {
 		return string(SDL_GetKeyName(Key));
 	}
-InputController::InputController (GlobalEventManager * MainClass)
+
+KeyboardInput::~KeyboardInput()
+{
+	delete[] KeysStatus;
+}
+
+InputController::InputController(GlobalEventManager * MainClass)
         {
 		this->MainClass = MainClass;
 		Mouse = new MouseInput(MainClass);
@@ -80,4 +86,10 @@ void InputController::Update ()
         {
 		MainClass->Update();
 	}
+
+InputController::~InputController()
+{
+	delete Mouse;
+	delete Keyboard;
+}
 

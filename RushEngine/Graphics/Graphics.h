@@ -29,7 +29,7 @@ class GraphicsEngine
 	
 
 private:
-	int Width, Height, LayerNumber;
+	int Width, Height;
 	string Title;
 	bool IsReady;
 	bool IsStarted;
@@ -80,22 +80,20 @@ public:
 	{
 		InitOldCpp();
 	}
-	GraphicsEngine(int Width, int Height, int LayerNumber, string Title, EventingEngine* EventsEnginePtr, ObjectsEngine* ObjEngine)
+	GraphicsEngine(int Width, int Height, string Title, EventingEngine* EventsEnginePtr, ObjectsEngine* ObjEngine)
 	{
 		InitOldCpp();
 		this->Width = Width;
 		this->Height = Height;
-		this->LayerNumber = LayerNumber;
 		this->Title = Title;
 		this->IsReady = true;
 		this->EventEngine = EventsEnginePtr;
 		this->ObjEngine = ObjEngine;
 	}
-	void Init(int Width, int Height, int LayerNumber, string Title, EventingEngine* EvVar, ObjectsEngine* ObjEngine)
+	void Init(int Width, int Height, string Title, EventingEngine* EvVar, ObjectsEngine* ObjEngine)
 	{
 		this->Width = Width;
 		this->Height = Height;
-		this->LayerNumber = LayerNumber;
 		this->Title = Title;
 		this->EventEngine = EvVar;
 		this->ObjEngine = ObjEngine;
@@ -111,11 +109,7 @@ public:
 			return false;
 		}
 
-		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-		{
-			EventEngine->SystemEvents->GraphicsError(SDL_GetError());
-			return false;
-		}
+		
 		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 		if (mainWindow == NULL)
 		{
@@ -141,6 +135,11 @@ public:
 
 		IsStarted = true;
 		return true;
+	}
+	~GraphicsEngine()
+	{
+		Stop();
+		delete ManagerGR;
 	}
 	void SetTextMaximumTime(int Time)
 	{

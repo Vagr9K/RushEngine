@@ -148,4 +148,12 @@ BackgroundElementData * ObjectsEngine::getBackgroundLayer (int ID)
 		return BackgroundData[ID];
 	}
 
+ObjectsEngine::~ObjectsEngine()
+{
+	delete[] ObjectsData;
+	delete[] InterfaceData;
+	delete[] BackgroundData;
+	delete[] EffectData;
+}
+
 

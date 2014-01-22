@@ -52,6 +52,7 @@ private:
 public:
   ObjectsEngine (int InterfaceLayerCount, int EffectsLayerCount, int WorldCount, int BackgroundLayerCount);
   ObjectsEngine (int InterfaceLayerCount, int EffectsLayerCount, int WorldCount, int BackgroundLayerCount, int OptimalObjectsCount);
+  ~ObjectsEngine();
   int GetCount ();
   int GetEffectLCount ();
   int GetWorldLCount ();

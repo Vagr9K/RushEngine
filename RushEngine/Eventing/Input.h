@@ -38,6 +38,7 @@ public:
   Uint8 const * KeysStatus;
   int KeyArrayLenght;
   KeyboardInput (GlobalEventManager * MainClass);
+  ~KeyboardInput();
   string GetKeyName (SDL_Keycode Key);
 };
 class InputController
@@ -47,6 +48,7 @@ public:
   MouseInput * Mouse;
   KeyboardInput * Keyboard;
   InputController (GlobalEventManager * MainClass);
+  ~InputController();
   void Update ();
   friend class MouseInput;
   friend class KeyboardInput;

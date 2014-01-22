@@ -156,7 +156,7 @@ void Init()
 		BodyDefinitionBall->position.Set(Rnd1, Rnd2);
 		Rnd1 = (float)RndGen(9) + 1.f;
 		Rnd2 = (float)RndGen(9) + 1.f;
-		Balls.at(i) = new ObjectBASE(&World, mainEngine.getObjects()->getObjectManager(0), mainEngine.getEventingEngine(), true, true);
+		Balls.at(i) = new ObjectBASE(&World, mainEngine.getObjects()->getObjectManager(0), mainEngine.Eventing, true, true);
 		Balls.at(i)->CreateBody(BodyDefinitionBall);
 		Balls.at(i)->CreateFixture(FixtureDefBall);
 		Balls.at(i)->SetImageSource("Ball.png");
@@ -174,7 +174,7 @@ void Init()
 	FixtureDefWall->restitution = 1.f;
 	for (int j = 0; j < WallCount; j++)
 	{
-		Walls.at(j) = new ObjectBASE(&World, mainEngine.getObjects()->getObjectManager(0), mainEngine.getEventingEngine(), true, true);
+		Walls.at(j) = new ObjectBASE(&World, mainEngine.getObjects()->getObjectManager(0), mainEngine.Eventing, true, true);
 		Walls.at(j)->SetImageSource("Wall.png");
 		Walls.at(j)->SyncFactor = K;
 		Walls.at(j)->ForceLocalFactor = true;

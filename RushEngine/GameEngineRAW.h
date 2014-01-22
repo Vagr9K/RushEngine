@@ -9,7 +9,7 @@ class GameEngine
 {
 private:
 	string Title;
-	int h, w, LayerNumber;
+	int h, w;
 	ObjectsEngine* Objects;
 	string Errors;
 	
@@ -44,8 +44,22 @@ public:
 
 	GameEngine()
 	{ 
+		
 		Eventing = new EventingEngine();
+		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+		{
+			Eventing->SystemEvents->GraphicsError(SDL_GetError());
+		}
 		Audio = new AudioEngine(Eventing);
+	}
+	~GameEngine()
+	{
+		delete Objects;
+		delete Physics;
+		delete Graphics;
+		delete Eventing;
+		delete Audio;
+		SDL_Quit();
 	}
 	void InitGraphics(int Width, int Height, string Title)
 	{
@@ -58,7 +72,7 @@ public:
 			Eventing->SystemEvents->GraphicsError("Objects engine is not initialized.");
 		}
 		
-		Graphics->Init(Width, Height, LayerNumber, Title, Eventing, Objects);
+		Graphics->Init(Width, Height, Title, Eventing, Objects);
 		
 
 	}
@@ -70,10 +84,6 @@ public:
 		return Status;
 	}
 
-	EventingEngine* getEventingEngine()
-	{
-		return Eventing;
-	}
 	ObjectsEngine* getObjects()
 	{
 		return Objects;

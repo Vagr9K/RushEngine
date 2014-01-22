@@ -17,6 +17,10 @@ public:
 		Start(2);
 		LastMusic = NULL;
 	}
+	~AudioEngine()
+	{
+		Stop();
+	}
 	bool Start(int ChanellNumber)
 	{
 		int Flags = MIX_INIT_FLAC | MIX_INIT_OGG | MIX_INIT_MP3;

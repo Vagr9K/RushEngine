@@ -8,8 +8,8 @@ using namespace std;
 class EventingEngine : public GlobalEventManager
 {
 public:
-public:
   SystemEventing * SystemEvents;
   InputController * Input;
   EventingEngine ();
+  ~EventingEngine();
 };
