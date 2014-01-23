@@ -49,11 +49,11 @@ void GraphicsManager::InitPreloaders ()
         {
 		if (PreLoadedPathsGL != NULL)
 		{
-			delete[] PreLoadedPathsGL;
+			delete PreLoadedPathsGL;
 		}
 		if (PreLoadedTextGL != NULL)
 		{
-			delete[] PreLoadedTextGL;
+			delete PreLoadedTextGL;
 		}
 		
 		this->PreLoadedPathsGL = new vector<string>(OptimalObjectCount);
@@ -76,8 +76,11 @@ SDL_Surface * GraphicsManager::IMGLoad (string Path)
 
 GraphicsManager::~GraphicsManager()
 {
-	delete[] PreLoadedPathsGL;
-	delete[] PreLoadedTextGL;
+	if (PreLoadedPathsGL != NULL)
+		delete PreLoadedPathsGL;
+
+	if (PreLoadedTextGL != NULL)
+		delete PreLoadedTextGL;
 }
 
 

@@ -52,7 +52,7 @@
     <CodeAnalysisRules />
     <CodeAnalysisRuleAssemblies />
     <OutDir>$(Configuration)\</OutDir>
-    <IntDir>\RushEngine.dir</IntDir>
+    <IntDir>\RushEngine.dir\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

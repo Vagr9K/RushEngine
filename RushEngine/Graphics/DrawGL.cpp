@@ -192,7 +192,7 @@ DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height
 	}
 DrawGL::~ DrawGL ()
         {
-		ManagerGR->ClearPreLoadGL(1.0);
+		
 		SDL_GL_MakeCurrent(NULL, NULL);
 		SDL_GL_DeleteContext(ContextGL);
 	}
