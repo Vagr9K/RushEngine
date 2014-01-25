@@ -13,6 +13,8 @@ void DrawGL::InitOldCpp ()
 		WorldLC = 0;
 		EffectLC = 0;
 		InterfaceLC = 0;
+
+		BindAllGL = false;
 	}
 bool DrawGL::GLErrorTest (string FuntionName)
         {
@@ -118,9 +120,14 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
 			{
 				glTranslatef(X - DeltaX, Y + DeltaY, 0.0);
 			}
-			glRotatef(AngleX, 1.0, 0.0, 0.0);
-			glRotatef(AngleY, 0.0, 1.0, 0.0);
-			glRotatef(AngleZ, 0.0, 0.0, 1.0);
+
+			if (AngleX != 0)
+				glRotatef(AngleX, 1.0, 0.0, 0.0);
+			if (AngleY != 0)
+				glRotatef(AngleY, 0.0, 1.0, 0.0);
+			if (AngleZ != 0)
+				glRotatef(AngleZ, 0.0, 0.0, 1.0);
+
 			if (TextureColor != NULL)
 			{
 				glColor4f(TextureColor->R, TextureColor->G, TextureColor->B, TextureColor->Fade);
@@ -129,6 +136,7 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
 			{
 				glColor4f(1.f, 1.f, 1.f, 1.f);
 			}
+
 			GLfloat Trg1Sz[] = {
 							-W/2, -H/2, 0,
 							-W/2,  H/2, 0,
@@ -141,13 +149,13 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
 							 W/2,  H/2, 0
 						   };
 			GLfloat Trg2Crd[] = {0,0 ,KX,0 ,KX,KY};
-			if (BindAll == false && PrevTextureID != TextureID)
+			if ((BindAll == false && BindAllGL == false) && PrevTextureID != TextureID)
 			{
 					glBindTexture(GL_TEXTURE_2D, 0);
 					glBindTexture(GL_TEXTURE_2D, TextureID);
 					PrevTextureID = TextureID;
 			}
-			if (BindAll == true)
+			if (BindAll == true || BindAllGL == true)
 			{
 				glBindTexture(GL_TEXTURE_2D, 0);
 				glBindTexture(GL_TEXTURE_2D, TextureID);
@@ -160,7 +168,9 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
 			glTexCoordPointer(2, GL_FLOAT, 0, &Trg2Crd);
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 			glLoadIdentity();
+#ifdef DEBUG
 			GLErrorTest("AddToBufferFROMTEXTURE()");
+#endif
 	}
 void DrawGL::AddToBufferFROMPATH (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
         {
@@ -192,7 +202,7 @@ DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height
 	}
 DrawGL::~ DrawGL ()
         {
-		ManagerGR->ClearPreLoadGL(1.0);
+		
 		SDL_GL_MakeCurrent(NULL, NULL);
 		SDL_GL_DeleteContext(ContextGL);
 	}
@@ -409,7 +419,7 @@ void DrawGL::DrawFromInterfaceElement(InterfaceElement* Element)
 		if (CheckScreenZone(X, Y, H, W, true))
 		{
 			string Path = Image->Source;
-			TextureInfo TInfo = ManagerGR->GenerateTexture(Path);
+			TextureInfo TInfo = ManagerGR->LoaderGL(Path);
 			AddToBufferFROMTEXTURE(X, Y, H, W, TInfo, 0.f, 0.f, Angle, true);
 		}
 
@@ -471,7 +481,7 @@ void DrawGL::SyncEffects(bool AutoPushBuffer /* = false */, EffectSyncMode SyncM
 		{
 			CurrentElement = Layer->at(LayerElementID);
 			CurrentElement->PtrToEffect->Refresh();
-			TextureInfo TInfo = ManagerGR->GenerateTexture(CurrentElement->Path);
+			TextureInfo TInfo = ManagerGR->LoaderGL(CurrentElement->Path);
 			DrawFromEffectElement(CurrentElement, SyncMode, ParticleColor, &TInfo);
 
 		}
@@ -557,6 +567,7 @@ void DrawGL::PushBuffer ()
 void DrawGL::ClearAll ()
         {
 		ManagerGR->ClearPreLoadGL(1.0);
+		PrevTextureID = -1;
 	}
 
 void DrawGL::setSyncFactor(float Factor)
@@ -577,7 +588,7 @@ float DrawGL::getSyncFactor()
 }
 void DrawGL::CacheImage(string Path)
 {
-	ManagerGR->GenerateTexture(Path);
+	ManagerGR->LoaderGL(Path);
 }
 void DrawGL::CacheText(TextFont* Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background)
 {

@@ -1,5 +1,17 @@
 #include "GraphicsManager.h"
 
+int GraphicsManager::StringToInt(string Argument)
+{
+	int Return = 0;
+	int Mult = 1;
+	for (unsigned int i = 0; i < Argument.size(); i++)
+	{
+		char Character = Argument.at(i);
+		Return += Character*Mult;
+		Mult *= 10;
+	}
+	return Return;
+}
 void GraphicsManager::SetMaximumTimeOfText (int Time)
         {
 		MaximumTimeFromLastUseOfText = Time;
@@ -57,7 +69,8 @@ TTF_Font * GraphicsManager::GetFont (string FontPath, int PointSize, int FontOut
         {
 		TTF_Font* Font = NULL;
 		bool Found = false;
-		string Path = FontPath + to_string(static_cast<long long>(PointSize)) + to_string(static_cast<long long>(Index));
+		int Path = StringToInt(FontPath)*100 + PointSize*10 + Index; //TODO: test;
+		
 		for (unsigned int i = 0; i < LoadedFontsPaths.size(); i++)
 		{
 			if (LoadedFontsPaths.at(i) == Path)
@@ -121,14 +134,13 @@ SDL_Surface * GraphicsManager::GetSurfaceShaded(TTF_Font * Font, string Text, SD
 }
 TextureInfo GraphicsManager::GetTextImageGL(TextFont * Font, string Text, Mode DrawMode, SDL_Color Foregroung, SDL_Color Background)
         {
-        string ColorDataFG = to_string(static_cast<long long>(Foregroung.a)) + to_string(static_cast<long long>(Foregroung.r)) +
-         to_string(static_cast<long long>(Foregroung.g)) + to_string(static_cast<long long>(Foregroung.b));
-        string ColorDataBG = to_string(static_cast<long long>(Background.a)) + to_string(static_cast<long long>(Background.r)) +
-         to_string(static_cast<long long>(Background.g)) + to_string(static_cast<long long>(Background.b));
+       
+         int ColorDataFG = Foregroung.b + Foregroung.g*10 + Foregroung.r*100 + Foregroung.a * 1000; //TODO: Test
+        int ColorDataBG = Background.b + Background.g*10 + Background.r*100 + Background.a * 1000; //TODO: TEST
 		TextureInfo Texture;
-		string args = to_string(static_cast<long long>(Font->FontKerning)) + to_string(static_cast<long long>(Font->FontOutline))
-			+ Font->FontPath + to_string(static_cast<long long>(Font->FontStyle)) + to_string(static_cast<long long>(Font->Index))
-			+ to_string(static_cast<long long>(Font->PointSize)) + Text + ColorDataBG + ColorDataFG;
+		int args = StringToInt(Text) + ColorDataFG*10 + ColorDataBG*100 + Font->PointSize*1000 + Font->Index*10000 + Font->FontStyle*100000 + 
+				    StringToInt(Font->FontPath)* 1000000 + Font->FontOutline*10000000 + Font->FontKerning*100000000;
+			
 		for (unsigned int i = 0; i < TimeFromLastUseGL.size(); i++)
 		{
 			if (LoadedTextArgsGL.at(i) == args)

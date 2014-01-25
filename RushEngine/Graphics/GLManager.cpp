@@ -165,4 +165,5 @@ void GraphicsManager::ClearPreLoadGL (double PartToClear)
 		glDeleteTextures(Count, &TextureToDelete->TextureID);
 		PreLoadedTextGL->erase(PreLoadedTextGL->begin(), PreLoadedTextGL->begin() + Count);
 		PreLoadedPathsGL->erase(PreLoadedPathsGL->begin(), PreLoadedPathsGL->begin() + Count);
+
 	}
