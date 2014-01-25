@@ -32,6 +32,8 @@ GraphicsManager::GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* Ob
 		this->ObjEngine = ObjEngine;
 		InitPreloaders();
 	}
+
+
 ObjectsEngine* GraphicsManager::GetObjEngine()
 {
 	return this->ObjEngine;
@@ -83,18 +85,6 @@ GraphicsManager::~GraphicsManager()
 		delete PreLoadedTextGL;
 }
 
-int GraphicsManager::StringToInt(string Argument)
-{
-	int Return = 0;
-	int Mult = 1;
-	for (unsigned int i = 0; i < Argument.size(); i++)
-	{
-		char Character = Argument.at(i);
-		Return += Character*Mult;
-		Mult *= 10;
-	}
-	return Return;
-}
 
 
 

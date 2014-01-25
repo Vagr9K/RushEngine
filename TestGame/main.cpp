@@ -118,7 +118,7 @@ void Init()
 	mainEngine.InitObjects(1, 1, 1, 1);
 	mainEngine.InitGraphics(WWIDTH, WHEIGHT, "Test #004.");
 	mainEngine.Graphics->Start();
-	mainEngine.Graphics->SetTextMaximumTime(K);
+	mainEngine.Graphics->SetTextMaximumTime(K + 2);
 	mainEngine.Graphics->DrawerGL->CacheImage("Ball.png");
 	mainEngine.Graphics->DrawerGL->CacheImage("Wall.png");
 

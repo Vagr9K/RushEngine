@@ -15,8 +15,8 @@ class GraphicsManager
   ObjectsEngine* ObjEngine;
   int OptimalObjectCount;
   vector <TTF_Font*> LoadedFonts;
-  vector <string> LoadedFontsPaths;
-  vector <string> LoadedTextArgsGL;
+  vector <int> LoadedFontsPaths;
+  vector <int> LoadedTextArgsGL;
   vector <TextureInfo> LoadedTextsGL;
   vector <int> TimeFromLastUseGL;
   int MaximumTimeFromLastUseOfText;
@@ -24,6 +24,7 @@ class GraphicsManager
   vector <TextureInfo> * PreLoadedTextGL;
 private:
   void InitOldCpp ();
+  inline int StringToInt(string Argument);
 public:
   GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine,vector <TextureInfo> * PreLoadedTextGL, vector <string> * PreLoadedPathsGL);
   GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine);
@@ -52,6 +53,6 @@ public:
   void CleanPreLoadGL (int IndexOfItem);
   void ClearPreLoadGL (double PartToClear);
   int GetNearestPowerOfTwo(int OldNumber);
-  inline int StringToInt(string Argument);
+  
 };
 
