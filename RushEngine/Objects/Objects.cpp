@@ -124,27 +124,27 @@ ObjectElementData * ObjectsEngine::getObjectsLayer (int ID)
 		return ObjectsData[ID];
 	}
 ObjDBManager <EffectElement> * ObjectsEngine::getEffectManager (int ID)
-        {
+    {
 		return EffectManagers.at(ID);
 	}
 EffectElementData * ObjectsEngine::getEffectLayer (int ID)
-        {
+    {
 		return EffectData[ID];
 	}
 ObjDBManager <InterfaceElement> * ObjectsEngine::getInterfaceManager (int ID)
-        {
+    {	
 		return InterfaceManagers.at(ID);
 	}
 InterfaceElementData * ObjectsEngine::getInterfaceLayer (int ID)
-        {
+    {
 		return InterfaceData[ID];
 	}
 ObjDBManager <BackgroundElement> * ObjectsEngine::getBackgroundManager (int ID)
-        {
+    {
 		return BackgroundManagers.at(ID);
 	}
 BackgroundElementData * ObjectsEngine::getBackgroundLayer (int ID)
-        {
+    {
 		return BackgroundData[ID];
 	}
 

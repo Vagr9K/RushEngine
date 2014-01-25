@@ -142,8 +142,14 @@
     <ClInclude Include="Audio\AudioMusic.h">
       <Filter>Source Files\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="AudioEffect.h">
+    <ClInclude Include="AdvFeatures\Object.h">
+      <Filter>Source Files\AdvFeatures</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioEffect.h">
       <Filter>Source Files\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvFeatures\RuntimeInfo.h">
+      <Filter>Source Files\AdvFeatures</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

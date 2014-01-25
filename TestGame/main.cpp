@@ -1,7 +1,10 @@
 #include "GameEngine.h"
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
+#include <iostream> 
+
+#include <string>
+#include <sstream>
 
 #include "Header.h"
 
@@ -18,6 +21,8 @@ using namespace std;
 
 
 GameEngine mainEngine;
+
+string PointerToEngine;
 
 vector<ObjectBASE*> Balls(BallCount);
 vector<ObjectBASE*> Walls(WallCount);
@@ -48,6 +53,8 @@ Button* TestButton;
 
 AudioMusic* Music;
 AudioEffect* Eff;
+
+
 
 int RndGen(int Max)
 {
@@ -100,6 +107,11 @@ void ModColors()
 
 void Init()
 {
+	stringstream SS;
+	SS << RushEngineInfo.GamePointer;
+	PointerToEngine = SS.str();
+
+
 	Tester = new FPSTest;
 
 	NewFont = new TextFont("font.ttf");
@@ -239,6 +251,8 @@ void RenderGraphics()
 	mainEngine.Eventing->Input->Mouse->Refresh();
 	string Pos = to_string(mainEngine.Eventing->Input->Mouse->Status.X) + " : " + to_string(mainEngine.Eventing->Input->Mouse->Status.Y);
 	mainEngine.Graphics->DrawerGL->AddToBuffer(100, 100, 30, 200, NewFont, Pos, BLENDED, *NewColor, *NewColorBG);
+
+	mainEngine.Graphics->DrawerGL->AddToBuffer(100, 400, 30, 200, NewFont, PointerToEngine, BLENDED, *NewColor, *NewColorBG);
 	mainEngine.Graphics->DrawerGL->PushBuffer();
 
 	Eff->Play(0);
