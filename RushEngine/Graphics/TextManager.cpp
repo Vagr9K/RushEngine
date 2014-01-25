@@ -58,6 +58,9 @@ TTF_Font * GraphicsManager::GetFont (string FontPath, int PointSize, int FontOut
 		TTF_Font* Font = NULL;
 		bool Found = false;
 		string Path = FontPath + to_string(static_cast<long long>(PointSize)) + to_string(static_cast<long long>(Index));
+		/*
+		int Path = StringToInt(FontPath)*100 + PointSIze*10 + Index; //TODO: test;
+		*/
 		for (unsigned int i = 0; i < LoadedFontsPaths.size(); i++)
 		{
 			if (LoadedFontsPaths.at(i) == Path)
@@ -123,12 +126,22 @@ TextureInfo GraphicsManager::GetTextImageGL(TextFont * Font, string Text, Mode D
         {
         string ColorDataFG = to_string(static_cast<long long>(Foregroung.a)) + to_string(static_cast<long long>(Foregroung.r)) +
          to_string(static_cast<long long>(Foregroung.g)) + to_string(static_cast<long long>(Foregroung.b));
+         /*
+         int ColorDataFG = Foregroung.b + Foregroung.g*10 + Foregroung.r*100 + Foregroung.a * 1000; //TODO: Test
+         */
         string ColorDataBG = to_string(static_cast<long long>(Background.a)) + to_string(static_cast<long long>(Background.r)) +
          to_string(static_cast<long long>(Background.g)) + to_string(static_cast<long long>(Background.b));
+          /*
+         int ColorDataBG = Background.b + Background.g*10 + Background.r*100 + Background.a * 1000; //TODO: TEST
+         */
 		TextureInfo Texture;
 		string args = to_string(static_cast<long long>(Font->FontKerning)) + to_string(static_cast<long long>(Font->FontOutline))
 			+ Font->FontPath + to_string(static_cast<long long>(Font->FontStyle)) + to_string(static_cast<long long>(Font->Index))
 			+ to_string(static_cast<long long>(Font->PointSize)) + Text + ColorDataBG + ColorDataFG;
+			/*
+				int args = ColorDataFG + ColorDataBG*10 + Font->PointSize*100 + Font->Index*1000 + Font->FontStyle*10000 + 
+				StringToInt(Font->FontPath)* 100000 + Font->FontOutline*1000000 + Font->FontKerning*10000000;
+			*/
 		for (unsigned int i = 0; i < TimeFromLastUseGL.size(); i++)
 		{
 			if (LoadedTextArgsGL.at(i) == args)

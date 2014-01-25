@@ -19,12 +19,13 @@ class DrawGL
   bool BufferStarted;
   float GlobalDrawFactor;
   GLuint PrevTextureID;
+  bool BindAllGL;
 private:
   void InitOldCpp ();
   bool GLErrorTest (string FuntionName);
   bool InitOpenGL ();
   void ManageTexture (GLuint TextureID, GLfloat H, GLfloat W, GLfloat * Trg1Sz, GLfloat * Trg2Sz, GLfloat * Trg1Crd, GLfloat * Trg2Crd);
-  void AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ, bool NoDelta = false, RGBColor* TextureColor = NULL, bool BindAll = true);
+  void AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ, bool NoDelta = false, RGBColor* TextureColor = NULL, bool BindAll = false);
   void AddToBufferFROMPATH (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
   void AddToBufferFROMTEXT (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
   void DrawFromLayerElement(ObjectElement* Element, float DrawFactor, ObjectSyncMode SyncTo);

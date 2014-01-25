@@ -52,5 +52,6 @@ public:
   void CleanPreLoadGL (int IndexOfItem);
   void ClearPreLoadGL (double PartToClear);
   int GetNearestPowerOfTwo(int OldNumber);
+  inline int StringToInt(string Argument);
 };
 
