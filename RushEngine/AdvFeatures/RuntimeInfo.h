@@ -1,6 +1,7 @@
 class GameEngine;
 class EventingEngine;
 class PhysicsEngine;
+class ObjectsEngine;
 
 class RuntimeInfo
 {
@@ -8,6 +9,7 @@ public:
 	GameEngine* GamePointer;
 	EventingEngine* Eventing;
 	PhysicsEngine* Physics;
+	ObjectsEngine* Objects;
 	ObjDBManager<ObjectElement>* ObjectsDatabase;
 	ObjDBManager<EffectElement>* EffectDatabase;
 	ObjDBManager<BackgroundElement>* BackgroundDatabase;
@@ -21,6 +23,7 @@ public:
 		GamePointer = NULL;
 		Eventing = NULL;
 		Physics = NULL;
+		Objects = NULL;
 		DefaultObjManagerID = 0;
 		DefaultInterfaceManagerID = 0;
 		DefaultEffManagerID = 0;

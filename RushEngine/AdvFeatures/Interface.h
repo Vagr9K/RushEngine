@@ -13,10 +13,9 @@ public:
 	{
 
 	}
-	Interface()
-		:InterfaceBASE(RushEngineInfo.InterfaceDatabase, RushEngineInfo.Eventing)
+	Interface(int LayerID = 0)
+		:InterfaceBASE(RushEngineInfo.Objects->getInterfaceManager(LayerID), RushEngineInfo.Eventing)
 	{
 
 	}
-
 };

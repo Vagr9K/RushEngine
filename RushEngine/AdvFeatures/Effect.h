@@ -13,7 +13,11 @@ public:
 	{
 
 	}
+	Effect(int LayerID, int ParticleCount, string Path)
+		:EffectBASE(RushEngineInfo.Objects->getEffectManager(LayerID), ParticleCount, Path)
+	{
 
+	}
 
 };
 

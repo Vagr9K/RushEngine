@@ -7,7 +7,6 @@
 
 #include "AdvFeatures/RuntimeInfo.h"
 
-#include "AdvFeatures/Tests.h"
 
 
 RuntimeInfo RushEngineInfo;
@@ -63,6 +62,7 @@ private:
 			{
 				RushEngineInfo.ObjectsDatabase = NULL;
 			}
+			RushEngineInfo.Objects = Obj;
 	}
 public:
 	PhysicsEngine* Physics;

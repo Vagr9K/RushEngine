@@ -21,4 +21,10 @@ public:
 	{
 
 	}
+	Object(int WorldID, bool SyncGraphics = true, bool AllowDraw = true)
+		: ObjectBASE(RushEngineInfo.Physics->GetWorlds()->at(WorldID), RushEngineInfo.ObjectsDatabase,
+		RushEngineInfo.Eventing, SyncGraphics, AllowDraw)
+	{
+
+	}
 };

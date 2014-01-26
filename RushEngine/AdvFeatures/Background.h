@@ -13,8 +13,8 @@ public:
 	{
 
 	}
-	Background(bool AutoAdd = true)
-		:BackgroundBASE(RushEngineInfo.BackgroundDatabase, RushEngineInfo.Eventing, AutoAdd)
+	Background(int LayerID = 0, bool AutoAdd = true)
+		:BackgroundBASE(RushEngineInfo.Objects->getBackgroundManager(LayerID), RushEngineInfo.Eventing, AutoAdd)
 	{
 
 	}
