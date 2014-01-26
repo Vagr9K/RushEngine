@@ -24,8 +24,8 @@ GameEngine mainEngine;
 
 string PointerToEngine;
 
-vector<ObjectBASE*> Balls(BallCount);
-vector<ObjectBASE*> Walls(WallCount);
+vector<Object*> Balls(BallCount);
+vector<Object*> Walls(WallCount);
 b2Vec2 Gravity(0.0f, -10.0f);
 b2World World(Gravity);
 b2CircleShape* STDShape;
@@ -168,7 +168,7 @@ void Init()
 		BodyDefinitionBall->position.Set(Rnd1, Rnd2);
 		Rnd1 = (float)RndGen(9) + 1.f;
 		Rnd2 = (float)RndGen(9) + 1.f;
-		Balls.at(i) = new ObjectBASE(&World, mainEngine.getObjects()->getObjectManager(0), mainEngine.Eventing, true, true);
+		Balls.at(i) = new Object(&World, mainEngine.getObjects()->getObjectManager(0), mainEngine.Eventing, true, true);
 		Balls.at(i)->CreateBody(BodyDefinitionBall);
 		Balls.at(i)->CreateFixture(FixtureDefBall);
 		Balls.at(i)->SetImageSource("Ball.png");
@@ -186,7 +186,7 @@ void Init()
 	FixtureDefWall->restitution = 1.f;
 	for (int j = 0; j < WallCount; j++)
 	{
-		Walls.at(j) = new ObjectBASE(&World, mainEngine.getObjects()->getObjectManager(0), mainEngine.Eventing, true, true);
+		Walls.at(j) = new Object(&World, mainEngine.getObjects()->getObjectManager(0), mainEngine.Eventing, true, true);
 		Walls.at(j)->SetImageSource("Wall.png");
 		Walls.at(j)->SyncFactor = K;
 		Walls.at(j)->ForceLocalFactor = true;
@@ -211,7 +211,7 @@ void Init()
 
 	Ev = new SDL_Event;
 
-	BackgroundBASE* BgkWood = new BackgroundBASE(mainEngine.getObjects()->getBackgroundManager(), mainEngine.Eventing, true);
+	Background* BgkWood = new Background(mainEngine.getObjects()->getBackgroundManager(), mainEngine.Eventing, true);
 	IMG* Wood = new IMG;
 	Wood->h = 1000;
 	Wood->w = 1100;

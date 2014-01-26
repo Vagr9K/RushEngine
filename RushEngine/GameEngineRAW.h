@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Graphics/Graphics.h"
 #include "Physics/Physics.h"
 #include "Objects/Objects.h"
@@ -70,6 +72,7 @@ public:
 	void InitPhysics()
 	{
 		Physics = new PhysicsEngine;
+		RushEngineInfo.Physics = Physics;
 	}
 
 	void InitObjects(int InterfaceLayerCount, int SpecialLayerCount, int WorldCount, int BackGroundLayerCount)

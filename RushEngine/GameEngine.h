@@ -13,3 +13,7 @@
 
 
 #include "GameEngineRAW.h"
+#include "AdvFeatures/Object.h"
+#include "AdvFeatures/Effect.h"
+#include "AdvFeatures/Background.h"
+#include "AdvFeatures/Interface.h"

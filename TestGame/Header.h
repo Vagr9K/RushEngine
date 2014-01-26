@@ -6,7 +6,7 @@ const static GLfloat colors[12][3] =
 	{ 0.5f, 1.0f, 0.5f }, { 0.5f, 1.0f, 0.75f }, { 0.5f, 1.0f, 1.0f }, { 0.5f, 0.75f, 1.0f },
 	{ 0.5f, 0.5f, 1.0f }, { 0.75f, 0.5f, 1.0f }, { 1.0f, 0.5f, 1.0f }, { 1.0f, 0.5f, 0.75f }
 };
-class EngineFireEffect : public EffectBASE
+class EngineFireEffect : public Effect
 {
 	float slowdown;
 
@@ -15,7 +15,7 @@ public:
 	float yspeed;
 	float X, Y;
 	unsigned int col;
-	EngineFireEffect(int ParticleCount, ObjDBManager<EffectElement>* EffectManager, string Path) :EffectBASE(EffectManager, ParticleCount, Path)
+	EngineFireEffect(int ParticleCount, ObjDBManager<EffectElement>* EffectManager, string Path) :Effect(EffectManager, ParticleCount, Path)
 	{
 		xspeed = 0.f;
 		yspeed = 2000.f;
@@ -76,7 +76,7 @@ public:
 	}
 };
 
-class Button : public InterfaceBASE
+class Button : public Interface
 {
 	string Path1;
 	string Path2;
@@ -93,7 +93,7 @@ class Button : public InterfaceBASE
 	}
 public:
 
-	Button(ObjDBManager<InterfaceElement>* ManagerDB, EventingEngine* EventSystem) :InterfaceBASE(ManagerDB, EventSystem)
+	Button(ObjDBManager<InterfaceElement>* ManagerDB, EventingEngine* EventSystem) :Interface(ManagerDB, EventSystem)
 	{
 		Path1 = "Button1.png";
 		Path2 = "Button2.png";
