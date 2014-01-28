@@ -142,8 +142,23 @@
     <ClInclude Include="Audio\AudioMusic.h">
       <Filter>Source Files\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="AudioEffect.h">
+    <ClInclude Include="AdvFeatures\Object.h">
+      <Filter>Source Files\AdvFeatures</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioEffect.h">
       <Filter>Source Files\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvFeatures\RuntimeInfo.h">
+      <Filter>Source Files\AdvFeatures</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvFeatures\Effect.h">
+      <Filter>Source Files\AdvFeatures</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvFeatures\Interface.h">
+      <Filter>Source Files\AdvFeatures</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvFeatures\Background.h">
+      <Filter>Source Files\AdvFeatures</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

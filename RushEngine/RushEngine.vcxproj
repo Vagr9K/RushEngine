@@ -124,9 +124,14 @@
     <ClCompile Include="Physics\Physics.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AdvFeatures\Background.h" />
+    <ClInclude Include="AdvFeatures\Effect.h" />
+    <ClInclude Include="AdvFeatures\Interface.h" />
+    <ClInclude Include="AdvFeatures\Object.h" />
+    <ClInclude Include="AdvFeatures\RuntimeInfo.h" />
     <ClInclude Include="AdvFeatures\Tests.h" />
-    <ClInclude Include="AudioEffect.h" />
     <ClInclude Include="Audio\Audio.h" />
+    <ClInclude Include="Audio\AudioEffect.h" />
     <ClInclude Include="Audio\AudioMusic.h" />
     <ClInclude Include="Eventing\EventComponents.h" />
     <ClInclude Include="Eventing\Eventing.h" />
