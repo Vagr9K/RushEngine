@@ -8,6 +8,10 @@ void DrawGL::InitOldCpp ()
 		ObjEngine = NULL;
 		DeltaX = 0;
 		DeltaY = 0;
+		AspectX = 1.f;
+		AspectY = 1.f;
+		ZeroWidth = 0;
+		ZeroHeight = 0;
 		BufferStarted = false;
 		BgkC = 0;
 		WorldLC = 0;
@@ -26,7 +30,7 @@ bool DrawGL::GLErrorTest (string FuntionName)
 		}
 		return true;
 	}
-bool DrawGL::InitOpenGL ()
+bool DrawGL::InitOpenGL (bool FullInit /* = false */)
         {
 		ContextGL = SDL_GL_CreateContext(mainWindow);
 		
@@ -52,7 +56,15 @@ bool DrawGL::InitOpenGL ()
 
 		glMatrixMode(GL_PROJECTION);
 
-		glOrtho(0, WinWidth, WinHeight, 0, 0.f, 4.f);
+		
+		if (FullInit)
+		{
+			gluPerspective(45.f, (GLfloat)WinWidth / (GLfloat)WinHeight, 0.f, 4.f);
+		}
+		else
+		{
+			glOrtho(0, WinWidth, WinHeight, 0, 0.f, 4.f);
+		}
 
 		glMatrixMode(GL_MODELVIEW);
 
@@ -82,13 +94,13 @@ bool DrawGL::CheckScreenZone(float x, float y, float h, float w, bool NoDelta)
 			ActX = x - DeltaX;
 			ActY = y + DeltaY;
 		}
-		h = h / 2;
-		w = w / 2;
-		if ((ActX - w) <= WinWidth && (ActX + w) >= 0 && (ActY - h) <= WinHeight && (ActY + h) >= 0)
+		h = (h / 2);
+		w = (w / 2);
+		if ((ActX - w) <= ZeroWidth && (ActX + w) >= 0 && (ActY - h) <= ZeroHeight && (ActY + h) >= 0)
 		{
 			return true;
 		}
-		if (((ActX - w) >= WinWidth && (ActX + w) <= 0) || ((ActY - h) >= WinHeight && (ActY + h) <= 0))
+		else if (((ActX - w) >= ZeroWidth && (ActX + w) <= 0) || ((ActY - h) >= ZeroHeight && (ActY + h) <= 0))
 		{
 			return true;
 		}
@@ -112,6 +124,7 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
         	float KX = TextureData.KxKy.KX;
         	float KY = TextureData.KxKy.KY;
         	GLuint TextureID = TextureData.TextureID;
+			
 			if (NoDelta)
 			{
 				glTranslatef(X, Y, 0.0);
@@ -191,6 +204,8 @@ DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height
 		this->EventEngine = Events;
 		this->WinHeight = Height;
 		this->WinWidth = Width;
+		this->ZeroHeight = Height;
+		this->ZeroWidth = Width;
 		if (InitOpenGL() == false)
 		{
 			EventEngine->SystemEvents->GraphicsError("OpenGL initialization error in function DrawGL().");
@@ -212,8 +227,8 @@ void DrawGL::SetView(int X, int Y)
 		DeltaY = Y;
 	}
 void DrawGL::StartBuffer ()
-        {
-		
+   {
+		CheckScreenState();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
@@ -692,5 +707,48 @@ void DrawGL::SyncAll(bool AutoPushBuffer /* = false */)
 	if (AutoPushBuffer)
 	{
 		PushBuffer();
+	}
+}
+
+void DrawGL::RefreshData(int NewWidth, int NewHeight)
+{
+	WinWidth = NewWidth;
+	WinHeight = NewHeight;
+	ManagerGR->WindowData->Height = NewHeight;
+	ManagerGR->WindowData->Width = NewWidth;
+	AspectX = float(ZeroWidth) / float(WinWidth);
+	AspectY = float(ZeroHeight) / float(WinHeight);
+
+	SDL_GL_DeleteContext(ContextGL);
+	InitOpenGL(true);
+	
+	glViewport(0, 0, (GLsizei)NewWidth, (GLsizei)NewHeight);
+
+	glMatrixMode(GL_PROJECTION);					
+	glLoadIdentity();									
+
+	AspectX = AspectY;
+
+	glOrtho(0.f, WinWidth * AspectX, WinHeight * AspectY, 0.f, -1.0, 1.0);
+
+	glMatrixMode(GL_MODELVIEW);		
+
+	glLoadIdentity();
+
+	ClearAll();
+
+}
+
+void DrawGL::CheckScreenState()
+{
+	if (EventEngine->GlobalEvent.type == SDL_WINDOWEVENT)
+	{
+		if (EventEngine->GlobalEvent.window.event == SDL_WINDOWEVENT_RESIZED 
+			|| EventEngine->GlobalEvent.window.event == SDL_WINDOWEVENT_MAXIMIZED
+			|| EventEngine->GlobalEvent.window.event == SDL_WINDOWEVENT_RESTORED
+			|| EventEngine->GlobalEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+		{
+			RefreshData(EventEngine->GlobalEvent.window.data1, EventEngine->GlobalEvent.window.data2);
+		}
 	}
 }

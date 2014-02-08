@@ -22,6 +22,8 @@ class GraphicsManager
   int MaximumTimeFromLastUseOfText;
   vector <string> * PreLoadedPathsGL;
   vector <TextureInfo> * PreLoadedTextGL;
+public:
+	WindowInfo* WindowData;
 private:
   void InitOldCpp ();
   inline int StringToInt(string Argument);
@@ -53,6 +55,5 @@ public:
   void CleanPreLoadGL (int IndexOfItem);
   void ClearPreLoadGL (double PartToClear);
   int GetNearestPowerOfTwo(int OldNumber);
-  
 };
 

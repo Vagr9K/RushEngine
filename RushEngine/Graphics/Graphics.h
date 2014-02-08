@@ -29,7 +29,7 @@ class GraphicsEngine
 
 
 private:
-	int Width, Height;
+	WindowInfo* WinData;
 	string Title;
 	bool IsReady;
 	bool IsStarted;
@@ -50,8 +50,12 @@ private:
 		ObjEngine = NULL;
 		ManagerGR = NULL;
 		GLInited = false;
+		WinData = new WindowInfo;
 	}
+	void RefreshData()
+	{
 
+	}
 
 public:
 	DrawGL* DrawerGL;
@@ -61,7 +65,7 @@ private:
 		if (GLInited == false)
 		{
 
-			DrawerGL = new DrawGL(ManagerGR, mainWindow, Height, Width, EventEngine);
+			DrawerGL = new DrawGL(ManagerGR, mainWindow, WinData->Height, WinData->Width, EventEngine);
 			GLInited = true;
 		}
 	}
@@ -83,8 +87,8 @@ public:
 	GraphicsEngine(int Width, int Height, string Title, EventingEngine* EventsEnginePtr, ObjectsEngine* ObjEngine)
 	{
 		InitOldCpp();
-		this->Width = Width;
-		this->Height = Height;
+		this->WinData->Width = Width;
+		this->WinData->Height = Height;
 		this->Title = Title;
 		this->IsReady = true;
 		this->EventEngine = EventsEnginePtr;
@@ -92,8 +96,8 @@ public:
 	}
 	void Init(int Width, int Height, string Title, EventingEngine* EvVar, ObjectsEngine* ObjEngine)
 	{
-		this->Width = Width;
-		this->Height = Height;
+		this->WinData->Width = Width;
+		this->WinData->Height = Height;
 		this->Title = Title;
 		this->EventEngine = EvVar;
 		this->ObjEngine = ObjEngine;
@@ -110,7 +114,7 @@ public:
 		}
 
 
-		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WinData->Width, WinData->Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 		if (mainWindow == NULL)
 		{
 			EventEngine->SystemEvents->GraphicsError(SDL_GetError());
@@ -130,7 +134,7 @@ public:
 		}
 
 		this->ManagerGR = new GraphicsManager(EventEngine, ObjEngine);
-
+		ManagerGR->WindowData = WinData;
 		InitGL();
 
 		IsStarted = true;

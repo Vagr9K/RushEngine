@@ -14,7 +14,7 @@ using namespace std;
 #define WWIDTH 1000
 
 
-#define  BallCount  100
+#define  BallCount  20
 #define  WallCount  4
 
 #define  K 100
@@ -130,7 +130,6 @@ void Init()
 	mainEngine.InitObjects(1, 1, 1, 1);
 	mainEngine.InitGraphics(WWIDTH, WHEIGHT, "Test #004.");
 	mainEngine.Graphics->Start();
-	mainEngine.Graphics->SetFullScreen(true);
 	mainEngine.Graphics->SetTextMaximumTime(K + 2);
 	mainEngine.Graphics->DrawerGL->CacheImage("Ball.png");
 	mainEngine.Graphics->DrawerGL->CacheImage("Wall.png");
@@ -159,7 +158,7 @@ void Init()
 	b2BodyDef* BodyDefinitionBall = new b2BodyDef;
 	BodyDefinitionBall->type = b2_dynamicBody;
 	b2FixtureDef* FixtureDefBall = new b2FixtureDef;
-	FixtureDefBall->restitution = 1.1f;
+	FixtureDefBall->restitution = 0.9f;
 	FixtureDefBall->friction = 0.1f;
 	FixtureDefBall->shape = STDShape;
 	float Rnd1 = (float)RndGen(9)+1.f;
@@ -281,6 +280,16 @@ void RenderCamera()
 	{
 		CamY = CamY - 40;
 		
+	}
+	else if (A[SDL_SCANCODE_ESCAPE])
+	{
+		mainEngine.Graphics->SetFullScreen(false);
+
+	}
+	else if (A[SDL_SCANCODE_F])
+	{
+		mainEngine.Graphics->SetFullScreen(true);
+
 	}
 	mainEngine.Graphics->DrawerGL->SetView(CamX, CamY);
 

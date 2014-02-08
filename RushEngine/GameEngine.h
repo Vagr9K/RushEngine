@@ -8,6 +8,7 @@
 #pragma comment(lib, "SDL2_ttf.lib")
 #pragma comment(lib, "SDL2_mixer.lib")
 #pragma comment(lib, "opengl32.lib")
+#pragma comment(lib, "glu32.lib")
 #endif
 
 
