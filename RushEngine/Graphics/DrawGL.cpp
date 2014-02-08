@@ -30,7 +30,7 @@ bool DrawGL::GLErrorTest (string FuntionName)
 		}
 		return true;
 	}
-bool DrawGL::InitOpenGL (bool FullInit /* = false */)
+bool DrawGL::InitOpenGL ()
         {
 		ContextGL = SDL_GL_CreateContext(mainWindow);
 		
@@ -56,15 +56,7 @@ bool DrawGL::InitOpenGL (bool FullInit /* = false */)
 
 		glMatrixMode(GL_PROJECTION);
 
-		
-		if (FullInit)
-		{
-			gluPerspective(45.f, (GLfloat)WinWidth / (GLfloat)WinHeight, 0.f, 4.f);
-		}
-		else
-		{
-			glOrtho(0, WinWidth, WinHeight, 0, 0.f, 4.f);
-		}
+		glOrtho(0, WinWidth, WinHeight, 0, -1.f, 1.f);
 
 		glMatrixMode(GL_MODELVIEW);
 
@@ -86,13 +78,13 @@ bool DrawGL::CheckScreenZone(float x, float y, float h, float w, bool NoDelta)
 		float ActY;
 		if (NoDelta)
 		{
-			ActX = x;
-			ActY = y;
+			ActX = x / AspectX;
+			ActY = y / AspectY;
 		}
 		else
 		{
-			ActX = x - DeltaX;
-			ActY = y + DeltaY;
+			ActX = (x / AspectX - DeltaX);
+			ActY = (y / AspectY + DeltaY);
 		}
 		h = (h / 2);
 		w = (w / 2);
@@ -195,17 +187,17 @@ void DrawGL::AddToBufferFROMTEXT (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, Te
 		TextureInfo TextureID = ManagerGR->GetTextImageGL(Font, Text, DrawMode, Foreground, Background);
 		AddToBufferFROMTEXTURE(X, Y, H, W, TextureID, AngleX, AngleY, AngleZ);
 	}
-DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height, int Width, EventingEngine * Events)
+DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, EventingEngine * Events)
         {
 		InitOldCpp();
 		this->ManagerGR = ManagerGR;
 		this->ObjEngine = ManagerGR->GetObjEngine();
 		this->mainWindow = mainWindow;
 		this->EventEngine = Events;
-		this->WinHeight = Height;
-		this->WinWidth = Width;
-		this->ZeroHeight = Height;
-		this->ZeroWidth = Width;
+		this->WinHeight = ManagerGR->WindowData->Height;
+		this->WinWidth = ManagerGR->WindowData->Width;
+		this->ZeroHeight = ManagerGR->WindowData->ZeroHeight;
+		this->ZeroWidth = ManagerGR->WindowData->ZeroWidth;
 		if (InitOpenGL() == false)
 		{
 			EventEngine->SystemEvents->GraphicsError("OpenGL initialization error in function DrawGL().");
@@ -712,15 +704,12 @@ void DrawGL::SyncAll(bool AutoPushBuffer /* = false */)
 
 void DrawGL::RefreshData(int NewWidth, int NewHeight)
 {
-	WinWidth = NewWidth;
-	WinHeight = NewHeight;
-	ManagerGR->WindowData->Height = NewHeight;
-	ManagerGR->WindowData->Width = NewWidth;
+	
 	AspectX = float(ZeroWidth) / float(WinWidth);
 	AspectY = float(ZeroHeight) / float(WinHeight);
 
 	SDL_GL_DeleteContext(ContextGL);
-	InitOpenGL(true);
+	InitOpenGL();
 	
 	glViewport(0, 0, (GLsizei)NewWidth, (GLsizei)NewHeight);
 
@@ -729,11 +718,18 @@ void DrawGL::RefreshData(int NewWidth, int NewHeight)
 
 	AspectX = AspectY;
 
-	glOrtho(0.f, WinWidth * AspectX, WinHeight * AspectY, 0.f, -1.0, 1.0);
+	glOrtho(0.f, NewWidth * AspectX, NewHeight * AspectY, 0.f, -1.0, 1.0);
 
 	glMatrixMode(GL_MODELVIEW);		
 
 	glLoadIdentity();
+
+	WinWidth = NewWidth;
+	WinHeight = NewHeight;
+	ManagerGR->WindowData->Height = NewHeight;
+	ManagerGR->WindowData->Width = NewWidth;
+	ManagerGR->WindowData->AspectX = AspectX;
+	ManagerGR->WindowData->AspectY = AspectY;
 
 	ClearAll();
 

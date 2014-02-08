@@ -36,8 +36,13 @@ public:
 };
 struct WindowInfo
 {
-  int Height;
-  int Width;
+	int Height;
+	int Width;
+	float AspectX;
+	float AspectY;
+	int ZeroHeight;
+	int ZeroWidth;
+	WindowInfo();
 };
 
 class OperationController  //Windows only!

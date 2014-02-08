@@ -29,7 +29,7 @@ private:
   inline int StringToInt(string Argument);
 public:
   GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine,vector <TextureInfo> * PreLoadedTextGL, vector <string> * PreLoadedPathsGL);
-  GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine);
+  GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine, WindowInfo* WindowData = NULL);
   GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine, int OptimalObjectCount);
   ~GraphicsManager();
   void SetOptimalObjectCount (int OptimalObjectCount);

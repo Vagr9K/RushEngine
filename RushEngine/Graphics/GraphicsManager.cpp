@@ -17,11 +17,12 @@ GraphicsManager::GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* Ob
 		this->PreLoadedTextGL = PreLoadedTextGL;
 		this->ObjEngine = ObjEngine;
 	}
-GraphicsManager::GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine)
+GraphicsManager::GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine,WindowInfo* WindowData /*= NULL */)
         {
 		InitOldCpp();
 		this->EventEngine = EventEngine;
 		this->ObjEngine = ObjEngine;
+		this->WindowData = WindowData;
 		InitPreloaders();
 	}
 GraphicsManager::GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine, int OptimalObjectCount)

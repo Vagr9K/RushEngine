@@ -129,6 +129,8 @@ void Init()
 
 	mainEngine.InitObjects(1, 1, 1, 1);
 	mainEngine.InitGraphics(WWIDTH, WHEIGHT, "Test #004.");
+	mainEngine.Graphics->SetWindowSize(800, 600);
+	mainEngine.Graphics->SetFullScreen(true);
 	mainEngine.Graphics->Start();
 	mainEngine.Graphics->SetTextMaximumTime(K + 2);
 	mainEngine.Graphics->DrawerGL->CacheImage("Ball.png");
@@ -288,6 +290,7 @@ void RenderCamera()
 	}
 	else if (A[SDL_SCANCODE_F])
 	{
+		
 		mainEngine.Graphics->SetFullScreen(true);
 
 	}

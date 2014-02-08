@@ -65,7 +65,7 @@ private:
 		if (GLInited == false)
 		{
 
-			DrawerGL = new DrawGL(ManagerGR, mainWindow, WinData->Height, WinData->Width, EventEngine);
+			DrawerGL = new DrawGL(ManagerGR, mainWindow, EventEngine);
 			GLInited = true;
 		}
 	}
@@ -87,6 +87,8 @@ public:
 	GraphicsEngine(int Width, int Height, string Title, EventingEngine* EventsEnginePtr, ObjectsEngine* ObjEngine)
 	{
 		InitOldCpp();
+		this->WinData->ZeroWidth = Width;
+		this->WinData->ZeroHeight = Height;
 		this->WinData->Width = Width;
 		this->WinData->Height = Height;
 		this->Title = Title;
@@ -96,6 +98,8 @@ public:
 	}
 	void Init(int Width, int Height, string Title, EventingEngine* EvVar, ObjectsEngine* ObjEngine)
 	{
+		this->WinData->ZeroWidth = Width;
+		this->WinData->ZeroHeight = Height;
 		this->WinData->Width = Width;
 		this->WinData->Height = Height;
 		this->Title = Title;
@@ -104,7 +108,14 @@ public:
 		this->IsReady = true;
 
 	}
-
+	void SetWindowSize(int Width, int Height)
+	{
+		if (!IsStarted)
+		{
+			WinData->Width = Width;
+			WinData->Height = Height;
+		}
+	}
 	bool Start()
 	{
 		if (IsReady == false)
@@ -113,8 +124,11 @@ public:
 			return false;
 		}
 
-
+#ifdef __ANDROID__
+		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WinData->Width, WinData->Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
+#else
 		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WinData->Width, WinData->Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+#endif
 		if (mainWindow == NULL)
 		{
 			EventEngine->SystemEvents->GraphicsError(SDL_GetError());
@@ -133,8 +147,8 @@ public:
 			return false;
 		}
 
-		this->ManagerGR = new GraphicsManager(EventEngine, ObjEngine);
-		ManagerGR->WindowData = WinData;
+		this->ManagerGR = new GraphicsManager(EventEngine, ObjEngine, WinData);
+		
 		InitGL();
 
 		IsStarted = true;
@@ -210,10 +224,15 @@ public:
 		}
 	}
 
-	WindowInfo getWindowSize()
+	WindowInfo* getWindowSize()
 	{
-		WindowInfo Info;
-		SDL_GetWindowSize(mainWindow, &Info.Width, &Info.Height);
+		WindowInfo* Info;
+		if (IsStarted)
+		{
+			return WinData;
+		}
+		Info = new WindowInfo();
+		
 		return Info;
 	}
 

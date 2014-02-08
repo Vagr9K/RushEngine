@@ -43,3 +43,13 @@ TextureRenderFactor::TextureRenderFactor()
 	KY = 0;
 }
 
+
+WindowInfo::WindowInfo()
+{
+	Height = 0;
+	Width = 0;
+	ZeroHeight = 0;
+	ZeroWidth = 0;
+	AspectX = 0.f;
+	AspectY = 0.f;
+}

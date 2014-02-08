@@ -1,5 +1,5 @@
 #include "GraphicsManager.h"
-#include "GL/GLU.h"
+
 
 using namespace std;
 
@@ -29,7 +29,7 @@ class DrawGL
 private:
   void InitOldCpp ();
   bool GLErrorTest (string FuntionName);
-  bool InitOpenGL (bool FullInit = false);
+  bool InitOpenGL ();
   void ManageTexture (GLuint TextureID, GLfloat H, GLfloat W, GLfloat * Trg1Sz, GLfloat * Trg2Sz, GLfloat * Trg1Crd, GLfloat * Trg2Crd);
   void AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ, bool NoDelta = false, RGBColor* TextureColor = NULL, bool BindAll = false);
   void AddToBufferFROMPATH (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ);
@@ -43,7 +43,7 @@ private:
 inline  bool CheckScreenZone(float x, float y, float h, float w, bool NoDelta = false);
 inline void SetEffectMode(bool Status);
 public:
-  DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height, int Width, EventingEngine * Events);
+  DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, EventingEngine * Events);
   ~ DrawGL ();
   void SetView(int X, int Y);
   void setSyncFactor(float Factor);
