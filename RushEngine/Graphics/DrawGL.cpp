@@ -78,21 +78,21 @@ bool DrawGL::CheckScreenZone(float x, float y, float h, float w, bool NoDelta)
 		float ActY;
 		if (NoDelta)
 		{
-			ActX = x / AspectX;
-			ActY = y / AspectY;
+			ActX = x/AspectX;
+			ActY = y/AspectY;
 		}
 		else
 		{
-			ActX = (x / AspectX - DeltaX);
-			ActY = (y / AspectY + DeltaY);
+			ActX = (x - DeltaX)/AspectX;
+			ActY = (y + DeltaY)/AspectY;
 		}
-		h = (h / 2);
-		w = (w / 2);
-		if ((ActX - w) <= ZeroWidth && (ActX + w) >= 0 && (ActY - h) <= ZeroHeight && (ActY + h) >= 0)
+		h = (h / 2)/AspectY;
+		w = (w / 2)/AspectX;
+		if ((ActX - w) <= WinWidth && (ActX + w) >= 0 && (ActY - h) <= WinHeight && (ActY + h) >= 0)
 		{
 			return true;
 		}
-		else if (((ActX - w) >= ZeroWidth && (ActX + w) <= 0) || ((ActY - h) >= ZeroHeight && (ActY + h) <= 0))
+		else if (((ActX - w) >= WinWidth && (ActX + w) <= 0) || ((ActY - h) >= WinHeight && (ActY + h) <= 0))
 		{
 			return true;
 		}
@@ -705,6 +705,14 @@ void DrawGL::SyncAll(bool AutoPushBuffer /* = false */)
 void DrawGL::RefreshData(int NewWidth, int NewHeight)
 {
 	
+	if (NewWidth == 0)
+	{
+		NewWidth = 1;
+	}
+	if (NewHeight == 0)
+	{
+		NewHeight = 1;
+	}
 	AspectX = float(ZeroWidth) / float(WinWidth);
 	AspectY = float(ZeroHeight) / float(WinHeight);
 
