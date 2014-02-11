@@ -11,7 +11,6 @@ protected:
   int PhysicsWorldIndex;
   int ObjectsIndex;
   bool ObjElementInDB;
-  EventingEngine * EventingEnginePtr;
 public:
 protected:
   void CleanObject (void * Obj);
@@ -22,6 +21,7 @@ protected:
   void SyncPhysicsData (ObjectSyncMode SyncTo);
 protected:
   ObjectElement * ObjElement;
+  EventingEngine * EventingEnginePtr;
   bool SizeDataSyncedImage;
   bool SizeDataSyncedText;
 public:

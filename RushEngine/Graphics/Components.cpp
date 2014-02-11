@@ -50,6 +50,6 @@ WindowInfo::WindowInfo()
 	Width = 0;
 	ZeroHeight = 0;
 	ZeroWidth = 0;
-	AspectX = 0.f;
-	AspectY = 0.f;
+	AspectX = 1.f;
+	AspectY = 1.f;
 }
