@@ -22,12 +22,14 @@ class GraphicsManager
   int MaximumTimeFromLastUseOfText;
   vector <string> * PreLoadedPathsGL;
   vector <TextureInfo> * PreLoadedTextGL;
+public:
+	WindowInfo* WindowData;
 private:
   void InitOldCpp ();
   inline int StringToInt(string Argument);
 public:
   GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine,vector <TextureInfo> * PreLoadedTextGL, vector <string> * PreLoadedPathsGL);
-  GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine);
+  GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine, WindowInfo* WindowData = NULL);
   GraphicsManager(EventingEngine * EventEngine, ObjectsEngine* ObjEngine, int OptimalObjectCount);
   ~GraphicsManager();
   void SetOptimalObjectCount (int OptimalObjectCount);
@@ -53,6 +55,5 @@ public:
   void CleanPreLoadGL (int IndexOfItem);
   void ClearPreLoadGL (double PartToClear);
   int GetNearestPowerOfTwo(int OldNumber);
-  
 };
 

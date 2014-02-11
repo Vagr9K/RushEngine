@@ -8,6 +8,10 @@ void DrawGL::InitOldCpp ()
 		ObjEngine = NULL;
 		DeltaX = 0;
 		DeltaY = 0;
+		AspectX = 1.f;
+		AspectY = 1.f;
+		ZeroWidth = 0;
+		ZeroHeight = 0;
 		BufferStarted = false;
 		BgkC = 0;
 		WorldLC = 0;
@@ -52,7 +56,7 @@ bool DrawGL::InitOpenGL ()
 
 		glMatrixMode(GL_PROJECTION);
 
-		glOrtho(0, WinWidth, WinHeight, 0, 0.f, 4.f);
+		glOrtho(0, WinWidth, WinHeight, 0, -1.f, 1.f);
 
 		glMatrixMode(GL_MODELVIEW);
 
@@ -74,21 +78,21 @@ bool DrawGL::CheckScreenZone(float x, float y, float h, float w, bool NoDelta)
 		float ActY;
 		if (NoDelta)
 		{
-			ActX = x;
-			ActY = y;
+			ActX = x/AspectX;
+			ActY = y/AspectY;
 		}
 		else
 		{
-			ActX = x - DeltaX;
-			ActY = y + DeltaY;
+			ActX = (x - DeltaX)/AspectX;
+			ActY = (y + DeltaY)/AspectY;
 		}
-		h = h / 2;
-		w = w / 2;
+		h = (h / 2)/AspectY;
+		w = (w / 2)/AspectX;
 		if ((ActX - w) <= WinWidth && (ActX + w) >= 0 && (ActY - h) <= WinHeight && (ActY + h) >= 0)
 		{
 			return true;
 		}
-		if (((ActX - w) >= WinWidth && (ActX + w) <= 0) || ((ActY - h) >= WinHeight && (ActY + h) <= 0))
+		else if (((ActX - w) >= WinWidth && (ActX + w) <= 0) || ((ActY - h) >= WinHeight && (ActY + h) <= 0))
 		{
 			return true;
 		}
@@ -112,6 +116,7 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
         	float KX = TextureData.KxKy.KX;
         	float KY = TextureData.KxKy.KY;
         	GLuint TextureID = TextureData.TextureID;
+			
 			if (NoDelta)
 			{
 				glTranslatef(X, Y, 0.0);
@@ -182,15 +187,17 @@ void DrawGL::AddToBufferFROMTEXT (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, Te
 		TextureInfo TextureID = ManagerGR->GetTextImageGL(Font, Text, DrawMode, Foreground, Background);
 		AddToBufferFROMTEXTURE(X, Y, H, W, TextureID, AngleX, AngleY, AngleZ);
 	}
-DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height, int Width, EventingEngine * Events)
+DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, EventingEngine * Events)
         {
 		InitOldCpp();
 		this->ManagerGR = ManagerGR;
 		this->ObjEngine = ManagerGR->GetObjEngine();
 		this->mainWindow = mainWindow;
 		this->EventEngine = Events;
-		this->WinHeight = Height;
-		this->WinWidth = Width;
+		this->WinHeight = ManagerGR->WindowData->Height;
+		this->WinWidth = ManagerGR->WindowData->Width;
+		this->ZeroHeight = ManagerGR->WindowData->ZeroHeight;
+		this->ZeroWidth = ManagerGR->WindowData->ZeroWidth;
 		if (InitOpenGL() == false)
 		{
 			EventEngine->SystemEvents->GraphicsError("OpenGL initialization error in function DrawGL().");
@@ -212,8 +219,8 @@ void DrawGL::SetView(int X, int Y)
 		DeltaY = Y;
 	}
 void DrawGL::StartBuffer ()
-        {
-		
+   {
+		CheckScreenState();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
@@ -344,8 +351,8 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 		CurrentParticle = &EffectEl->ParticleArray[i];
 		if (CurrentParticle->Active == true && (SyncMode == ACTIVE || SyncMode == ALLEFFECTS))
 		{
-			float X = CurrentParticle->X;
-			float Y = CurrentParticle->Y;
+			float X = WinWidth - CurrentParticle->X;
+			float Y = WinHeight - CurrentParticle->Y;
 			float H = CurrentParticle->H;
 			float W = CurrentParticle->W;
 
@@ -373,8 +380,8 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 		}
 		if (CurrentParticle->Active == false && (SyncMode == INACTIVE || SyncMode == ALLEFFECTS))
 		{
-			float X = CurrentParticle->X;
-			float Y = CurrentParticle->Y;
+			float X = WinWidth - CurrentParticle->X;
+			float Y = WinHeight - CurrentParticle->Y;
 			float H = CurrentParticle->H;
 			float W = CurrentParticle->W;
 
@@ -386,10 +393,10 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 				ParticleColor->Fade = CurrentParticle->Fade;
 
 				AddToBufferFROMTEXTURE(
-					X,
-					Y,
-					H,
-					W,
+					X / AspectX,
+					Y / AspectY,
+					H / AspectY,
+					W / AspectX,
 					*TInfo,
 					0.f,
 					0.f,
@@ -692,5 +699,60 @@ void DrawGL::SyncAll(bool AutoPushBuffer /* = false */)
 	if (AutoPushBuffer)
 	{
 		PushBuffer();
+	}
+}
+
+void DrawGL::RefreshData(int NewWidth, int NewHeight)
+{
+	
+	if (NewWidth == 0)
+	{
+		NewWidth = 1;
+	}
+	if (NewHeight == 0)
+	{
+		NewHeight = 1;
+	}
+	AspectX = float(ZeroWidth) / float(WinWidth);
+	AspectY = float(ZeroHeight) / float(WinHeight);
+
+	SDL_GL_DeleteContext(ContextGL);
+	InitOpenGL();
+	
+	glViewport(0, 0, (GLsizei)NewWidth, (GLsizei)NewHeight);
+
+	glMatrixMode(GL_PROJECTION);					
+	glLoadIdentity();									
+
+	AspectX = AspectY;
+
+	glOrtho(0.f, NewWidth * AspectX, NewHeight * AspectY, 0.f, -1.0, 1.0);
+
+	glMatrixMode(GL_MODELVIEW);		
+
+	glLoadIdentity();
+
+	WinWidth = NewWidth;
+	WinHeight = NewHeight;
+	ManagerGR->WindowData->Height = NewHeight;
+	ManagerGR->WindowData->Width = NewWidth;
+	ManagerGR->WindowData->AspectX = AspectX;
+	ManagerGR->WindowData->AspectY = AspectY;
+
+	ClearAll();
+
+}
+
+void DrawGL::CheckScreenState()
+{
+	if (EventEngine->GlobalEvent.type == SDL_WINDOWEVENT)
+	{
+		if (EventEngine->GlobalEvent.window.event == SDL_WINDOWEVENT_RESIZED 
+			|| EventEngine->GlobalEvent.window.event == SDL_WINDOWEVENT_MAXIMIZED
+			|| EventEngine->GlobalEvent.window.event == SDL_WINDOWEVENT_RESTORED
+			|| EventEngine->GlobalEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+		{
+			RefreshData(EventEngine->GlobalEvent.window.data1, EventEngine->GlobalEvent.window.data2);
+		}
 	}
 }

@@ -15,6 +15,8 @@ bool InterfaceBASE::CheckScreenZone (float x, float y, float h, float w, int Mou
 		float ActY = y;
 		h = h / 2;
 		w = w / 2;
+		MouseX = (int)((float)MouseX * EventSystem->GlobalVariables->WindowData->AspectX);
+		MouseY = (int)((float)MouseY * EventSystem->GlobalVariables->WindowData->AspectY);
 		if (((ActX - w) <= MouseX) && ((ActX + w) >= MouseX) && ((ActY + h) >= MouseY) && ((ActY - h) <= MouseY))
 		{
 			return true;
@@ -24,16 +26,19 @@ bool InterfaceBASE::CheckScreenZone (float x, float y, float h, float w, int Mou
 	}
 void InterfaceBASE::StateTest ()
         {
+	bool NoNULL = false;
 		EventSystem->Input->Mouse->Refresh();
 		if (CheckHover())
 		{
 			OnHover();
+			NoNULL = true;
 		}
-		else if (CheckClick())
+		if (CheckClick())
 		{
 			OnClick();
+			NoNULL = true;
 		}
-		else
+		if (!NoNULL)
 		{
 			OnNULL();
 		}
@@ -69,7 +74,7 @@ void InterfaceBASE::Refresh ()
 		StateTest();
 	}
 
-inline bool InterfaceBASE::CheckHover()
+bool InterfaceBASE::CheckHover()
 {
 
 	int MouseX = EventSystem->Input->Mouse->Status.X;
@@ -86,7 +91,7 @@ inline bool InterfaceBASE::CheckHover()
 	}
 	return false;
 }
-inline bool InterfaceBASE::CheckClick()
+bool InterfaceBASE::CheckClick()
 {
 	if (CheckHover())
 	{
@@ -99,15 +104,15 @@ inline bool InterfaceBASE::CheckClick()
 	}
 	return false;
 }
-inline void InterfaceBASE::OnHover()
+void InterfaceBASE::OnHover()
 {
 	//Do nothing by default.
 }
-inline void InterfaceBASE::OnClick()
+void InterfaceBASE::OnClick()
 {
 	//Do nothing by default.
 }
-inline void InterfaceBASE::OnNULL()
+void InterfaceBASE::OnNULL()
 {
-
+	//Do nothing by default.
 }

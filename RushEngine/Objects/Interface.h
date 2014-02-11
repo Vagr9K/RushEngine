@@ -12,8 +12,9 @@ private:
 protected:
   InterfaceElement * InterElement;
   ObjDBManager <InterfaceElement> * ManagerDB;
-  EventingEngine * EventSystem;
 protected:
+	EventingEngine * EventSystem;
+
   bool CheckScreenZone (float x, float y, float h, float w, int MouseX, int MouseY);
   virtual bool CheckHover ();
   virtual bool CheckClick ();

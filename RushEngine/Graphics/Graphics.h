@@ -26,10 +26,10 @@ typedef glOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GL
 
 class GraphicsEngine
 {
-	
+
 
 private:
-	int Width, Height;
+	WindowInfo* WinData;
 	string Title;
 	bool IsReady;
 	bool IsStarted;
@@ -50,18 +50,22 @@ private:
 		ObjEngine = NULL;
 		ManagerGR = NULL;
 		GLInited = false;
+		WinData = new WindowInfo;
 	}
-	
+	void RefreshData()
+	{
+
+	}
 
 public:
 	DrawGL* DrawerGL;
 private:
 	void InitGL()
 	{
-		if (GLInited==false)
+		if (GLInited == false)
 		{
 
-			DrawerGL = new DrawGL(ManagerGR, mainWindow, Height, Width, EventEngine);
+			DrawerGL = new DrawGL(ManagerGR, mainWindow, EventEngine);
 			GLInited = true;
 		}
 	}
@@ -83,24 +87,36 @@ public:
 	GraphicsEngine(int Width, int Height, string Title, EventingEngine* EventsEnginePtr, ObjectsEngine* ObjEngine)
 	{
 		InitOldCpp();
-		this->Width = Width;
-		this->Height = Height;
+		this->WinData->ZeroWidth = Width;
+		this->WinData->ZeroHeight = Height;
+		this->WinData->Width = Width;
+		this->WinData->Height = Height;
 		this->Title = Title;
 		this->IsReady = true;
 		this->EventEngine = EventsEnginePtr;
 		this->ObjEngine = ObjEngine;
+		EventEngine->GlobalVariables->WindowData = WinData;
 	}
 	void Init(int Width, int Height, string Title, EventingEngine* EvVar, ObjectsEngine* ObjEngine)
 	{
-		this->Width = Width;
-		this->Height = Height;
+		this->WinData->ZeroWidth = Width;
+		this->WinData->ZeroHeight = Height;
+		this->WinData->Width = Width;
+		this->WinData->Height = Height;
 		this->Title = Title;
 		this->EventEngine = EvVar;
 		this->ObjEngine = ObjEngine;
 		this->IsReady = true;
-		
+		EventEngine->GlobalVariables->WindowData = WinData;
 	}
-
+	void SetWindowSize(int Width, int Height)
+	{
+		if (!IsStarted)
+		{
+			WinData->Width = Width;
+			WinData->Height = Height;
+		}
+	}
 	bool Start()
 	{
 		if (IsReady == false)
@@ -109,8 +125,11 @@ public:
 			return false;
 		}
 
-		
-		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+#ifdef __ANDROID__
+		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WinData->Width, WinData->Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
+#else
+		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WinData->Width, WinData->Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+#endif
 		if (mainWindow == NULL)
 		{
 			EventEngine->SystemEvents->GraphicsError(SDL_GetError());
@@ -128,13 +147,25 @@ public:
 			EventEngine->SystemEvents->GraphicsError(IMG_GetError());
 			return false;
 		}
-		
-		this->ManagerGR = new GraphicsManager(EventEngine, ObjEngine);
 
+		this->ManagerGR = new GraphicsManager(EventEngine, ObjEngine, WinData);
+		
 		InitGL();
 
 		IsStarted = true;
 		return true;
+	}
+
+	void SetFullScreen(bool Fullscreen)
+	{
+		if (Fullscreen)
+		{
+			SDL_SetWindowFullscreen(mainWindow, SDL_WINDOW_FULLSCREEN);
+		}
+		else
+		{
+			SDL_SetWindowFullscreen(mainWindow, 0);
+		}
 	}
 	~GraphicsEngine()
 	{
@@ -148,22 +179,22 @@ public:
 
 	bool Stop()
 	{
-		
+
 		SDL_DestroyWindow(mainWindow);
 		IMG_Quit();
 		TTF_Quit();
 		SDL_Quit();
 
-		if (GLInited==true)
+		if (GLInited == true)
 		{
 			DeleteGL();
 		}
 
-		
+
 		IsStarted = false;
 		return true;
 	}
-	void ShowMessageBox(string Title, string Message, MSGBOXMODE Type)
+	void ShowMessageBox(string Title, string Message, MSGBOXMODE Type = INFORMATIONMessage)
 	{
 		switch (Type)
 		{
@@ -179,7 +210,7 @@ public:
 		default:
 			break;
 		}
-		
+
 	}
 
 	void TrapMouse(bool Status)
@@ -194,14 +225,19 @@ public:
 		}
 	}
 
-	WindowInfo getWindowSize()
+	WindowInfo* getWindowData()
 	{
-		WindowInfo Info;
-		SDL_GetWindowSize(mainWindow, &Info.Width, &Info.Height);
+		WindowInfo* Info;
+		if (IsStarted)
+		{
+			return WinData;
+		}
+		Info = new WindowInfo();
+		
 		return Info;
 	}
 
-	
+
 };
 
 

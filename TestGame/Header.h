@@ -6,6 +6,17 @@ const static GLfloat colors[12][3] =
 	{ 0.5f, 1.0f, 0.5f }, { 0.5f, 1.0f, 0.75f }, { 0.5f, 1.0f, 1.0f }, { 0.5f, 0.75f, 1.0f },
 	{ 0.5f, 0.5f, 1.0f }, { 0.75f, 0.5f, 1.0f }, { 1.0f, 0.5f, 1.0f }, { 1.0f, 0.5f, 0.75f }
 };
+class ParticleDATA 
+{
+public:
+	
+	float Life;
+	float SpeedX;
+	float SpeedY;
+	float GravityX;
+	float GravityY;
+
+};
 class EngineFireEffect : public Effect
 {
 	float slowdown;
@@ -15,8 +26,10 @@ public:
 	float yspeed;
 	float X, Y;
 	unsigned int col;
+	ParticleDATA* ParticleData;
 	EngineFireEffect(int ParticleCount, ObjDBManager<EffectElement>* EffectManager, string Path) :Effect(EffectManager, ParticleCount, Path)
 	{
+		ParticleData = new ParticleDATA[ParticleCount];
 		xspeed = 0.f;
 		yspeed = 2000.f;
 		slowdown = 2.f;
@@ -33,14 +46,14 @@ public:
 			ParticleArray[loop].Angle = 0.f;
 			ParticleArray[loop].Active = true;								
 			ParticleArray[loop].Fade = 1.0f;								
-			ParticleArray[loop].Life = float(rand() % 1000) / 1000.0f + 0.003f;	
+			ParticleData[loop].Life = float(rand() % 1000) / 1000.0f + 0.003f;	
 			ParticleArray[loop].R = colors[loop*(12 / ParticleCount)][0];	
 			ParticleArray[loop].G = colors[loop*(12 / ParticleCount)][1];	
 			ParticleArray[loop].B = colors[loop*(12 / ParticleCount)][2];	
-			ParticleArray[loop].SpeedX = float((rand() % 50) - 26.0f)*100.0f;		
-			ParticleArray[loop].SpeedY = float((rand() % 50) - 25.0f)*100.0f;		
-			ParticleArray[loop].GravityX = 0.0f;									
-			ParticleArray[loop].GravityY = 0.98f;								
+			ParticleData[loop].SpeedX = float((rand() % 50) - 26.0f)*100.0f;
+			ParticleData[loop].SpeedY = float((rand() % 50) - 25.0f)*100.0f;
+			ParticleData[loop].GravityX = 0.0f;
+			ParticleData[loop].GravityY = 0.98f;
 			ParticleArray[loop].H = 10.f;
 			ParticleArray[loop].W = 10.f;
 		}
@@ -52,21 +65,21 @@ public:
 		{
 			if (ParticleArray[loop].Active)
 			{
-				ParticleArray[loop].X += ParticleArray[loop].SpeedX / (slowdown * 1000);
-				ParticleArray[loop].Y += ParticleArray[loop].SpeedY / (slowdown * 1000);
-				ParticleArray[loop].SpeedX += ParticleArray[loop].GravityX;			
-				ParticleArray[loop].SpeedY += ParticleArray[loop].GravityY;			
-				ParticleArray[loop].Fade -= ParticleArray[loop].Life;	
+				ParticleArray[loop].X += ParticleData[loop].SpeedX / (slowdown * 1000);
+				ParticleArray[loop].Y += ParticleData[loop].SpeedY / (slowdown * 1000);
+				ParticleData[loop].SpeedX += ParticleData[loop].GravityX;
+				ParticleData[loop].SpeedY += ParticleData[loop].GravityY;
+				ParticleArray[loop].Fade -= ParticleData[loop].Life;
 				srand(SDL_GetTicks());
 				col = rand() % 3;
 				if (ParticleArray[loop].Fade < 0.0f)					
 				{
 					ParticleArray[loop].Fade = 1.0f;				
-					ParticleArray[loop].Life = float(rand() % 100) / 1000.0f + 0.003f;	
+					ParticleData[loop].Life = float(rand() % 100) / 1000.0f + 0.003f;
 					ParticleArray[loop].X = X;						
 					ParticleArray[loop].Y = Y;						
-					ParticleArray[loop].SpeedX = xspeed + float((rand() % 600) - 320.0f);	
-					ParticleArray[loop].SpeedY = yspeed + float((rand() % 600) - 300.0f);	
+					ParticleData[loop].SpeedX = xspeed + float((rand() % 600) - 320.0f);
+					ParticleData[loop].SpeedY = yspeed + float((rand() % 600) - 300.0f);
 					ParticleArray[loop].R = colors[col][0];
 					ParticleArray[loop].G = colors[col][1];	
 					ParticleArray[loop].B = colors[col][2];			
@@ -80,6 +93,7 @@ class Button : public Interface
 {
 	string Path1;
 	string Path2;
+	
 	void SetPath(int Num)
 	{
 		if (Num == 1)
@@ -97,6 +111,7 @@ public:
 	{
 		Path1 = "Button1.png";
 		Path2 = "Button2.png";
+		
 	}
 	virtual void Init()
 	{
@@ -111,4 +126,9 @@ public:
 	{
 		SetPath(1);
 	}
+	virtual void OnClick()
+	{
+		RushEngineInfo.GamePointer->Graphics->ShowMessageBox("You have pressed the button.", "The button on screen was pressed by you!");
+	}
+
 };

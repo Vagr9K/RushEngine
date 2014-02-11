@@ -53,17 +53,4 @@ public:
   friend class MouseInput;
   friend class KeyboardInput;
 };
-inline void MouseInput::RequestUpdate ()
-        {
-		MainClass->Update();
-	}
-inline void KeyboardInput::RequestUpdate()
-        {
-		MainClass->Update();
-	}
-inline void KeyboardInput::GetKeyStatusFK()
-        {
-		RequestUpdate();
-		KeysStatus = SDL_GetKeyboardState(&KeyArrayLenght);
 
-	}

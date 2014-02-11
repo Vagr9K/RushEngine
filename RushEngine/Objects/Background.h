@@ -9,8 +9,9 @@ protected:
   ObjDBManager <BackgroundElement> * DatabaseManager;
   int BackgroundsIndex;
   bool ObjElementInDB;
-  EventingEngine * EventingEnginePtr;
 protected:
+	EventingEngine * EventingEnginePtr;
+
   void CleanBackground (void * Obj);
   void NULLifyAll ();
   void InitOldCpp ();

@@ -1,4 +1,6 @@
 #include "GraphicsManager.h"
+
+
 using namespace std;
 
 class DrawGL
@@ -8,8 +10,12 @@ class DrawGL
   EventingEngine * EventEngine;
   ObjectsEngine* ObjEngine;
   SDL_GLContext ContextGL;
+  int ZeroWidth;
+  int ZeroHeight;
   int WinHeight;
   int WinWidth;
+  float AspectX;
+  float AspectY;
   int DeltaX;
   int DeltaY;
   int BgkC;
@@ -32,10 +38,12 @@ private:
   void DrawFromInterfaceElement(InterfaceElement* CurrentElement);
   void DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncMode, RGBColor* ParticleColor, TextureInfo* TInfo);
   void DrawFromBackgroundElement(BackgroundElement* Element);
+  void RefreshData(int NewWidth, int NewHeight);
+  void CheckScreenState();
 inline  bool CheckScreenZone(float x, float y, float h, float w, bool NoDelta = false);
 inline void SetEffectMode(bool Status);
 public:
-  DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, int Height, int Width, EventingEngine * Events);
+  DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, EventingEngine * Events);
   ~ DrawGL ();
   void SetView(int X, int Y);
   void setSyncFactor(float Factor);
