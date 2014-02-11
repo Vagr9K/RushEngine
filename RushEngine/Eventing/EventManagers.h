@@ -27,8 +27,25 @@ public:
 };
 class GlobalEventManager
 {
+	bool InLoop;
+	bool UseLooping;
 public:
   SDL_Event GlobalEvent;
 public:
+	GlobalEventManager()
+	{
+		InLoop = false;
+		UseLooping = false;
+	}
+	void StartLoop()
+	{
+		InLoop = true;
+		UseLooping = true;
+		SDL_PollEvent(&GlobalEvent);
+	}
+	void EndLoop()
+	{
+		InLoop = false;
+	}
   void Update ();
 };

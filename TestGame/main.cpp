@@ -304,6 +304,7 @@ int main(int argc, char** argv)
 	bool Close = false;
 	while (Close == false)
 	{
+		mainEngine.Eventing->StartLoop();
 		if (mainEngine.Eventing->GlobalEvent.type == SDL_QUIT)
 		{
 			Close = true;
@@ -314,6 +315,8 @@ int main(int argc, char** argv)
 
 
 		RenderCamera();
+
+		mainEngine.Eventing->EndLoop();
 		
 	}
 

@@ -54,8 +54,10 @@ void SystemEventing::AudioError(string Error)
 }
 
 void GlobalEventManager::Update()
-        {
-		//TODO: Check performance problems.
-		SDL_PollEvent(&GlobalEvent);
+    {
+		if (!InLoop || !UseLooping)
+		{
+			SDL_PollEvent(&GlobalEvent);
+		}
 	}
 

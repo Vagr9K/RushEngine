@@ -93,3 +93,17 @@ InputController::~InputController()
 	delete Keyboard;
 }
 
+void MouseInput::RequestUpdate()
+{
+	MainClass->Update();
+}
+void KeyboardInput::RequestUpdate()
+{
+	MainClass->Update();
+}
+void KeyboardInput::GetKeyStatusFK()
+{
+	RequestUpdate();
+	KeysStatus = SDL_GetKeyboardState(&KeyArrayLenght);
+
+}
