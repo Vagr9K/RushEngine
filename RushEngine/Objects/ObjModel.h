@@ -56,19 +56,15 @@ enum ObjectSyncMode
   ALL
 };
 class EffectBASE;
-struct Particle
+class Particle
 {
+public:
   bool Active;
-  float Life;
   float X;
   float Y;
   float H;
   float W;
   float Angle;
-  float SpeedX;
-  float SpeedY;
-  float GravityX;
-  float GravityY;
   float R;
   float G;
   float B;
