@@ -95,6 +95,7 @@ public:
 		this->IsReady = true;
 		this->EventEngine = EventsEnginePtr;
 		this->ObjEngine = ObjEngine;
+		EventEngine->GlobalVariables->WindowData = WinData;
 	}
 	void Init(int Width, int Height, string Title, EventingEngine* EvVar, ObjectsEngine* ObjEngine)
 	{
@@ -106,7 +107,7 @@ public:
 		this->EventEngine = EvVar;
 		this->ObjEngine = ObjEngine;
 		this->IsReady = true;
-
+		EventEngine->GlobalVariables->WindowData = WinData;
 	}
 	void SetWindowSize(int Width, int Height)
 	{
@@ -193,7 +194,7 @@ public:
 		IsStarted = false;
 		return true;
 	}
-	void ShowMessageBox(string Title, string Message, MSGBOXMODE Type)
+	void ShowMessageBox(string Title, string Message, MSGBOXMODE Type = INFORMATIONMessage)
 	{
 		switch (Type)
 		{
@@ -224,7 +225,7 @@ public:
 		}
 	}
 
-	WindowInfo* getWindowSize()
+	WindowInfo* getWindowData()
 	{
 		WindowInfo* Info;
 		if (IsStarted)

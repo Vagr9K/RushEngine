@@ -351,8 +351,8 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 		CurrentParticle = &EffectEl->ParticleArray[i];
 		if (CurrentParticle->Active == true && (SyncMode == ACTIVE || SyncMode == ALLEFFECTS))
 		{
-			float X = CurrentParticle->X;
-			float Y = CurrentParticle->Y;
+			float X = WinWidth - CurrentParticle->X;
+			float Y = WinHeight - CurrentParticle->Y;
 			float H = CurrentParticle->H;
 			float W = CurrentParticle->W;
 
@@ -380,8 +380,8 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 		}
 		if (CurrentParticle->Active == false && (SyncMode == INACTIVE || SyncMode == ALLEFFECTS))
 		{
-			float X = CurrentParticle->X;
-			float Y = CurrentParticle->Y;
+			float X = WinWidth - CurrentParticle->X;
+			float Y = WinHeight - CurrentParticle->Y;
 			float H = CurrentParticle->H;
 			float W = CurrentParticle->W;
 
@@ -393,10 +393,10 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 				ParticleColor->Fade = CurrentParticle->Fade;
 
 				AddToBufferFROMTEXTURE(
-					X,
-					Y,
-					H,
-					W,
+					X / AspectX,
+					Y / AspectY,
+					H / AspectY,
+					W / AspectX,
 					*TInfo,
 					0.f,
 					0.f,

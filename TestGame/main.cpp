@@ -104,6 +104,7 @@ void ModColors()
 		break;
 	}
 }
+WindowInfo* WinData;
 
 void Init()
 {
@@ -130,6 +131,7 @@ void Init()
 	mainEngine.InitObjects(1, 1, 1, 1);
 	mainEngine.InitGraphics(WWIDTH, WHEIGHT, "Test #004.");
 	mainEngine.Graphics->Start();
+	WinData = mainEngine.Graphics->getWindowData();
 	mainEngine.Graphics->SetTextMaximumTime(K + 2);
 	mainEngine.Graphics->DrawerGL->CacheImage("Ball.png");
 	mainEngine.Graphics->DrawerGL->CacheImage("Wall.png");
@@ -231,8 +233,8 @@ void RenderPhysics()
 	float Step = 1.f / 60.f;
 	World.Step(Step, 8, 3);
 	b2Vec2 Pos = Balls.at(5)->Body->GetPosition();
-	EffectTest->X =WWIDTH - Pos.x*K;
-	EffectTest->Y =WHEIGHT -Pos.y*K;
+	EffectTest->X =Pos.x*K;
+	EffectTest->Y =Pos.y*K;
 }
 
 void RenderGraphics()
