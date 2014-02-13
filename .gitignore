@@ -159,6 +159,17 @@ $RECYCLE.BIN/
 .DS_Store
 
 #SDL repository data
-/libs/SDL/.hg
-/libs/SDL/.hg*
 /libs/SDL/premake
+
+#Mercurical
+.hg
+.hg*
+
+#SVN
+.svn
+.svn*
+/libs/Box2D/.svn
+
+#Dot files ignore
+.*
+!/.gitignore
