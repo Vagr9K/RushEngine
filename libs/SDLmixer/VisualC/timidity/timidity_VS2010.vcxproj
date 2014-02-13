@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>timidity</ProjectName>
+    <ProjectName>timidity_SDLMIXER</ProjectName>
     <ProjectGuid>{B162B6F1-E876-4D5F-A1F6-E3A6DC2F4A2C}</ProjectGuid>
     <RootNamespace>timidity</RootNamespace>
   </PropertyGroup>

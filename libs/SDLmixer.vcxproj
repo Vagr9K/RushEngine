@@ -62,17 +62,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\Build\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\Build\Intermediate\SDLMixer.dir\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Build\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Build\Intermediate\SDLMixer.dir\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\Build\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\Build\Intermediate\SDLMixer.dir\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Build\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Build\Intermediate\SDLMixer.dir\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
@@ -100,7 +100,7 @@
     <ClCompile>
       <AdditionalOptions>/D OGG_DYNAMIC=\"libvorbisfile-3.dll\" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\SDL\include;$(ProjectDir)\SDLmixer\timidity;$(ProjectDir)\SDLmixer\native_midi;$(ProjectDir)\SDLmixer\external\flac-1.2.1\include;$(ProjectDir)\SDLmixer\external\libmikmod-3.1.12\include;$(ProjectDir)\SDLmixer\external\libogg-1.3.1\include;$(ProjectDir)\SDLmixer\external\libvorbis-1.3.3\include;$(ProjectDir)\SDLmixer\external\libvorbisidec-1.2.1;$(ProjectDir)\SDLmixer\external\smpeg2-2.0.0;$(ProjectDir)\SDLmixer\external\libmodplug-0.8.8.4\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\SDL\include;$(ProjectDir)\SDLmixer\timidity;$(ProjectDir)\SDLmixer\native_midi;$(ProjectDir)\SDLmixer\VisualC\external\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MODPLUG_MUSIC;MODPLUG_DYNAMIC="libmodplug-1.dll";OGG_MUSIC;OGG_DYNAMIC="libvorbisfile-3.dll";FLAC_MUSIC;FLAC_DYNAMIC="libFLAC-8.dll";MP3_MUSIC;MP3_DYNAMIC="smpeg2.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -116,7 +116,7 @@
     <Link>
       <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>./$(Configuration)/$(Platform)/SDL_mixer.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>.\Build\Intermediate\PDBs\</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
@@ -138,7 +138,7 @@
     <ClCompile>
       <AdditionalOptions>/D OGG_DYNAMIC=\"libvorbisfile-3.dll\" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\SDL\include;$(ProjectDir)\SDLmixer\timidity;.$(ProjectDir)\SDLmixer\native_midi;$(ProjectDir)\SDLmixer\external%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\SDL\include;$(ProjectDir)\SDLmixer\timidity;$(ProjectDir)\SDLmixer\native_midi;$(ProjectDir)\SDLmixer\VisualC\external\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MODPLUG_MUSIC;MODPLUG_DYNAMIC="libmodplug-1.dll";OGG_MUSIC;OGG_DYNAMIC="libvorbisfile-3.dll";FLAC_MUSIC;FLAC_DYNAMIC="libFLAC-8.dll";MP3_MUSIC;MP3_DYNAMIC="smpeg2.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -154,7 +154,7 @@
     <Link>
       <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>./$(Configuration)/$(Platform)/SDL_mixer.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>.\Build\Intermediate\PDBs\</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
@@ -177,7 +177,7 @@
       <AdditionalOptions>/D OGG_DYNAMIC=\"libvorbisfile-3.dll\" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>$(ProjectDir)\SDL\include;$(ProjectDir)\SDLmixer\timidity;$(ProjectDir)\SDLmixer\native_midi;$(ProjectDir)\SDLmixer\external\flac-1.2.1\include;$(ProjectDir)\SDLmixer\external\libmikmod-3.1.12\include;$(ProjectDir)\SDLmixer\external\libogg-1.3.1\include;$(ProjectDir)\SDLmixer\external\libvorbis-1.3.3\include;$(ProjectDir)\SDLmixer\external\libvorbisidec-1.2.1;$(ProjectDir)\SDLmixer\external\smpeg2-2.0.0;$(ProjectDir)\SDLmixer\external\libmodplug-0.8.8.4\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\SDL\include;$(ProjectDir)\SDLmixer\timidity;$(ProjectDir)\SDLmixer\native_midi;$(ProjectDir)\SDLmixer\VisualC\external\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MODPLUG_MUSIC;MODPLUG_DYNAMIC="libmodplug-1.dll";OGG_MUSIC;OGG_DYNAMIC="libvorbisfile-3.dll";FLAC_MUSIC;FLAC_DYNAMIC="libFLAC-8.dll";MP3_MUSIC;MP3_DYNAMIC="smpeg2.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -191,7 +191,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ProgramDatabaseFile>./$(Configuration)/$(Platform)/SDL_mixer.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>.\Build\Intermediate\PDBs\</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
@@ -214,7 +214,7 @@
       <AdditionalOptions>/D OGG_DYNAMIC=\"libvorbisfile-3.dll\" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>$(ProjectDir)\SDL\include;$(ProjectDir)\SDLmixer\timidity;.$(ProjectDir)\SDLmixer\native_midi;$(ProjectDir)\SDLmixer\external%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\SDL\include;$(ProjectDir)\SDLmixer\timidity;$(ProjectDir)\SDLmixer\native_midi;$(ProjectDir)\SDLmixer\VisualC\external\includes;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;WAV_MUSIC;MODPLUG_MUSIC;MODPLUG_DYNAMIC="libmodplug-1.dll";OGG_MUSIC;OGG_DYNAMIC="libvorbisfile-3.dll";FLAC_MUSIC;FLAC_DYNAMIC="libFLAC-8.dll";MP3_MUSIC;MP3_DYNAMIC="smpeg2.dll";MID_MUSIC;USE_TIMIDITY_MIDI;USE_NATIVE_MIDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -228,7 +228,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ProgramDatabaseFile>./$(Configuration)/$(Platform)/SDL_mixer.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>.\Build\Intermediate\PDBs\</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
@@ -305,8 +305,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="$(ProjectDir)\SDL\VisualC\SDL\$(Platform)\$(Configuration)\SDL2.lib" />
-    <Library Include="$(ProjectDir)\SDL\VisualC\SDLmain\$(Platform)\$(Configuration)\SDL2main.lib" />
+    <Library Include="$(ProjectDir)\Build\$(Configuration)\SDL2.lib" />
+    <Library Include="$(ProjectDir)\Build\$(Configuration)\SDL2main.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

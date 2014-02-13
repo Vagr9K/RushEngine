@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>native_midi</ProjectName>
+    <ProjectName>native_midi_SDLMIXER</ProjectName>
     <ProjectGuid>{EBDA67CA-4A23-4F22-BFBC-B8DBE0580D4F}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
