@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -96,19 +96,12 @@ LoadTexture(SDL_Renderer *renderer, char *file, SDL_bool transparent)
     return texture;
 }
 
-static void
-DrawRect(SDL_Renderer *r, const int x, const int y, const int w, const int h)
-{
-    const SDL_Rect area = { x, y, w, h };
-    SDL_RenderFillRect(r, &area);
-}
-
 static SDL_bool
 WatchJoystick(SDL_Joystick * joystick)
 {
     SDL_Window *window = NULL;
     SDL_Renderer *screen = NULL;
-    SDL_Texture *target, *background, *button, *axis, *marker;
+    SDL_Texture *background, *button, *axis, *marker;
     const char *name = NULL;
     SDL_bool retval = SDL_FALSE;
     SDL_bool done = SDL_FALSE, next=SDL_FALSE;
@@ -159,11 +152,13 @@ WatchJoystick(SDL_Joystick * joystick)
         return SDL_FALSE;
     }
     
-    target = SDL_CreateTexture(screen, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, MAP_WIDTH, MAP_HEIGHT);
     background = LoadTexture(screen, "controllermap.bmp", SDL_FALSE);
     button = LoadTexture(screen, "button.bmp", SDL_TRUE);
     axis = LoadTexture(screen, "axis.bmp", SDL_TRUE);
     SDL_RaiseWindow(window);
+
+    /* scale for platforms that don't give you the window size you asked for. */
+    SDL_RenderSetLogicalSize(screen, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     /* Print info about the joystick we are watching */
     name = SDL_JoystickName(joystick);
@@ -213,7 +208,9 @@ WatchJoystick(SDL_Joystick * joystick)
         dst.y = step->y;
         SDL_QueryTexture(marker, NULL, NULL, &dst.w, &dst.h);
         next=SDL_FALSE;
-        
+
+        SDL_SetRenderDrawColor(screen, 0xFF, 0xFF, 0xFF, SDL_ALPHA_OPAQUE);
+
         while (!done && !next) {
             if (SDL_GetTicks() - alpha_ticks > 5) {
                 alpha_ticks = SDL_GetTicks();
@@ -226,13 +223,11 @@ WatchJoystick(SDL_Joystick * joystick)
                 }
             }
             
-            SDL_SetRenderTarget(screen, target);
+            SDL_RenderClear(screen);
             SDL_RenderCopy(screen, background, NULL, NULL);
             SDL_SetTextureAlphaMod(marker, alpha);
             SDL_SetTextureColorMod(marker, 10, 255, 21);
             SDL_RenderCopyEx(screen, marker, NULL, &dst, step->angle, NULL, 0);
-            SDL_SetRenderTarget(screen, NULL);
-            SDL_RenderCopy(screen, target, NULL, NULL);
             SDL_RenderPresent(screen);
             
             if (SDL_PollEvent(&event)) {

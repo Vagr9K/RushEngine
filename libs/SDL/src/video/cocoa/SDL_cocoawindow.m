@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "SDL_config.h"
+#include "../../SDL_internal.h"
 
 #if SDL_VIDEO_DRIVER_COCOA
 
@@ -299,9 +299,14 @@ SetWindowStyle(SDL_Window * window, unsigned int style)
        !!! FIXME:   http://bugzilla.libsdl.org/show_bug.cgi?id=1825
     */
     windows = [NSApp orderedWindows];
-    if ([windows count] > 0) {
-        NSWindow *win = (NSWindow *) [windows objectAtIndex:0];
+    for (NSWindow *win in windows)
+    {
+        if (win == window) {
+            continue;
+        }
+
         [win makeKeyAndOrderFront:self];
+        break;
     }
 }
 
@@ -699,8 +704,10 @@ SetWindowStyle(SDL_Window * window, unsigned int style)
             touches = [event touchesMatchingPhase:NSTouchPhaseBegan inView:nil];
             break;
         case COCOA_TOUCH_UP:
-        case COCOA_TOUCH_CANCELLED:
             touches = [event touchesMatchingPhase:NSTouchPhaseEnded inView:nil];
+            break;
+        case COCOA_TOUCH_CANCELLED:
+            touches = [event touchesMatchingPhase:NSTouchPhaseCancelled inView:nil];
             break;
         case COCOA_TOUCH_MOVE:
             touches = [event touchesMatchingPhase:NSTouchPhaseMoved inView:nil];

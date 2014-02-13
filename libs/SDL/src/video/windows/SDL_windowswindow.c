@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "SDL_config.h"
+#include "../../SDL_internal.h"
 
 #if SDL_VIDEO_DRIVER_WINDOWS
 
@@ -32,6 +32,7 @@
 
 #include "SDL_windowsvideo.h"
 #include "SDL_windowswindow.h"
+#include "SDL_hints.h"
 
 /* Dropfile support */
 #include <shellapi.h>
@@ -337,6 +338,31 @@ WIN_CreateWindowFrom(_THIS, SDL_Window * window, const void *data)
     if (SetupWindowData(_this, window, hwnd, SDL_FALSE) < 0) {
         return -1;
     }
+
+#if SDL_VIDEO_OPENGL_WGL
+    {
+        const char *hint = SDL_GetHint(SDL_HINT_VIDEO_WINDOW_SHARE_PIXEL_FORMAT);
+        if (hint) {
+            // This hint is a pointer (in string form) of the address of
+            // the window to share a pixel format with
+            SDL_Window *otherWindow = NULL;
+            SDL_sscanf(hint, "%p", (void**)&otherWindow);
+
+            // Do some error checking on the pointer
+            if (otherWindow != NULL && otherWindow->magic == &_this->window_magic)
+            {
+                // If the otherWindow has SDL_WINDOW_OPENGL set, set it for the new window as well
+                if (otherWindow->flags & SDL_WINDOW_OPENGL)
+                {
+                    window->flags |= SDL_WINDOW_OPENGL;
+                    if(!WIN_GL_SetPixelFormatFrom(_this, otherWindow, window)) {
+                        return -1;
+                    }
+                }
+            }
+        }
+    }
+#endif
     return 0;
 }
 
@@ -527,7 +553,7 @@ WIN_SetWindowFullscreen(_THIS, SDL_Window * window, SDL_VideoDisplay * display, 
     }
     SetWindowLong(hwnd, GWL_STYLE, style);
     data->expected_resize = TRUE;
-    SetWindowPos(hwnd, top, x, y, w, h, SWP_NOCOPYBITS);
+    SetWindowPos(hwnd, top, x, y, w, h, SWP_NOCOPYBITS | SWP_NOACTIVATE);
     data->expected_resize = FALSE;
 }
 

@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -19,16 +19,13 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "SDL_config.h"
+#include "../../SDL_internal.h"
 
 #ifndef _SDL_waylandvideo_h
 #define _SDL_waylandvideo_h
 
-#include <wayland-client.h>
-#include <wayland-cursor.h>
-#include <wayland-egl.h>
-
 #include <EGL/egl.h>
+#include "wayland-util.h"
 
 struct xkb_context;
 struct SDL_WaylandInput;
@@ -71,12 +68,6 @@ typedef struct {
 
     uint32_t shm_formats;
 } SDL_VideoData;
-
-static inline void
-wayland_schedule_write(SDL_VideoData *data)
-{
-    wl_display_flush(data->display);
-}
 
 #endif /* _SDL_nullvideo_h */
 
