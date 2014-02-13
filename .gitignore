@@ -155,6 +155,10 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
-# Mac crap
+# Mac
 .DS_Store
 
+#SDL repository data
+/libs/SDL/.hg
+/libs/SDL/.hg*
+/libs/SDL/premake
