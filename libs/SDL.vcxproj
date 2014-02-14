@@ -116,13 +116,13 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_static|Win32'">$(ProjectDir)\Build\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\Build\Intermediate\SDL.dir\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_static|Win32'">$(ProjectDir)\Build\Intermediate\SDL.dir\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Build\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Build\$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_static|x64'">$(ProjectDir)\Build\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Build\Intermediate\SDL.dir\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Build\Intermediate\SDL.dir\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_static|x64'">$(ProjectDir)\Build\Intermediate\SDL.dir\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\Build\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)Build\$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_static|Win32'">$(ProjectDir)\Build\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\Build\Intermediate\SDL.dir\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)Build\Intermediate\SDL.dir\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_static|Win32'">$(ProjectDir)\Build\Intermediate\SDL.dir\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\Build\$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_static|x64'">$(ProjectDir)\Build\$(Configuration)\</OutDir>
@@ -483,6 +483,9 @@
     <ClInclude Include="$(ProjectDir)\SDL\include\SDL_version.h" />
     <ClInclude Include="$(ProjectDir)\SDL\include\SDL_video.h" />
     <ClInclude Include="$(ProjectDir)\SDL\src\core\windows\SDL_windows.h" />
+    <ClInclude Include="$(ProjectDir)\SDL\src\dynapi\SDL_dynapi.h" />
+    <ClInclude Include="$(ProjectDir)\SDL\src\dynapi\SDL_dynapi_overrides.h" />
+    <ClInclude Include="$(ProjectDir)\SDL\src\dynapi\SDL_dynapi_procs.h" />
     <ClInclude Include="$(ProjectDir)\SDL\src\events\blank_cursor.h" />
     <ClInclude Include="$(ProjectDir)\SDL\src\events\default_cursor.h" />
     <ClInclude Include="$(ProjectDir)\SDL\src\audio\directsound\directx.h" />
@@ -563,6 +566,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(ProjectDir)\SDL\src\core\windows\SDL_windows.c" />
+    <ClCompile Include="$(ProjectDir)\SDL\src\dynapi\SDL_dynapi.c" />
     <ClCompile Include="$(ProjectDir)\SDL\src\events\SDL_clipboardevents.c" />
     <ClCompile Include="$(ProjectDir)\SDL\src\events\SDL_gesture.c" />
     <ClCompile Include="$(ProjectDir)\SDL\src\events\SDL_touch.c" />
