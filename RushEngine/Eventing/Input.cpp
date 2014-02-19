@@ -72,7 +72,7 @@ string KeyboardInput::GetKeyName (SDL_Keycode Key)
 
 KeyboardInput::~KeyboardInput()
 {
-	delete[] KeysStatus;
+	
 }
 
 InputController::InputController(GlobalEventManager * MainClass)

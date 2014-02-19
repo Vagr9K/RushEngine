@@ -35,8 +35,8 @@ TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 			ImageH = Surface->h;
 			TextureW = GetNearestPowerOfTwo(ImageW);
 			TextureH = GetNearestPowerOfTwo(ImageH);
-			KX = (GLfloat)ImageW / (GLfloat)TextureW;
-			KY = (GLfloat)ImageH / (GLfloat)TextureH;
+			KX = static_cast<GLfloat>(ImageW) / static_cast<GLfloat>(TextureW);
+			KY = static_cast<GLfloat>(ImageH) / static_cast<GLfloat>(TextureH);
 			SDL_Color Background = { 0, 0, 0, 0 };
 			SDL_SetSurfaceAlphaMod(Surface, 0xFF);
 			//SDL_SetSurfaceBlendMode(Surface, SDL_BLENDMODE_BLEND);
@@ -162,6 +162,7 @@ void GraphicsManager::ClearPreLoadGL (double PartToClear)
 		{
 			TextureToDelete[i] = PreLoadedTextGL->at(i);
 		}
+		delete TextureToDelete;
 		glDeleteTextures(Count, &TextureToDelete->TextureID);
 		PreLoadedTextGL->erase(PreLoadedTextGL->begin(), PreLoadedTextGL->begin() + Count);
 		PreLoadedPathsGL->erase(PreLoadedPathsGL->begin(), PreLoadedPathsGL->begin() + Count);

@@ -11,5 +11,7 @@ EventingEngine::EventingEngine ()
 EventingEngine::~EventingEngine()
 {
 	delete SystemEvents;
+	delete Input;
+	delete GlobalVariables; 
 }
 

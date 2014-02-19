@@ -173,7 +173,7 @@ TextureInfo GraphicsManager::GetTextImageGL(TextFont * Font, string Text, Mode D
 			break;
 			/*
 		case SHADED:
-			Texture = GetTextureShadedGL(TTFFONT, Text, Foregroung, Background); //No support for SHADED mode!
+			Texture = GetTextureShadedGL(TTFFONT, Text, Foregroung, Background); //TODO: No support for SHADED mode!
 			break;
 			*/
 		case BLENDED:

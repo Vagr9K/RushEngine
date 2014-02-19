@@ -173,7 +173,7 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
 			glTexCoordPointer(2, GL_FLOAT, 0, &Trg2Crd);
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 			glLoadIdentity();
-#ifdef DEBUG
+#ifdef _DEBUG
 			GLErrorTest("AddToBufferFROMTEXTURE()");
 #endif
 	}
@@ -418,11 +418,11 @@ void DrawGL::DrawFromInterfaceElement(InterfaceElement* Element)
 	if (Element->ImageExists == true)
 	{
 		IMG* Image = Element->Image;
-		float X = (GLfloat)Image->x;
-		float Y = (GLfloat)Image->y;
-		float H = (GLfloat)Image->h;
-		float W = (GLfloat)Image->w;
-		float Angle = (GLfloat)Image->Angle;
+		float X = static_cast<GLfloat>(Image->x);
+		float Y = static_cast<GLfloat>(Image->y);
+		float H = static_cast<GLfloat>(Image->h);
+		float W = static_cast<GLfloat>(Image->w);
+		float Angle = static_cast<GLfloat>(Image->Angle);
 		if (CheckScreenZone(X, Y, H, W, true))
 		{
 			string Path = Image->Source;
@@ -435,11 +435,11 @@ void DrawGL::DrawFromInterfaceElement(InterfaceElement* Element)
 	if (Element->TextExists == true)
 	{
 		TXT* Text = Element->Text;
-		float X = (GLfloat)Text->x;
-		float Y = (GLfloat)Text->y;
-		float H = (GLfloat)Text->h;
-		float W = (GLfloat)Text->w;
-		float Angle = (GLfloat)Text->Angle;
+		float X = static_cast<GLfloat>(Text->x);
+		float Y = static_cast<GLfloat>(Text->y);
+		float H = static_cast<GLfloat>(Text->h);
+		float W = static_cast<GLfloat>(Text->w);
+		float Angle = static_cast<GLfloat>(Text->Angle);
 		if (CheckScreenZone(X, Y, H, W))
 		{
 			TextFont* Font = Text->Font;
@@ -447,9 +447,13 @@ void DrawGL::DrawFromInterfaceElement(InterfaceElement* Element)
 			SDL_Color* Foreground = Text->Foreground;
 			SDL_Color* Background = Text->Background;
 			Mode DrawMode = Text->DrawMode;
+
+			bool DeleteBackground = false;
+			bool DeleteForeground = false;
 			if (Foreground == NULL)
 			{
 				Foreground = new SDL_Color();
+				DeleteForeground = true;
 				Foreground->a = 0;
 				Foreground->g = 255;
 				Foreground->b = 255;
@@ -457,6 +461,8 @@ void DrawGL::DrawFromInterfaceElement(InterfaceElement* Element)
 			}
 			if (Background == NULL)
 			{
+				DeleteBackground = true;
+				Background = new SDL_Color();
 				Background->a = 0;
 				Background->b = 0;
 				Background->r = 0;
@@ -464,6 +470,10 @@ void DrawGL::DrawFromInterfaceElement(InterfaceElement* Element)
 			}
 			TextureInfo TInfo = ManagerGR->GetTextImageGL(Font, Contents, DrawMode, *Foreground, *Background);
 			AddToBufferFROMTEXTURE(X, Y, H, W, TInfo, 0.f, 0.f, Angle, true);
+			if (DeleteForeground)
+				delete Foreground;
+			if (DeleteForeground)
+				delete Background;
 		}
 	}
 
@@ -516,10 +526,10 @@ void DrawGL::DrawFromLayerElement(ObjectElement* Element, float DrawFactor, Obje
 	if (Element->ImageExists == true && (SyncTo == IMAGE || SyncTo == ALL))
 	{
 		IMG* Image = Element->Image;
-		float X = WinWidth - (GLfloat)Image->x*DrawFactor;
-		float Y = WinHeight - (GLfloat)Image->y*DrawFactor;
-		float H = (GLfloat)Image->h*DrawFactor;
-		float W = (GLfloat)Image->w*DrawFactor;
+		float X = WinWidth - static_cast<GLfloat>(Image->x)*DrawFactor;
+		float Y = WinHeight - static_cast<GLfloat>(Image->y)*DrawFactor;
+		float H = static_cast<GLfloat>(Image->h)*DrawFactor;
+		float W = static_cast<GLfloat>(Image->w)*DrawFactor;
 		if (CheckScreenZone(X, Y, H, W))
 		{
 			string Path = Image->Source;
@@ -531,10 +541,10 @@ void DrawGL::DrawFromLayerElement(ObjectElement* Element, float DrawFactor, Obje
 	if (Element->TextExists == true && (SyncTo == TEXT || SyncTo == ALL))
 	{
 		TXT* Text = Element->Text;
-		float X = WinWidth - (GLfloat)Text->x*DrawFactor;
-		float Y = WinHeight - (GLfloat)Text->y*DrawFactor;
-		float H = (GLfloat)Text->h*DrawFactor;
-		float W = (GLfloat)Text->w*DrawFactor;
+		float X = WinWidth - static_cast<GLfloat>(Text->x)*DrawFactor;
+		float Y = WinHeight - static_cast<GLfloat>(Text->y)*DrawFactor;
+		float H = static_cast<GLfloat>(Text->h)*DrawFactor;
+		float W = static_cast<GLfloat>(Text->w)*DrawFactor;
 		if (CheckScreenZone(X, Y, H, W))
 		{
 			TextFont* Font = Text->Font;
@@ -542,9 +552,13 @@ void DrawGL::DrawFromLayerElement(ObjectElement* Element, float DrawFactor, Obje
 			SDL_Color* Foreground = Text->Foreground;
 			SDL_Color* Background = Text->Background;
 			Mode DrawMode = Text->DrawMode;
+
+			bool DeleteBackground = false;
+			bool DeleteForeground = false;
 			if (Foreground == NULL)
 			{
 				Foreground = new SDL_Color();
+				DeleteForeground = true;
 				Foreground->a = 0;
 				Foreground->g = 255;
 				Foreground->b = 255;
@@ -552,12 +566,19 @@ void DrawGL::DrawFromLayerElement(ObjectElement* Element, float DrawFactor, Obje
 			}
 			if (Background == NULL)
 			{
+				DeleteBackground = true;
+				Background = new SDL_Color();
 				Background->a = 0;
 				Background->b = 0;
 				Background->r = 0;
 				Background->g = 0;
 			}
+
 			AddToBuffer(X, Y, H, W, Font, Contents, DrawMode, *Foreground, *Background);
+			if (DeleteForeground)
+				delete Foreground;
+			if (DeleteBackground)
+				delete Background;
 		}
 		
 		
@@ -634,10 +655,10 @@ void DrawGL::DrawFromBackgroundElement(BackgroundElement* Element)
 	if (Element->ImageExists == true)
 	{
 		IMG* Image = Element->Image;
-		float X = WinWidth - (GLfloat)Image->x;
-		float Y = WinHeight - (GLfloat)Image->y;
-		float H = (GLfloat)Image->h;
-		float W = (GLfloat)Image->w;
+		float X = WinWidth - static_cast<GLfloat>(Image->x);
+		float Y = WinHeight - static_cast<GLfloat>(Image->y);
+		float H = static_cast<GLfloat>(Image->h);
+		float W = static_cast<GLfloat>(Image->w);
 		if (CheckScreenZone(X, Y, H, W))
 		{
 			string Path = Image->Source;
@@ -649,20 +670,25 @@ void DrawGL::DrawFromBackgroundElement(BackgroundElement* Element)
 	if (Element->TextExists == true)
 	{
 		TXT* Text = Element->Text;
-		float X = WinWidth - (GLfloat)Text->x;
-		float Y = WinHeight - (GLfloat)Text->y;
-		float H = (GLfloat)Text->h;
-		float W = (GLfloat)Text->w;
+		float X = WinWidth - static_cast<GLfloat>(Text->x);
+		float Y = WinHeight - static_cast<GLfloat>(Text->y);
+		float H = static_cast<GLfloat>(Text->h);
+		float W = static_cast<GLfloat>(Text->w);
 		if (CheckScreenZone(X, Y, H, W))
 		{
+			
 			TextFont* Font = Text->Font;
 			string Contents = Text->Content;
 			SDL_Color* Foreground = Text->Foreground;
 			SDL_Color* Background = Text->Background;
 			Mode DrawMode = Text->DrawMode;
+
+			bool DeleteBackground = false;
+			bool DeleteForeground = false;
 			if (Foreground == NULL)
 			{
 				Foreground = new SDL_Color();
+				DeleteForeground = true;
 				Foreground->a = 0;
 				Foreground->g = 255;
 				Foreground->b = 255;
@@ -670,12 +696,18 @@ void DrawGL::DrawFromBackgroundElement(BackgroundElement* Element)
 			}
 			if (Background == NULL)
 			{
+				DeleteBackground = true;
+				Background = new SDL_Color();
 				Background->a = 0;
 				Background->b = 0;
 				Background->r = 0;
 				Background->g = 0;
 			}
 			AddToBuffer(X, Y, H, W, Font, Contents, DrawMode, *Foreground, *Background);
+			if (DeleteForeground)
+				delete Foreground;
+			if (DeleteBackground)
+				delete Background;
 		}
 
 
@@ -719,7 +751,7 @@ void DrawGL::RefreshData(int NewWidth, int NewHeight)
 	SDL_GL_DeleteContext(ContextGL);
 	InitOpenGL();
 	
-	glViewport(0, 0, (GLsizei)NewWidth, (GLsizei)NewHeight);
+	glViewport(0, 0, static_cast<GLsizei>(NewWidth), static_cast<GLsizei>(NewHeight));
 
 	glMatrixMode(GL_PROJECTION);					
 	glLoadIdentity();									

@@ -4,4 +4,12 @@ class GlobalVars
 {
 public:
 	WindowInfo* WindowData;
+	GlobalVars()
+	{
+
+	}
+	~GlobalVars()
+	{
+		delete WindowData;
+	}
 };

@@ -14,7 +14,7 @@ using namespace std;
 #define WWIDTH 1000
 
 
-#define  BallCount  20
+#define  BallCount  50
 #define  WallCount  4
 
 #define  K 100
