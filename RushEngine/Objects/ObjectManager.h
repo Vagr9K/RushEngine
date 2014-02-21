@@ -30,136 +30,136 @@ public:
   void CleanStore ();
 };
 template <typename ElementType>
-void ObjDBManager <ElementType>::InitOldCpp ()
-        {
-		AddCount = 0;
-		DeleteCount = 0;
-		OptObjCount = 0;
-		Inited = false;
-	}
+void ObjDBManager <ElementType>::InitOldCpp()
+{
+	AddCount = 0;
+	DeleteCount = 0;
+	OptObjCount = 0;
+	Inited = false;
+}
 template <typename ElementType>
-ObjDBManager <ElementType>::ObjDBManager (vector <ElementType*> * Source)
-        {
-		InitOldCpp();
-		this->Source = Source;
-	}
+ObjDBManager <ElementType>::ObjDBManager(vector <ElementType*> * Source)
+{
+	InitOldCpp();
+	this->Source = Source;
+}
 template <typename ElementType>
-ObjDBManager <ElementType>::ObjDBManager (vector <ElementType*> * Source, int OptimalObjectCount)
-        {
-		InitOldCpp();
-		this->Source = Source;
-		this->OptObjCount = OptimalObjectCount;
-	}
+ObjDBManager <ElementType>::ObjDBManager(vector <ElementType*> * Source, int OptimalObjectCount)
+{
+	InitOldCpp();
+	this->Source = Source;
+	this->OptObjCount = OptimalObjectCount;
+}
 template <typename ElementType>
-ObjDBManager <ElementType>::~ ObjDBManager ()
-        {
-		delete StoreForDelete;
-		delete StoreForAdd;
-		delete Source;
+ObjDBManager <ElementType>::~ObjDBManager()
+{
+	delete StoreForDelete;
+	delete StoreForAdd;
 
-	}
+
+}
 template <typename ElementType>
-void ObjDBManager <ElementType>::SetOptimalObjectCount (int OptimalObjectCount)
-        {
-		this->OptObjCount = OptimalObjectCount;
-	}
+void ObjDBManager <ElementType>::SetOptimalObjectCount(int OptimalObjectCount)
+{
+	this->OptObjCount = OptimalObjectCount;
+}
 template <typename ElementType>
-int ObjDBManager <ElementType>::GetOptimalObjectCount ()
-        {
-		return OptObjCount;
-	}
+int ObjDBManager <ElementType>::GetOptimalObjectCount()
+{
+	return OptObjCount;
+}
 template <typename ElementType>
-void ObjDBManager <ElementType>::SetSource (vector <ElementType*> * Source)
-        {
-		CleanStore();
+void ObjDBManager <ElementType>::SetSource(vector <ElementType*> * Source)
+{
+	CleanStore();
+	Init();
+	this->Source = Source;
+}
+template <typename ElementType>
+void ObjDBManager <ElementType>::Init()
+{
+	StoreForAdd = new vector<ElementType*>;
+	StoreForAdd->reserve(OptObjCount);
+	StoreForDelete = new vector<ElementType*>;
+	StoreForDelete->reserve(OptObjCount);
+
+	Inited = true;
+
+}
+template <typename ElementType>
+void ObjDBManager <ElementType>::AddToDelete(ElementType * DeleteElement)
+{
+	if (Inited == false)
+	{
 		Init();
-		this->Source = Source;
 	}
-template <typename ElementType>
-void ObjDBManager <ElementType>::Init ()
-        {
-		StoreForAdd = new vector<ElementType*>;
-		StoreForAdd->reserve(OptObjCount);
-		StoreForDelete = new vector<ElementType*>;
-		StoreForDelete->reserve(OptObjCount);
+	StoreForDelete->push_back(DeleteElement);
+	DeleteCount++;
 
-		Inited = true;
-
-	}
+}
 template <typename ElementType>
-void ObjDBManager <ElementType>::AddToDelete (ElementType * DeleteElement)
-        {
-		if (Inited == false)
-		{
-			Init();
-		}
-		StoreForDelete->push_back(DeleteElement);
-		DeleteCount++;
-
+void ObjDBManager <ElementType>::AddToCreate(ElementType * NewElement)
+{
+	if (Inited == false)
+	{
+		Init();
 	}
+	StoreForAdd->push_back(NewElement);
+	AddCount++;
+}
 template <typename ElementType>
-void ObjDBManager <ElementType>::AddToCreate (ElementType * NewElement)
-        {
-		if (Inited == false)
-		{
-			Init();
-		}
-		StoreForAdd->push_back(NewElement);
-		AddCount++;
+bool ObjDBManager <ElementType>::PushChanges()
+{
+	if (Inited == false)
+	{
+		return false;
 	}
-template <typename ElementType>
-bool ObjDBManager <ElementType>::PushChanges ()
-        {
-		if (Inited == false)
+	for (unsigned int i = 0; i < Source->size(); i++)
+	{
+		for (unsigned int j = 0; j < StoreForDelete->size(); j++)
 		{
-			return false;
-		}
-		for (unsigned int i = 0; i < Source->size(); i++)
-		{
-			for (unsigned int j = 0; j < StoreForDelete->size(); j++)
+			if (Source[i] == StoreForDelete[j])
 			{
-				if (Source[i] == StoreForDelete[j])
+				if (AddCount>0)
 				{
-					if (AddCount>0)
-					{
-						Source[i] = StoreForAdd[AddCount - 1];
-						DeleteCount--;
-						AddCount--;
+					Source[i] = StoreForAdd[AddCount - 1];
+					DeleteCount--;
+					AddCount--;
 
-					}
-					else
-					{
-						Source->erase(Source->begin() + i);
-						DeleteCount--;
-
-					}
-					break;
 				}
-			}
-			if (DeleteCount == 0)
-			{
+				else
+				{
+					Source->erase(Source->begin() + i);
+					DeleteCount--;
+
+				}
 				break;
 			}
 		}
-		if (AddCount > 0)
+		if (DeleteCount == 0)
 		{
-			for (int h = 0; h < AddCount; h++)
-			{
-				Source->push_back(StoreForAdd->at(h));
-			}
+			break;
 		}
+	}
+	if (AddCount > 0)
+	{
+		for (int h = 0; h < AddCount; h++)
+		{
+			Source->push_back(StoreForAdd->at(h));
+		}
+	}
 
-		CleanStore();
-		return true;
-	}
+	CleanStore();
+	return true;
+}
 template <typename ElementType>
-void ObjDBManager <ElementType>::CleanStore ()
-        {
-		AddCount = 0;
-		DeleteCount = 0;
-		Inited = false;
-		delete StoreForAdd;
-		StoreForAdd = NULL;
-		delete StoreForDelete;
-		StoreForDelete = NULL;
-	}
+void ObjDBManager <ElementType>::CleanStore()
+{
+	AddCount = 0;
+	DeleteCount = 0;
+	Inited = false;
+	delete StoreForAdd;
+	StoreForAdd = NULL;
+	delete StoreForDelete;
+	StoreForDelete = NULL;
+}

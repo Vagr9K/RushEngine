@@ -46,6 +46,7 @@ public:
   bool TextExists;
   bool ImageExists;
   bool AllowDraw;
+  RGBColor* Color;
   ObjectElement ();
   ~ObjectElement();
 };

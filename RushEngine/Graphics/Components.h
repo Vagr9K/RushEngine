@@ -73,6 +73,8 @@ struct TextureInfo
 struct RGBColor
 {
 	float Fade, R, G, B;
+	bool operator==(RGBColor SecondObject);
+	
 };
 
 enum MSGBOXMODE

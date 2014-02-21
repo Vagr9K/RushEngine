@@ -53,3 +53,10 @@ WindowInfo::WindowInfo()
 	AspectX = 1.f;
 	AspectY = 1.f;
 }
+
+bool RGBColor::operator==(RGBColor SecondObject)
+{
+	if (this->R == SecondObject.R && this->G == SecondObject.G && this->B == SecondObject.B && this->Fade == SecondObject.Fade)
+		return true;
+	return false;
+}

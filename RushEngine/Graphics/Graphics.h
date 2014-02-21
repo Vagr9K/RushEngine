@@ -170,7 +170,7 @@ public:
 	~GraphicsEngine()
 	{
 		Stop();
-		delete ManagerGR;
+		
 	}
 	void SetTextMaximumTime(int Time)
 	{
@@ -189,7 +189,7 @@ public:
 		{
 			DeleteGL();
 		}
-
+		delete ManagerGR;
 
 		IsStarted = false;
 		return true;

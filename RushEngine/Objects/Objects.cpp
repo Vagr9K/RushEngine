@@ -150,10 +150,35 @@ BackgroundElementData * ObjectsEngine::getBackgroundLayer (int ID)
 
 ObjectsEngine::~ObjectsEngine()
 {
+	for (int i = 0; i < WorldCount; i++)
+	{
+		delete ObjectsData[i];
+		delete ObjectsManagers.at(i);
+	}
 	delete[] ObjectsData;
+
+	for (int i = 0; i < InterfaceLayerCount; i++)
+	{
+		delete InterfaceData[i];
+		delete InterfaceManagers.at(i);
+	}
 	delete[] InterfaceData;
+
+	for (int i = 0; i < BackgroundLayerCount; i++)
+	{
+		delete BackgroundData[i];
+		delete BackgroundManagers.at(i);
+	}
 	delete[] BackgroundData;
+
+	for (int i = 0; i < EffectLayerCount; i++)
+	{
+		delete EffectData[i];
+		delete EffectManagers.at(i);
+	}
 	delete[] EffectData;
+
+
 }
 
 
