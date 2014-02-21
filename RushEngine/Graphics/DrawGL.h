@@ -25,6 +25,7 @@ class DrawGL
   bool BufferStarted;
   float GlobalDrawFactor;
   GLuint PrevTextureID;
+  RGBColor PrevColor;
   bool BindAllGL;
 private:
   void InitOldCpp ();

@@ -17,6 +17,10 @@ void DrawGL::InitOldCpp ()
 		WorldLC = 0;
 		EffectLC = 0;
 		InterfaceLC = 0;
+		PrevColor.R = 1.f;
+		PrevColor.G = 1.f;
+		PrevColor.B = 1.f;
+		PrevColor.Fade = 1.f;
 
 		BindAllGL = false;
 	}
@@ -135,11 +139,30 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
 
 			if (TextureColor != NULL)
 			{
-				glColor4f(TextureColor->R, TextureColor->G, TextureColor->B, TextureColor->Fade);
+				if (PrevColor == *TextureColor)
+				{
+
+				}
+				else
+				{
+					glColor4f(TextureColor->R, TextureColor->G, TextureColor->B, TextureColor->Fade);
+					PrevColor = *TextureColor;
+				}
 			}
 			else
 			{
-				glColor4f(1.f, 1.f, 1.f, 1.f);
+				if (PrevColor.R == 1.f && PrevColor.G == 1.f && PrevColor.B == 1.f && PrevColor.Fade == 1.f)
+				{
+
+				}
+				else
+				{
+					glColor4f(1.f, 1.f, 1.f, 1.f);
+					PrevColor.R = 1.f;
+					PrevColor.G = 1.f;
+					PrevColor.B = 1.f; 
+					PrevColor.Fade = 1.f;
+				}
 			}
 
 			GLfloat Trg1Sz[] = {
