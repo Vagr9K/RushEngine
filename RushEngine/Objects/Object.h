@@ -59,4 +59,5 @@ public:
   void SetTextColorBG (SDL_Color * Background);
   void SetTextContent (string Content);
   void SetTextDrawMode (Mode DrawMode);
+  void SetColor(RGBColor* Color);
 };

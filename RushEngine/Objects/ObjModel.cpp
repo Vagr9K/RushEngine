@@ -38,6 +38,7 @@ ObjectElement::ObjectElement ()
 		ImageExists = false;
 		DrawFactor = 0.f;
 		AllowDraw = true;
+		Color = NULL;
 	}
 
 ObjectElement::~ObjectElement()

@@ -546,6 +546,7 @@ void DrawGL::DrawFromLayerElement(ObjectElement* Element, float DrawFactor, Obje
 	{
 		DrawFactor = GlobalDrawFactor;
 	}
+
 	if (Element->ImageExists == true && (SyncTo == IMAGE || SyncTo == ALL))
 	{
 		IMG* Image = Element->Image;
@@ -553,10 +554,12 @@ void DrawGL::DrawFromLayerElement(ObjectElement* Element, float DrawFactor, Obje
 		float Y = WinHeight - static_cast<GLfloat>(Image->y)*DrawFactor;
 		float H = static_cast<GLfloat>(Image->h)*DrawFactor;
 		float W = static_cast<GLfloat>(Image->w)*DrawFactor;
+		float Angle = static_cast<GLfloat>(Image->Angle);
 		if (CheckScreenZone(X, Y, H, W))
 		{
 			string Path = Image->Source;
-			AddToBuffer(X, Y, H, W, Path);
+			TextureInfo TextureData = ManagerGR->LoaderGL(Path);
+			AddToBufferFROMTEXTURE(X, Y, H, W, TextureData, Angle, 0.f, 0.f, false, Element->Color, false);
 		}
 		
 		
@@ -568,6 +571,7 @@ void DrawGL::DrawFromLayerElement(ObjectElement* Element, float DrawFactor, Obje
 		float Y = WinHeight - static_cast<GLfloat>(Text->y)*DrawFactor;
 		float H = static_cast<GLfloat>(Text->h)*DrawFactor;
 		float W = static_cast<GLfloat>(Text->w)*DrawFactor;
+		float Angle = static_cast<GLfloat>(Text->Angle);
 		if (CheckScreenZone(X, Y, H, W))
 		{
 			TextFont* Font = Text->Font;
@@ -597,7 +601,8 @@ void DrawGL::DrawFromLayerElement(ObjectElement* Element, float DrawFactor, Obje
 				Background->g = 0;
 			}
 
-			AddToBuffer(X, Y, H, W, Font, Contents, DrawMode, *Foreground, *Background);
+			TextureInfo TextureData = ManagerGR->GetTextImageGL(Font, Contents, DrawMode, *Foreground, *Background);
+			AddToBufferFROMTEXTURE(X, Y, H, W, TextureData, Angle, 0.f, 0.f, false, Element->Color, false);
 			if (DeleteForeground)
 				delete Foreground;
 			if (DeleteBackground)

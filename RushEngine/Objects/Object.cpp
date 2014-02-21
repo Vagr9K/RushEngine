@@ -376,3 +376,8 @@ void ObjectBASE::CustomInit()
 {
 
 }
+
+void ObjectBASE::SetColor(RGBColor* Color)
+{
+	ObjElement->Color = Color;
+}

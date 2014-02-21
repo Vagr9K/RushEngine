@@ -106,6 +106,7 @@ void ModColors()
 }
 WindowInfo* WinData;
 
+RGBColor Color;
 void Init()
 {
 	stringstream SS;
@@ -125,6 +126,11 @@ void Init()
 	NewColorBG->b = 0;
 	NewColorBG->g = 0;
 	NewColorBG->r = 255;
+
+	Color.R = 1.f;
+	Color.G = 0.f;
+	Color.B = 0.f;
+	Color.Fade = 1.f;
 
 	mainEngine.InitPhysics();
 
@@ -180,6 +186,7 @@ void Init()
 		Balls.at(i)->SetTextColorFG(NewColor);
 		Balls.at(i)->SetTextColorBG(NewColorBG);
 		Balls.at(i)->SetTextContent(string(1, char(RndGen(255))));
+		Balls.at(i)->SetColor(&Color);
 
 	}
 	b2BodyDef* BodyDefinitionWall = new b2BodyDef;
