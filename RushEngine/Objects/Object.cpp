@@ -161,6 +161,7 @@ ObjectBASE::ObjectBASE (b2World * ObjWorld, ObjDBManager <ObjectElement> * Datab
 		{
 			AddToDatabase();
 		}
+		CustomInit();
 	}
 ObjectBASE::~ ObjectBASE ()
         {
@@ -371,3 +372,7 @@ void ObjectBASE::SetTextDrawMode (Mode DrawMode)
 		ObjElement->Text->DrawMode = DrawMode;
 	}
 
+void ObjectBASE::CustomInit()
+{
+
+}

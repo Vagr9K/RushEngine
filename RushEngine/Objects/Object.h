@@ -1,7 +1,8 @@
+#pragma once
+
 #include "ObjectManager.h"
 #include <Box2D/Box2D.h>
 #include "../Eventing/Eventing.h"
-
 
 class ObjectBASE
 {
@@ -19,6 +20,7 @@ protected:
   void InitObjElement ();
   void SyncObjectSizeData (ObjectSyncMode SyncTo);
   void SyncPhysicsData (ObjectSyncMode SyncTo);
+  virtual void CustomInit();
 protected:
   ObjectElement * ObjElement;
   EventingEngine * EventingEnginePtr;
