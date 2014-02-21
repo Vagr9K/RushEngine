@@ -130,7 +130,7 @@ void Init()
 	Color.R = 1.f;
 	Color.G = 0.f;
 	Color.B = 0.f;
-	Color.Fade = 1.f;
+	Color.Fade = 0.5f;
 
 	mainEngine.InitPhysics();
 
