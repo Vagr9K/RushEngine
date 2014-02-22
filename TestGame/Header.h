@@ -1,4 +1,5 @@
 #include "GameEngine.h"
+#include <random>
 
 const static GLfloat colors[12][3] =		
 {
@@ -131,4 +132,65 @@ public:
 		RushEngineInfo.GamePointer->Graphics->ShowMessageBox("You have pressed the button.", "The button on screen was pressed by you!");
 	}
 
+};
+
+
+class FlareEffect : public Effect
+{
+	 void InitParticle(int ID)
+	{
+		ParticleArray[ID].H = 4.f;
+		ParticleArray[ID].W = 4.f;
+		ParticleArray[ID].X = ZeroX;
+		ParticleArray[ID].Y = ZeroY;
+		ParticleArray[ID].R = R;
+		ParticleArray[ID].G = G;
+		ParticleArray[ID].B = B;
+		ParticleArray[ID].Fade = Fade;
+		ParticleArray[ID].Active = true;
+	}
+protected:
+	virtual void Init()
+	{
+		for (int i = 0; i < ParticleCount; i++)
+		{
+			InitParticle(i);
+		}
+	}
+
+	virtual void RefreshPosition()
+	{
+		srand(SDL_GetTicks());
+		
+		float SpX = SpeedX + GravityX;
+		float SpY = SpeedY + GravityY;
+		for (int i = 0; i < ParticleCount;i++)
+		{
+			
+			ParticleArray[i].Fade -= 0.01f;
+			if (ParticleArray[i].Fade < 0.f)
+			{
+				InitParticle(i);
+			}
+			
+			
+			
+		}
+	}
+public:
+	float GravityX, GravityY, SpeedX, SpeedY, ZeroX, ZeroY;
+	float R, G, B, Fade;
+	void SetData(float GravityX,float GravityY,float SpeedX,float SpeedY,float ZeroX,float ZeroY)
+	{
+		this->GravityX = GravityX;
+		this->GravityY = GravityY;
+		this->SpeedX = SpeedX;
+		this->SpeedY = SpeedY;
+		this->ZeroX = ZeroX;
+		this->ZeroY = ZeroY;
+	}
+	FlareEffect(int LayerID, int ParticleCount) : Effect(LayerID, ParticleCount, "assets/Effects/Flare.png")
+	{
+
+	}
 };

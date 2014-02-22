@@ -48,7 +48,7 @@ ObjectSyncMode SYNCMODE = IMAGE;
 FPSTest* Tester;
 
 
-EngineFireEffect* EffectTest;
+FlareEffect* EffectTest;
 Button* TestButton;
 
 AudioMusic* Music;
@@ -144,7 +144,13 @@ void Init()
 
 	mainEngine.Physics->AddWorld(&World);
 
-	EffectTest = new EngineFireEffect(250, mainEngine.getObjects()->getEffectManager(0), "Particle.png");
+	EffectTest = new FlareEffect(0, 50);
+	EffectTest->SetData(0.f, -static_cast<float>(9.8/K), 0.f, 0.1f, 0.f, 0.f);
+	EffectTest->R = 1.f;
+	EffectTest->G = 0.f;
+	EffectTest->B = 0.f;
+	EffectTest->Fade = 1.f;
+
 	mainEngine.getObjects()->getEffectManager(0)->PushChanges();
 
 	TestButton = new Button(mainEngine.getObjects()->getInterfaceManager(0), mainEngine.Eventing);
@@ -240,8 +246,8 @@ void RenderPhysics()
 	float Step = 1.f / 60.f;
 	World.Step(Step, 8, 3);
 	b2Vec2 Pos = Balls.at(5)->Body->GetPosition();
-	EffectTest->X =Pos.x*K;
-	EffectTest->Y =Pos.y*K;
+	EffectTest->ZeroX =Pos.x*K;
+	EffectTest->ZeroY =Pos.y*K;
 }
 
 void RenderGraphics()
