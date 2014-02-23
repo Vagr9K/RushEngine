@@ -253,13 +253,16 @@ void DrawGL::SetView(int X, int Y)
 	}
 void DrawGL::StartBuffer ()
    {
+	if (!BufferStarted)
+	{
 		AllowDraw = CheckDrawAllowance();
 		CheckScreenState();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		BufferStarted = true;
+	}
 	}
 void DrawGL::AddToBuffer (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
         {
@@ -631,13 +634,17 @@ void DrawGL::DrawFromLayerElement(ObjectElement* Element, float DrawFactor, Obje
 	}
 }
 void DrawGL::PushBuffer ()
-        {
+   {
+	if (AllowDraw)
+	{
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		
+
 		SDL_GL_SwapWindow(mainWindow);
-		BufferStarted = false;
+		
 		AllowDraw = false;
+	}
+	BufferStarted = false;
 	}
 void DrawGL::ClearAll ()
         {
@@ -843,4 +850,36 @@ void DrawGL::CheckScreenState()
 			RefreshData(EventEngine->GlobalEvent.window.data1, EventEngine->GlobalEvent.window.data2);
 		}
 	}
+}
+
+bool DrawGL::CheckFrames()
+{
+	Uint32 FrameTime = SDL_GetTicks();
+	if ((static_cast<float>(FrameTime - LastFrameTime) * static_cast<float>(FrameRate) / 1000.f < 1.f))
+	{
+		return false;
+	}
+	else
+	{
+		LastFrameTime = SDL_GetTicks();
+		return true;
+	}
+}
+
+bool DrawGL::CheckDrawAllowance()
+{
+	return CheckFrames();
+}
+
+int DrawGL::getFrameRate()
+{
+	return FrameRate;
+}
+
+void DrawGL::setFrameRate(int FrameRate)
+{
+	if (FrameRate > 30)
+		this->FrameRate = FrameRate;
+	else
+		this->FrameRate = 30;
 }

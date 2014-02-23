@@ -27,7 +27,7 @@ class DrawGL
   GLuint PrevTextureID;
   RGBColor PrevColor;
   bool BindAllGL;
-  Uint8 LastFrameTime;
+  Uint32 LastFrameTime;
   int FrameRate;
   bool AllowDraw;
 private:
@@ -44,22 +44,8 @@ private:
   void DrawFromBackgroundElement(BackgroundElement* Element);
   void RefreshData(int NewWidth, int NewHeight);
   void CheckScreenState();
-  bool CheckFrames()
-  {
-	  if ((static_cast<float>(SDL_GetTicks() - LastFrameTime) / static_cast<float>(FrameRate) < 1.f))
-	  {
-		  return false;
-	  }
-	  else
-	  {
-		  LastFrameTime = SDL_GetTicks();
-		  return true;
-	  }
-  }
-  bool CheckDrawAllowance()
-  {
-	  return CheckFrames();
-  }
+  bool CheckFrames();
+  bool CheckDrawAllowance();
 inline  bool CheckScreenZone(float x, float y, float h, float w, bool NoDelta = false);
 inline void SetEffectMode(bool Status);
 public:
@@ -68,6 +54,8 @@ public:
   void SetView(int X, int Y);
   void setSyncFactor(float Factor);
   float getSyncFactor();
+  int getFrameRate();
+  void setFrameRate(int FrameRate);
   void CacheImage(string Path);
   void CacheText(TextFont* Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background);
   void StartBuffer ();

@@ -141,6 +141,7 @@ void Init()
 	mainEngine.Graphics->SetTextMaximumTime(K + 2);
 	mainEngine.Graphics->DrawerGL->CacheImage("Ball.png");
 	mainEngine.Graphics->DrawerGL->CacheImage("Wall.png");
+	mainEngine.Graphics->DrawerGL->setFrameRate(60);
 
 	mainEngine.Physics->AddWorld(&World);
 
@@ -305,6 +306,19 @@ void RenderCamera()
 	{
 		
 		mainEngine.Graphics->SetFullScreen(true);
+
+	}
+	else if (A[SDL_SCANCODE_W])
+	{
+		int FrameRate = mainEngine.Graphics->DrawerGL->getFrameRate() + 1;
+		mainEngine.Graphics->DrawerGL->setFrameRate(FrameRate);
+
+	}
+	else if (A[SDL_SCANCODE_S])
+	{
+
+		int FrameRate = mainEngine.Graphics->DrawerGL->getFrameRate() - 1;
+		mainEngine.Graphics->DrawerGL->setFrameRate(FrameRate);
 
 	}
 	mainEngine.Graphics->DrawerGL->SetView(CamX, CamY);
