@@ -23,6 +23,10 @@ void DrawGL::InitOldCpp ()
 		PrevColor.Fade = 1.f;
 
 		BindAllGL = false;
+
+		FrameRate = 60;
+		LastFrameTime = 0;
+		AllowDraw = false;
 	}
 bool DrawGL::GLErrorTest (string FuntionName)
         {
@@ -201,14 +205,20 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
 #endif
 	}
 void DrawGL::AddToBufferFROMPATH (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, string Path, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
-        {
-		TextureInfo TextureID = ManagerGR->LoaderGL(Path);
-		AddToBufferFROMTEXTURE(X, Y, H, W, TextureID, AngleX, AngleY, AngleZ);
+    {
+		if (AllowDraw)
+		{
+			TextureInfo TextureID = ManagerGR->LoaderGL(Path);
+			AddToBufferFROMTEXTURE(X, Y, H, W, TextureID, AngleX, AngleY, AngleZ);
+		}
 	}
 void DrawGL::AddToBufferFROMTEXT (GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextFont * Font, string Text, Mode DrawMode, SDL_Color Foreground, SDL_Color Background, GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ)
-        {
-		TextureInfo TextureID = ManagerGR->GetTextImageGL(Font, Text, DrawMode, Foreground, Background);
-		AddToBufferFROMTEXTURE(X, Y, H, W, TextureID, AngleX, AngleY, AngleZ);
+   {
+		if (AllowDraw)
+		{
+			TextureInfo TextureID = ManagerGR->GetTextImageGL(Font, Text, DrawMode, Foreground, Background);
+			AddToBufferFROMTEXTURE(X, Y, H, W, TextureID, AngleX, AngleY, AngleZ);
+		}
 	}
 DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, EventingEngine * Events)
         {
@@ -243,6 +253,7 @@ void DrawGL::SetView(int X, int Y)
 	}
 void DrawGL::StartBuffer ()
    {
+		AllowDraw = CheckDrawAllowance();
 		CheckScreenState();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
@@ -308,27 +319,29 @@ void DrawGL::SyncObjects(bool AutoPushBuffer, ObjectSyncMode SyncTo)
 		{
 			StartBuffer();
 		}
-		int LayerID = 0;
-		ObjectElement* CurrentElement = NULL;
-		for (LayerID = 0; LayerID < WorldLC; LayerID++)
+		if (AllowDraw)
 		{
-			
-			vector<ObjectElement*>* Layer = ObjEngine->getObjectsLayer(LayerID);
-			for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
+			int LayerID = 0;
+			ObjectElement* CurrentElement = NULL;
+			for (LayerID = 0; LayerID < WorldLC; LayerID++)
 			{
-				CurrentElement = Layer->at(LayerElementID);
-				CurrentElement->ObjectPtr->SyncData(SyncTo);
-				DrawFromLayerElement(CurrentElement, DrawFactor, SyncTo);
-				
+
+				vector<ObjectElement*>* Layer = ObjEngine->getObjectsLayer(LayerID);
+				for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
+				{
+					CurrentElement = Layer->at(LayerElementID);
+					CurrentElement->ObjectPtr->SyncData(SyncTo);
+					DrawFromLayerElement(CurrentElement, DrawFactor, SyncTo);
+
+				}
+				LayerID++;
+
 			}
-			LayerID++;
-			
+			if (AutoPushBuffer == true)
+			{
+				PushBuffer();
+			}
 		}
-		if (AutoPushBuffer == true)
-		{
-			PushBuffer();
-		}
-		
 		
 
 	}
@@ -339,28 +352,30 @@ void DrawGL::SyncInterface(bool AutoPushBuffer)
 	{
 		StartBuffer();
 	}
-	int LayerID = 0;
-	InterfaceElement* CurrentElement = NULL;
-	for (LayerID = 0; LayerID < InterfaceLC; LayerID++)
+	if (AllowDraw)
 	{
-
-		vector<InterfaceElement*>* Layer = ObjEngine->getInterfaceLayer(LayerID);
-		for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
+		int LayerID = 0;
+		InterfaceElement* CurrentElement = NULL;
+		for (LayerID = 0; LayerID < InterfaceLC; LayerID++)
 		{
-			CurrentElement = Layer->at(LayerElementID);
-			CurrentElement->InterfacePtr->Refresh();
-			DrawFromInterfaceElement(CurrentElement);
+
+			vector<InterfaceElement*>* Layer = ObjEngine->getInterfaceLayer(LayerID);
+			for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
+			{
+				CurrentElement = Layer->at(LayerElementID);
+				CurrentElement->InterfacePtr->Refresh();
+				DrawFromInterfaceElement(CurrentElement);
+
+			}
+			LayerID++;
 
 		}
-		LayerID++;
+		if (AutoPushBuffer == true)
+		{
+			PushBuffer();
+		}
 
 	}
-	if (AutoPushBuffer == true)
-	{
-		PushBuffer();
-	}
-
-
 
 }
 
@@ -509,30 +524,33 @@ void DrawGL::SyncEffects(bool AutoPushBuffer /* = false */, EffectSyncMode SyncM
 	{
 		StartBuffer();
 	}
-	SetEffectMode(true);
-	int LayerID = 0;
-	EffectElement* CurrentElement = NULL;
-	RGBColor* ParticleColor = new RGBColor;
-	for (LayerID = 0; LayerID < EffectLC; LayerID++)
+	if (AllowDraw)
 	{
-
-		vector<EffectElement*>* Layer = ObjEngine->getEffectLayer(LayerID);
-		for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
+		SetEffectMode(true);
+		int LayerID = 0;
+		EffectElement* CurrentElement = NULL;
+		RGBColor* ParticleColor = new RGBColor;
+		for (LayerID = 0; LayerID < EffectLC; LayerID++)
 		{
-			CurrentElement = Layer->at(LayerElementID);
-			CurrentElement->PtrToEffect->Refresh();
-			TextureInfo TInfo = ManagerGR->LoaderGL(CurrentElement->Path);
-			DrawFromEffectElement(CurrentElement, SyncMode, ParticleColor, &TInfo);
+
+			vector<EffectElement*>* Layer = ObjEngine->getEffectLayer(LayerID);
+			for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
+			{
+				CurrentElement = Layer->at(LayerElementID);
+				CurrentElement->PtrToEffect->Refresh();
+				TextureInfo TInfo = ManagerGR->LoaderGL(CurrentElement->Path);
+				DrawFromEffectElement(CurrentElement, SyncMode, ParticleColor, &TInfo);
+
+			}
+			LayerID++;
 
 		}
-		LayerID++;
-
-	}
-	delete ParticleColor;
-	SetEffectMode(false);
-	if (AutoPushBuffer == true)
-	{
-		PushBuffer();
+		delete ParticleColor;
+		SetEffectMode(false);
+		if (AutoPushBuffer == true)
+		{
+			PushBuffer();
+		}
 	}
 }
 
@@ -619,6 +637,7 @@ void DrawGL::PushBuffer ()
 		
 		SDL_GL_SwapWindow(mainWindow);
 		BufferStarted = false;
+		AllowDraw = false;
 	}
 void DrawGL::ClearAll ()
         {
@@ -658,23 +677,26 @@ void DrawGL::SyncBackground(bool AutoPushBuffer /* = false */)
 	{
 		StartBuffer();
 	}
-	int LayerID = 0;
-	BackgroundElement* CurrentElement = NULL;
-	for (LayerID = 0; LayerID < WorldLC; LayerID++)
+	if (AllowDraw)
 	{
-
-		vector<BackgroundElement*>* Layer = ObjEngine->getBackgroundLayer(LayerID);
-		for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
+		int LayerID = 0;
+		BackgroundElement* CurrentElement = NULL;
+		for (LayerID = 0; LayerID < WorldLC; LayerID++)
 		{
-			CurrentElement = Layer->at(LayerElementID);
-			DrawFromBackgroundElement(CurrentElement);
-		}
-		LayerID++;
 
-	}
-	if (AutoPushBuffer == true)
-	{
-		PushBuffer();
+			vector<BackgroundElement*>* Layer = ObjEngine->getBackgroundLayer(LayerID);
+			for (unsigned int LayerElementID = 0; LayerElementID < Layer->size(); LayerElementID++)
+			{
+				CurrentElement = Layer->at(LayerElementID);
+				DrawFromBackgroundElement(CurrentElement);
+			}
+			LayerID++;
+
+		}
+		if (AutoPushBuffer == true)
+		{
+			PushBuffer();
+		}
 	}
 }
 void DrawGL::DrawFromBackgroundElement(BackgroundElement* Element)
@@ -744,21 +766,27 @@ void DrawGL::DrawFromBackgroundElement(BackgroundElement* Element)
 
 void DrawGL::SyncAll(bool AutoPushBuffer /* = false */)
 {
-	if (BgkC > 0)
-	SyncBackground();
-
-	if (WorldLC > 0)
-	SyncObjects();
-
-	if (EffectLC > 0)
-	SyncEffects();
-
-	if (InterfaceLC > 0)
-	SyncInterface();
-
-	if (AutoPushBuffer)
+	if (BufferStarted == false)
+		StartBuffer();
+	if (AllowDraw)
 	{
-		PushBuffer();
+		if (BgkC > 0)
+			SyncBackground();
+
+		if (WorldLC > 0)
+			SyncObjects();
+
+		if (EffectLC > 0)
+			SyncEffects();
+
+		if (InterfaceLC > 0)
+			SyncInterface();
+
+		if (AutoPushBuffer)
+		{
+			PushBuffer();
+		}
+
 	}
 }
 

@@ -137,21 +137,79 @@ public:
 
 class FlareEffect : public Effect
 {
-	 void InitParticle(int ID)
+
+	struct ParticleData
 	{
+		float SpeedX;
+		float SpeedY;
+		float FadeSpeed;
+		ParticleData()
+		{
+			ReRandom();
+		}
+		void ReRandom()
+		{
+			
+			SpeedX = static_cast<float>(rand() % 1000) / 1000 - 0.5f;
+			SpeedY = static_cast<float>(rand() % 10000) / 1000 - 0.5f;
+			FadeSpeed = static_cast<float>(rand() % 1000) / 100000;
+		}
+	};
+	struct GravityData
+	{
+		float X;
+		float Y;
+		GravityData()
+		{
+			X = 0.f;
+			Y = 0.f;
+		}
+	};
+	struct ColorData
+	{
+		float R, G, B, Fade;
+		ColorData()
+		{
+			R = 1.f;
+			G = 1.f;
+			B = 1.f;
+			Fade = 1.f;
+		}
+	};
+	struct SpeedData
+	{
+		float X, Y;
+		SpeedData()
+		{
+			X = 0.f;
+			Y = 0.f;
+		}
+	};
+
+	ParticleData* PData;
+	void InitParticle(int ID)
+	{
+		
 		ParticleArray[ID].H = 4.f;
 		ParticleArray[ID].W = 4.f;
-		ParticleArray[ID].X = ZeroX;
-		ParticleArray[ID].Y = ZeroY;
-		ParticleArray[ID].R = R;
-		ParticleArray[ID].G = G;
-		ParticleArray[ID].B = B;
-		ParticleArray[ID].Fade = Fade;
+		ParticleArray[ID].X = X;
+		ParticleArray[ID].Y = Y;
+		ParticleArray[ID].R = Color.R + static_cast<float>(rand() % 100) / 100 - 0.5f;
+		if (ParticleArray[ID].R > 1.f)
+			ParticleArray[ID].R = 1.f;
+		ParticleArray[ID].G = Color.G + static_cast<float>(rand() % 100) / 100 - 0.5f;
+		if (ParticleArray[ID].G > 1.f)
+			ParticleArray[ID].G = 1.f;
+		ParticleArray[ID].B = Color.B + static_cast<float>(rand() % 100) / 100 - 0.5f;
+		if (ParticleArray[ID].B > 1.f)
+			ParticleArray[ID].B = 1.f;
+		ParticleArray[ID].Fade = Color.Fade;
 		ParticleArray[ID].Active = true;
 	}
 protected:
 	virtual void Init()
 	{
+		PData = new ParticleData[ParticleCount];
 		for (int i = 0; i < ParticleCount; i++)
 		{
 			InitParticle(i);
@@ -160,34 +218,37 @@ protected:
 
 	virtual void RefreshPosition()
 	{
-		srand(SDL_GetTicks());
-		
-		float SpX = SpeedX + GravityX;
-		float SpY = SpeedY + GravityY;
+		float SharedSpX = Speed.X + Gravity.X;
+		float SharedSpY = Speed.Y + Gravity.Y;
 		for (int i = 0; i < ParticleCount;i++)
 		{
-			
-			ParticleArray[i].Fade -= 0.01f;
+			ParticleArray[i].Fade -= PData[i].FadeSpeed;
 			if (ParticleArray[i].Fade < 0.f)
 			{
 				InitParticle(i);
 			}
-			
+			else
+			{
+				ParticleArray[i].X += SharedSpX + PData[i].SpeedX;
+				ParticleArray[i].Y += SharedSpY + PData[i].SpeedY;
+			}
 			
 			
 		}
 	}
 public:
-	float GravityX, GravityY, SpeedX, SpeedY, ZeroX, ZeroY;
-	float R, G, B, Fade;
+	float X, Y;
+	GravityData Gravity;
+	ColorData Color;
+	SpeedData Speed;
 	void SetData(float GravityX,float GravityY,float SpeedX,float SpeedY,float ZeroX,float ZeroY)
 	{
-		this->GravityX = GravityX;
-		this->GravityY = GravityY;
-		this->SpeedX = SpeedX;
-		this->SpeedY = SpeedY;
-		this->ZeroX = ZeroX;
-		this->ZeroY = ZeroY;
+		this->Gravity.X = GravityX;
+		this->Gravity.Y = GravityY;
+		this->Speed.X = SpeedX;
+		this->Speed.Y = SpeedY;
+		this->X = ZeroX;
+		this->Y = ZeroY;
 	}
 	FlareEffect(int LayerID, int ParticleCount) : Effect(LayerID, ParticleCount, "assets/Effects/Flare.png")
 	{

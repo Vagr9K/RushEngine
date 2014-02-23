@@ -144,12 +144,12 @@ void Init()
 
 	mainEngine.Physics->AddWorld(&World);
 
-	EffectTest = new FlareEffect(0, 50);
-	EffectTest->SetData(0.f, -static_cast<float>(9.8/K), 0.f, 0.1f, 0.f, 0.f);
-	EffectTest->R = 1.f;
-	EffectTest->G = 0.f;
-	EffectTest->B = 0.f;
-	EffectTest->Fade = 1.f;
+	EffectTest = new FlareEffect(0, 250);
+	EffectTest->SetData(0.f, -static_cast<float>(9.8/K), 1.f, 1.f, 0.f, 0.f);
+	EffectTest->Color.R = 1.f;
+	EffectTest->Color.G = 1.f;
+	EffectTest->Color.B = 0.f;
+	EffectTest->Color.Fade = 1.f;
 
 	mainEngine.getObjects()->getEffectManager(0)->PushChanges();
 
@@ -246,8 +246,8 @@ void RenderPhysics()
 	float Step = 1.f / 60.f;
 	World.Step(Step, 8, 3);
 	b2Vec2 Pos = Balls.at(5)->Body->GetPosition();
-	EffectTest->ZeroX =Pos.x*K;
-	EffectTest->ZeroY =Pos.y*K;
+	EffectTest->X =Pos.x*K;
+	EffectTest->Y =Pos.y*K;
 }
 
 void RenderGraphics()

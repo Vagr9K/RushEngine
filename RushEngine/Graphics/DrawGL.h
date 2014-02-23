@@ -27,6 +27,9 @@ class DrawGL
   GLuint PrevTextureID;
   RGBColor PrevColor;
   bool BindAllGL;
+  Uint8 LastFrameTime;
+  int FrameRate;
+  bool AllowDraw;
 private:
   void InitOldCpp ();
   bool GLErrorTest (string FuntionName);
@@ -41,6 +44,22 @@ private:
   void DrawFromBackgroundElement(BackgroundElement* Element);
   void RefreshData(int NewWidth, int NewHeight);
   void CheckScreenState();
+  bool CheckFrames()
+  {
+	  if ((static_cast<float>(SDL_GetTicks() - LastFrameTime) / static_cast<float>(FrameRate) < 1.f))
+	  {
+		  return false;
+	  }
+	  else
+	  {
+		  LastFrameTime = SDL_GetTicks();
+		  return true;
+	  }
+  }
+  bool CheckDrawAllowance()
+  {
+	  return CheckFrames();
+  }
 inline  bool CheckScreenZone(float x, float y, float h, float w, bool NoDelta = false);
 inline void SetEffectMode(bool Status);
 public:
