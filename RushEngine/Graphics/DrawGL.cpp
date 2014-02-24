@@ -24,7 +24,7 @@ void DrawGL::InitOldCpp ()
 
 		BindAllGL = false;
 
-		FrameRate = 60;
+		FrameRate = 120;
 		LastFrameTime = 0;
 		AllowDraw = false;
 	}

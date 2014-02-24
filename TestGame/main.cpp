@@ -14,11 +14,14 @@ using namespace std;
 #define WWIDTH 1000
 
 
-#define  BallCount  50
+#define  BallCount  20
 #define  WallCount  4
 
 #define  K 100
 
+
+Uint32 LastPhysTime = SDL_GetTicks();
+static int GlobalFPS = 60;
 
 GameEngine mainEngine;
 
@@ -49,6 +52,7 @@ FPSTest* Tester;
 
 
 FlareEffect* EffectTest;
+FlareEffect* EffectTest2;
 Button* TestButton;
 
 AudioMusic* Music;
@@ -141,16 +145,23 @@ void Init()
 	mainEngine.Graphics->SetTextMaximumTime(K + 2);
 	mainEngine.Graphics->DrawerGL->CacheImage("Ball.png");
 	mainEngine.Graphics->DrawerGL->CacheImage("Wall.png");
-	mainEngine.Graphics->DrawerGL->setFrameRate(60);
+	mainEngine.Graphics->DrawerGL->setFrameRate(120);
 
 	mainEngine.Physics->AddWorld(&World);
 
-	EffectTest = new FlareEffect(0, 250);
-	EffectTest->SetData(0.f, -static_cast<float>(9.8/K), 1.f, 1.f, 0.f, 0.f);
+	EffectTest = new FlareEffect(0, 1000, K, mainEngine.Graphics->DrawerGL->getFrameRate());
+	EffectTest->SetData(0.f, 3.f, 0.f, 0.f, 0.f, 0.f);
 	EffectTest->Color.R = 1.f;
 	EffectTest->Color.G = 1.f;
 	EffectTest->Color.B = 0.f;
 	EffectTest->Color.Fade = 1.f;
+
+	EffectTest2 = new FlareEffect(0, 1000, K, mainEngine.Graphics->DrawerGL->getFrameRate());
+	EffectTest2->SetData(0.f,-3.f, 0.f, 0.f, 0.f, 0.f);
+	EffectTest2->Color.R = 1.f;
+	EffectTest2->Color.G = 1.f;
+	EffectTest2->Color.B = 0.f;
+	EffectTest2->Color.Fade = 1.f;
 
 	mainEngine.getObjects()->getEffectManager(0)->PushChanges();
 
@@ -173,8 +184,8 @@ void Init()
 	b2BodyDef* BodyDefinitionBall = new b2BodyDef;
 	BodyDefinitionBall->type = b2_dynamicBody;
 	b2FixtureDef* FixtureDefBall = new b2FixtureDef;
-	FixtureDefBall->restitution = 0.9f;
-	FixtureDefBall->friction = 0.1f;
+	FixtureDefBall->restitution = 1.001f;
+	FixtureDefBall->friction = 0.3f;
 	FixtureDefBall->shape = STDShape;
 	float Rnd1 = (float)RndGen(9)+1.f;
 	float Rnd2 = (float)RndGen(9) + 1.f;
@@ -241,14 +252,41 @@ void Init()
 	mainEngine.getObjects()->getBackgroundManager()->PushChanges();
 }
 
+void StepWorld()
+{
+	Uint32 Now = SDL_GetTicks();
+	if (static_cast<float>(Now - LastPhysTime )> (1000.f / static_cast<float>(GlobalFPS) ))
+	{
+		float Step = 1.f / 60.f;
+		World.Step(Step, 8, 3);
+
+		LastPhysTime = SDL_GetTicks();
+	}
+	else
+	{
+
+	}
+
+}
+
 
 void RenderPhysics()
 {
-	float Step = 1.f / 60.f;
-	World.Step(Step, 8, 3);
-	b2Vec2 Pos = Balls.at(5)->Body->GetPosition();
-	EffectTest->X =Pos.x*K;
-	EffectTest->Y =Pos.y*K;
+	StepWorld();
+	b2Vec2 Pos = Balls.at(1)->Body->GetPosition();
+	b2Vec2 Speed = Balls.at(1)->Body->GetLinearVelocity();
+	EffectTest->X =Pos.x;
+	EffectTest->Y =Pos.y;
+	EffectTest->Speed.X = Speed.x;
+	EffectTest->Speed.Y = Speed.y;
+
+	b2Vec2 Pos2 = Balls.at(2)->Body->GetPosition();
+	b2Vec2 Speed2 = Balls.at(2)->Body->GetLinearVelocity();
+	EffectTest2->X = Pos2.x;
+	EffectTest2->Y = Pos2.y;
+	EffectTest2->Speed.X = Speed.x;
+	EffectTest2->Speed.Y = Speed.y;
+	
 }
 
 void RenderGraphics()
@@ -312,6 +350,7 @@ void RenderCamera()
 	{
 		int FrameRate = mainEngine.Graphics->DrawerGL->getFrameRate() + 1;
 		mainEngine.Graphics->DrawerGL->setFrameRate(FrameRate);
+		EffectTest->RenderPS = FrameRate;
 
 	}
 	else if (A[SDL_SCANCODE_S])
@@ -319,6 +358,7 @@ void RenderCamera()
 
 		int FrameRate = mainEngine.Graphics->DrawerGL->getFrameRate() - 1;
 		mainEngine.Graphics->DrawerGL->setFrameRate(FrameRate);
+		EffectTest->RenderPS = FrameRate;
 
 	}
 	mainEngine.Graphics->DrawerGL->SetView(CamX, CamY);

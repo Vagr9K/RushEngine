@@ -145,14 +145,14 @@ class FlareEffect : public Effect
 		float FadeSpeed;
 		ParticleData()
 		{
-			ReRandom();
+			
 		}
-		void ReRandom()
+		void ReRandom(float RandomAspectSpeed, float RandomAspectFading)
 		{
 			
-			SpeedX = static_cast<float>(rand() % 1000) / 1000 - 0.5f;
-			SpeedY = static_cast<float>(rand() % 10000) / 1000 - 0.5f;
-			FadeSpeed = static_cast<float>(rand() % 1000) / 100000;
+			SpeedX = (static_cast<float>(rand() % 1000) / 1000.f - 0.5f) * RandomAspectSpeed;
+			SpeedY = (static_cast<float>(rand() % 1000) / 1000.f - 0.5f) * RandomAspectSpeed;
+			FadeSpeed = static_cast<float>(rand() % 1000) / 100000 * RandomAspectFading;
 		}
 	};
 	struct GravityData
@@ -192,8 +192,8 @@ class FlareEffect : public Effect
 		
 		ParticleArray[ID].H = 4.f;
 		ParticleArray[ID].W = 4.f;
-		ParticleArray[ID].X = X;
-		ParticleArray[ID].Y = Y;
+		ParticleArray[ID].X = X * PixelMeter;
+		ParticleArray[ID].Y = Y * PixelMeter;
 		ParticleArray[ID].R = Color.R + static_cast<float>(rand() % 100) / 100 - 0.5f;
 		if (ParticleArray[ID].R > 1.f)
 			ParticleArray[ID].R = 1.f;
@@ -205,6 +205,9 @@ class FlareEffect : public Effect
 			ParticleArray[ID].B = 1.f;
 		ParticleArray[ID].Fade = Color.Fade;
 		ParticleArray[ID].Active = true;
+		PData[ID].ReRandom(RandomAspectSpeed, RandomAspectFading);
+		PData[ID].SpeedX += Speed.X;
+		PData[ID].SpeedY += Speed.Y;
 	}
 protected:
 	virtual void Init()
@@ -218,8 +221,6 @@ protected:
 
 	virtual void RefreshPosition()
 	{
-		float SharedSpX = Speed.X + Gravity.X;
-		float SharedSpY = Speed.Y + Gravity.Y;
 		for (int i = 0; i < ParticleCount;i++)
 		{
 			ParticleArray[i].Fade -= PData[i].FadeSpeed;
@@ -229,8 +230,8 @@ protected:
 			}
 			else
 			{
-				ParticleArray[i].X += SharedSpX + PData[i].SpeedX;
-				ParticleArray[i].Y += SharedSpY + PData[i].SpeedY;
+				ParticleArray[i].X += (Gravity.X + PData[i].SpeedX) * PixelMeter / static_cast<float>(RenderPS);
+				ParticleArray[i].Y += (Gravity.Y + PData[i].SpeedY) * PixelMeter / static_cast<float>(RenderPS);
 			}
 			
 			
@@ -238,6 +239,10 @@ protected:
 	}
 public:
 	float X, Y;
+	float PixelMeter;
+	int RenderPS;
+	float RandomAspectSpeed;
+	float RandomAspectFading;
 	GravityData Gravity;
 	ColorData Color;
 	SpeedData Speed;
@@ -250,8 +255,11 @@ public:
 		this->X = ZeroX;
 		this->Y = ZeroY;
 	}
-	FlareEffect(int LayerID, int ParticleCount) : Effect(LayerID, ParticleCount, "assets/Effects/Flare.png")
+	FlareEffect(int LayerID, int ParticleCount, float PixelMeter = 1.0f, int RenderPS = 1) : Effect(LayerID, ParticleCount, "Effects/Flare.png")
 	{
-
+		this->PixelMeter = PixelMeter;
+		this->RenderPS = RenderPS;
+		RandomAspectSpeed = 1.f;
+		RandomAspectFading = 1.f;
 	}
 };
