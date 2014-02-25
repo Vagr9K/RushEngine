@@ -52,7 +52,7 @@ FPSTest* Tester;
 
 
 FlareEffect* EffectTest;
-FlareEffect* EffectTest2;
+SmokeEffect* EffectTest2;
 Button* TestButton;
 
 AudioMusic* Music;
@@ -150,18 +150,23 @@ void Init()
 	mainEngine.Physics->AddWorld(&World);
 
 	EffectTest = new FlareEffect(0, 1000, K, mainEngine.Graphics->DrawerGL->getFrameRate());
-	EffectTest->SetData(0.f, 3.f, 0.f, 0.f, 0.f, 0.f);
+	EffectTest->SetData(0.f, 10.f, 0.f, 0.f, 0.f, 0.f);
 	EffectTest->Color.R = 1.f;
 	EffectTest->Color.G = 1.f;
 	EffectTest->Color.B = 0.f;
 	EffectTest->Color.Fade = 1.f;
 
-	EffectTest2 = new FlareEffect(0, 1000, K, mainEngine.Graphics->DrawerGL->getFrameRate());
-	EffectTest2->SetData(0.f,-3.f, 0.f, 0.f, 0.f, 0.f);
-	EffectTest2->Color.R = 1.f;
-	EffectTest2->Color.G = 1.f;
-	EffectTest2->Color.B = 0.f;
+	EffectTest2 = new SmokeEffect(0, 500, K, mainEngine.Graphics->DrawerGL->getFrameRate());
+	EffectTest2->SetData(1.f,3.f, 0.f, 0.f, 0.f, 0.f);
+	EffectTest2->Color.R = 0.3515f;
+	EffectTest2->Color.G = 0.3710f;
+	EffectTest2->Color.B = 0.3906f;
 	EffectTest2->Color.Fade = 1.f;
+	EffectTest2->DeadZones.Active = true;
+	EffectTest2->DeadZones.MaxX = 1000.f;
+	EffectTest2->DeadZones.MaxY = 900.f;
+	EffectTest2->DeadZones.MinX = 0.f;
+	EffectTest2->DeadZones.MinY = 0.f;
 
 	mainEngine.getObjects()->getEffectManager(0)->PushChanges();
 

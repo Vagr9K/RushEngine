@@ -165,6 +165,18 @@ class FlareEffect : public Effect
 			Y = 0.f;
 		}
 	};
+	struct DeadZoneData
+	{
+		float MinX;
+		float MaxX;
+		float MinY;
+		float MaxY;
+		bool Active;
+		DeadZoneData()
+		{
+			Active = false;
+		}
+	};
 	struct ColorData
 	{
 		float R, G, B, Fade;
@@ -232,6 +244,13 @@ protected:
 			{
 				ParticleArray[i].X += (Gravity.X + PData[i].SpeedX) * PixelMeter / static_cast<float>(RenderPS);
 				ParticleArray[i].Y += (Gravity.Y + PData[i].SpeedY) * PixelMeter / static_cast<float>(RenderPS);
+				if (DeadZones.Active)
+				{
+					if (ParticleArray[i].X < DeadZones.MinX || ParticleArray[i].X > DeadZones.MaxX)
+						InitParticle(i);
+					else if (ParticleArray[i].Y < DeadZones.MinY || ParticleArray[i].Y > DeadZones.MaxY)
+						InitParticle(i);
+				}
 			}
 			
 			
@@ -246,6 +265,7 @@ public:
 	GravityData Gravity;
 	ColorData Color;
 	SpeedData Speed;
+	DeadZoneData DeadZones;
 	void SetData(float GravityX,float GravityY,float SpeedX,float SpeedY,float ZeroX,float ZeroY)
 	{
 		this->Gravity.X = GravityX;
@@ -260,6 +280,156 @@ public:
 		this->PixelMeter = PixelMeter;
 		this->RenderPS = RenderPS;
 		RandomAspectSpeed = 1.f;
+		RandomAspectFading = 1.f;
+	}
+};
+
+class SmokeEffect : public Effect
+{
+
+	struct ParticleData
+	{
+		float SpeedX;
+		float SpeedY;
+		float FadeSpeed;
+		ParticleData()
+		{
+
+		}
+		void ReRandom(float RandomAspectSpeed, float RandomAspectFading)
+		{
+
+			SpeedX = (static_cast<float>(rand() % 1000) / 1000.f - 0.5f) * RandomAspectSpeed;
+			SpeedY = (static_cast<float>(rand() % 1000) / 1000.f - 0.5f) * RandomAspectSpeed;
+			FadeSpeed = static_cast<float>(rand() % 1000) / 100000 * RandomAspectFading;
+		}
+	};
+	struct GravityData
+	{
+		float X;
+		float Y;
+		GravityData()
+		{
+			X = 0.f;
+			Y = 0.f;
+		}
+	};
+	struct DeadZoneData
+	{
+		float MinX;
+		float MaxX;
+		float MinY;
+		float MaxY;
+		bool Active;
+		DeadZoneData()
+		{
+			Active = false;
+		}
+	};
+	struct ColorData
+	{
+		float R, G, B, Fade;
+		ColorData()
+		{
+			R = 1.f;
+			G = 1.f;
+			B = 1.f;
+			Fade = 1.f;
+		}
+	};
+	struct SpeedData
+	{
+		float X, Y;
+		SpeedData()
+		{
+			X = 0.f;
+			Y = 0.f;
+		}
+	};
+
+	ParticleData* PData;
+	void InitParticle(int ID)
+	{
+
+		ParticleArray[ID].H = 32.f;
+		ParticleArray[ID].W = 32.f;
+		ParticleArray[ID].X = X * PixelMeter;
+		ParticleArray[ID].Y = Y * PixelMeter;
+		ParticleArray[ID].R = Color.R + static_cast<float>(rand() % 1) / 100 - 0.005f;
+		if (ParticleArray[ID].R > 1.f)
+			ParticleArray[ID].R = 1.f;
+		ParticleArray[ID].G = Color.G + static_cast<float>(rand() % 1) / 100 - 0.005f;
+		if (ParticleArray[ID].G > 1.f)
+			ParticleArray[ID].G = 1.f;
+		ParticleArray[ID].B = Color.B + static_cast<float>(rand() % 1) / 100 - 0.005f;
+		if (ParticleArray[ID].B > 1.f)
+			ParticleArray[ID].B = 1.f;
+		ParticleArray[ID].Fade = Color.Fade;
+		ParticleArray[ID].Angle = static_cast<float>(rand() % 360);
+		ParticleArray[ID].Active = true;
+		PData[ID].ReRandom(RandomAspectSpeed, RandomAspectFading);
+		PData[ID].SpeedX += Speed.X;
+		PData[ID].SpeedY += Speed.Y;
+	}
+protected:
+	virtual void Init()
+	{
+		PData = new ParticleData[ParticleCount];
+		for (int i = 0; i < ParticleCount; i++)
+		{
+			InitParticle(i);
+		}
+	}
+
+	virtual void RefreshPosition()
+	{
+		for (int i = 0; i < ParticleCount; i++)
+		{
+			ParticleArray[i].Fade -= PData[i].FadeSpeed;
+			if (ParticleArray[i].Fade < 0.f)
+			{
+				InitParticle(i);
+			}
+			else
+			{
+				ParticleArray[i].X += (Gravity.X + PData[i].SpeedX) * PixelMeter / static_cast<float>(RenderPS);
+				ParticleArray[i].Y += (Gravity.Y + PData[i].SpeedY) * PixelMeter / static_cast<float>(RenderPS);
+				if (DeadZones.Active)
+				{
+					if (ParticleArray[i].X < DeadZones.MinX || ParticleArray[i].X > DeadZones.MaxX)
+						InitParticle(i);
+					else if (ParticleArray[i].Y < DeadZones.MinY || ParticleArray[i].Y > DeadZones.MaxY)
+						InitParticle(i);
+				}
+			}
+
+
+		}
+	}
+public:
+	float X, Y;
+	float PixelMeter;
+	int RenderPS;
+	float RandomAspectSpeed;
+	float RandomAspectFading;
+	GravityData Gravity;
+	ColorData Color;
+	SpeedData Speed;
+	DeadZoneData DeadZones;
+	void SetData(float GravityX, float GravityY, float SpeedX, float SpeedY, float ZeroX, float ZeroY)
+	{
+		this->Gravity.X = GravityX;
+		this->Gravity.Y = GravityY;
+		this->Speed.X = SpeedX;
+		this->Speed.Y = SpeedY;
+		this->X = ZeroX;
+		this->Y = ZeroY;
+	}
+	SmokeEffect(int LayerID, int ParticleCount, float PixelMeter = 1.0f, int RenderPS = 1) : Effect(LayerID, ParticleCount, "Effects/Smoke.png")
+	{
+		this->PixelMeter = PixelMeter;
+		this->RenderPS = RenderPS;
+		RandomAspectSpeed = 0.25f;
 		RandomAspectFading = 1.f;
 	}
 };
