@@ -45,16 +45,6 @@ struct WindowInfo
 	WindowInfo();
 };
 
-class OperationController  //Windows only!
-{
-	ULONGLONG StartTime;
-	ULONGLONG CurrentTime;
-	int RepeatsPerSecond;
-	double MinDiff;
-	OperationController(int RepeatsPerSecond);
-	bool GetStatus();
-
-};
 
 struct TextureRenderFactor
 {

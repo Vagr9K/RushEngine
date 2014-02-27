@@ -27,6 +27,7 @@ void DrawGL::InitOldCpp ()
 		FrameRate = 120;
 		LastFrameTime = 0;
 		AllowDraw = false;
+		BlendEnabled = false;
 	}
 bool DrawGL::GLErrorTest (string FuntionName)
         {
@@ -109,14 +110,17 @@ bool DrawGL::CheckScreenZone(float x, float y, float h, float w, bool NoDelta)
 	}
 void DrawGL::SetEffectMode(bool Status)
 {
-	if (Status)
+	if (Status && !BlendEnabled)
 	{
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		BlendEnabled = true;
 	} 
-	else
+	else if (!Status && BlendEnabled)
 	{
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		BlendEnabled = false;
 	}
+	
 	
 }
 void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData,GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ, bool NoDelta, RGBColor* TextureColor, bool BindAll)
@@ -386,7 +390,16 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 {
 	string Path = EffectEl->Path;
 	Particle* CurrentParticle = NULL;
-	
+	bool DrawBlack = false;
+	if (EffectEl->DrawMode == NOBLEND)
+		SetEffectMode(false);
+	else if (EffectEl->DrawMode == BLEND)
+		SetEffectMode(true);
+	else if (EffectEl->DrawMode == BLACKBLEND)
+	{
+		SetEffectMode(true);
+		DrawBlack = true;
+	}
 	for (int i = 0; i < EffectEl->ParticleCount; i++)
 	{
 		CurrentParticle = &EffectEl->ParticleArray[i];
@@ -398,12 +411,32 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 			float W = CurrentParticle->W;
 
 			if (CheckScreenZone(X, Y, H, W))
-			{
+			{	
+				if (DrawBlack)
+				{
+					ParticleColor->R = 0.f;
+					ParticleColor->G = 0.f;
+					ParticleColor->B = 0.f;
+					ParticleColor->Fade = 0.f;
+					AddToBufferFROMTEXTURE(
+						X,
+						Y,
+						H,
+						W,
+						*TInfo,
+						0.f,
+						0.f,
+						CurrentParticle->Angle,
+						false,
+						ParticleColor,
+						false
+						);
+				
+				}
 				ParticleColor->R = CurrentParticle->R;
 				ParticleColor->G = CurrentParticle->G;
 				ParticleColor->B = CurrentParticle->B;
 				ParticleColor->Fade = CurrentParticle->Fade;
-				
 				AddToBufferFROMTEXTURE(
 					X,
 					Y,
@@ -428,6 +461,27 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 
 			if (CheckScreenZone(X, Y, H, W))
 			{
+				if (DrawBlack)
+				{
+					ParticleColor->R = 0.f;
+					ParticleColor->G = 0.f;
+					ParticleColor->B = 0.f;
+					ParticleColor->Fade = 0.f;
+					AddToBufferFROMTEXTURE(
+						X,
+						Y,
+						H,
+						W,
+						*TInfo,
+						0.f,
+						0.f,
+						CurrentParticle->Angle,
+						false,
+						ParticleColor,
+						false
+						);
+
+				}
 				ParticleColor->R = CurrentParticle->R;
 				ParticleColor->G = CurrentParticle->G;
 				ParticleColor->B = CurrentParticle->B;

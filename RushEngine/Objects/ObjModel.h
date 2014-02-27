@@ -72,10 +72,17 @@ public:
   float Fade;
   Particle ();
 };
+enum EffectDrawMode
+{
+	NOBLEND,
+	BLEND,
+	BLACKBLEND
+};
 struct EffectElement
 {
   EffectBASE * PtrToEffect;
   Particle * ParticleArray;
+  EffectDrawMode DrawMode;
   string Path;
   int ParticleCount;
   EffectElement (EffectBASE * PtrToEffect, string Path);
@@ -87,6 +94,7 @@ enum EffectSyncMode
   INACTIVE,
   ALLEFFECTS
 };
+
 class InterfaceBASE;
 struct InterfaceElement
 {

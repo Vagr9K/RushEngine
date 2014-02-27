@@ -279,6 +279,7 @@ public:
 	{
 		this->PixelMeter = PixelMeter;
 		this->RenderPS = RenderPS;
+		SetBlendMode(BLEND);
 		RandomAspectSpeed = 1.f;
 		RandomAspectFading = 1.f;
 	}
@@ -431,5 +432,6 @@ public:
 		this->RenderPS = RenderPS;
 		RandomAspectSpeed = 0.25f;
 		RandomAspectFading = 1.f;
+		this->SetBlendMode(BLEND);
 	}
 };

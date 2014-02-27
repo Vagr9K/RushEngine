@@ -17,6 +17,8 @@ private:
 protected:
   virtual void Init () = 0;
   virtual void RefreshPosition () = 0;
+
+  void SetBlendMode(EffectDrawMode Mode);
 public:
   EffectBASE (ObjDBManager <EffectElement> * EffectManager, int ParticleCount, string Path);
   ~ EffectBASE ();

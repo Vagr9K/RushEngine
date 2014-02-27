@@ -14,28 +14,7 @@ TextFont::TextFont (string FontPath)
 
 	}
 
-OperationController::OperationController(int RepeatsPerSecond)  //TODO: Windows only!
-{
-	this->RepeatsPerSecond = RepeatsPerSecond;
 
-	this->StartTime = GetTickCount();
-	this->MinDiff = 1 / RepeatsPerSecond;
-}
-bool OperationController::GetStatus()
-{
-	this->CurrentTime = GetTickCount();
-	ULONGLONG Diff = CurrentTime - StartTime;
-	if (Diff >= MinDiff)
-	{
-		StartTime = GetTickCount();
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-	return false;
-}
 
 TextureRenderFactor::TextureRenderFactor()
 {

@@ -13,6 +13,7 @@ EffectBASE::EffectBASE (ObjDBManager <EffectElement> * EffectManager, int Partic
 		EffElement = new EffectElement(this, Path);
 		EffElement->ParticleArray = new Particle[ParticleCount];
 		EffElement->ParticleCount = ParticleCount;
+		EffElement->DrawMode = NOBLEND;
 		this->EffectManager = EffectManager;
 		this->ParticleArray = EffElement->ParticleArray;
 		this->ParticleCount = ParticleCount;
@@ -60,3 +61,8 @@ void EffectBASE::ReStart ()
 		Init();
 		Ended = false;
 	}
+
+void EffectBASE::SetBlendMode(EffectDrawMode Mode)
+{
+	EffElement->DrawMode = Mode;
+}
