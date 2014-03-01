@@ -199,7 +199,7 @@ void Init()
 		BodyDefinitionBall->position.Set(Rnd1, Rnd2);
 		Rnd1 = (float)RndGen(9) + 1.f;
 		Rnd2 = (float)RndGen(9) + 1.f;
-		Balls.at(i) = new Object(&World, mainEngine.getObjects()->getObjectManager(0), mainEngine.Eventing, true, true);
+		Balls.at(i) = new Object(0, true, true);
 		Balls.at(i)->CreateBody(BodyDefinitionBall);
 		Balls.at(i)->CreateFixture(FixtureDefBall);
 		Balls.at(i)->SetImageSource("Ball.png");
@@ -209,7 +209,7 @@ void Init()
 		Balls.at(i)->SetTextColorFG(NewColor);
 		Balls.at(i)->SetTextColorBG(NewColorBG);
 		Balls.at(i)->SetTextContent(string(1, char(RndGen(255))));
-		Balls.at(i)->SetColor(&Color);
+		//Balls.at(i)->SetColor(&Color);
 
 	}
 	b2BodyDef* BodyDefinitionWall = new b2BodyDef;
@@ -243,7 +243,7 @@ void Init()
 
 	Ev = new SDL_Event;
 
-	Background* BgkWood = new Background(mainEngine.getObjects()->getBackgroundManager(), mainEngine.Eventing, true);
+	Background* BgkWood = new Background(0, true);
 	IMG* Wood = new IMG;
 	Wood->h = 1000;
 	Wood->w = 1100;
@@ -254,7 +254,7 @@ void Init()
 	BgkWood->AddImage(Wood);
 
 	mainEngine.getObjects()->getObjectManager(0)->PushChanges();
-	mainEngine.getObjects()->getBackgroundManager()->PushChanges();
+	mainEngine.getObjects()->getBackgroundManager(0)->PushChanges();
 }
 
 void StepWorld()

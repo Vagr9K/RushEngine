@@ -108,7 +108,8 @@ class Button : public Interface
 	}
 public:
 
-	Button(ObjDBManager<InterfaceElement>* ManagerDB, EventingEngine* EventSystem) :Interface(ManagerDB, EventSystem)
+	Button(ObjDBManager<InterfaceElement>* ManagerDB, EventingEngine* EventSystem) 
+		:Interface(ManagerDB, EventSystem)
 	{
 		Path1 = "Button1.png";
 		Path2 = "Button2.png";
@@ -279,7 +280,7 @@ public:
 	{
 		this->PixelMeter = PixelMeter;
 		this->RenderPS = RenderPS;
-		SetBlendMode(BLEND);
+		SetBlendMode(BLACKBLEND);
 		RandomAspectSpeed = 1.f;
 		RandomAspectFading = 1.f;
 	}
@@ -387,6 +388,11 @@ protected:
 		for (int i = 0; i < ParticleCount; i++)
 		{
 			ParticleArray[i].Fade -= PData[i].FadeSpeed;
+			ParticleArray[i].Angle += 3.f;
+			if (ParticleArray[i].Angle > 360.f)
+			{
+				ParticleArray[i].Angle = 0.f;
+			}
 			if (ParticleArray[i].Fade < 0.f)
 			{
 				InitParticle(i);
@@ -426,12 +432,13 @@ public:
 		this->X = ZeroX;
 		this->Y = ZeroY;
 	}
-	SmokeEffect(int LayerID, int ParticleCount, float PixelMeter = 1.0f, int RenderPS = 1) : Effect(LayerID, ParticleCount, "Effects/Smoke.png")
+	SmokeEffect(int LayerID, int ParticleCount, float PixelMeter = 1.0f, int RenderPS = 1)
+		: Effect(LayerID, ParticleCount, "Effects/Smoke.png")
 	{
 		this->PixelMeter = PixelMeter;
 		this->RenderPS = RenderPS;
 		RandomAspectSpeed = 0.25f;
 		RandomAspectFading = 1.f;
-		this->SetBlendMode(BLEND);
+		this->SetBlendMode(BLACKBLEND);
 	}
 };

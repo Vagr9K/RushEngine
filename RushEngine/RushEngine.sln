@@ -59,10 +59,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Box2D", "..\libs\Box2D.vcxproj", "{B456B67F-A905-4CD0-97DC-EBB6639E26BB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{028B516C-9286-476D-9006-6410C1B72D9C}"
-	ProjectSection(SolutionItems) = preProject
-		Performance1.psess = Performance1.psess
-		Performance2.psess = Performance2.psess
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -517,8 +513,5 @@ Global
 		{EBDA67CA-4A23-4F22-BFBC-B8DBE0580D4F} = {16F6E57D-DC28-472F-BB1B-4BE7BD03CB3B}
 		{B162B6F1-E876-4D5F-A1F6-E3A6DC2F4A2C} = {16F6E57D-DC28-472F-BB1B-4BE7BD03CB3B}
 		{B456B67F-A905-4CD0-97DC-EBB6639E26BB} = {16F6E57D-DC28-472F-BB1B-4BE7BD03CB3B}
-	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

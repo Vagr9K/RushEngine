@@ -418,11 +418,12 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 					ParticleColor->G = 0.f;
 					ParticleColor->B = 0.f;
 					ParticleColor->Fade = 0.f;
+					SetEffectMode(false);
 					AddToBufferFROMTEXTURE(
 						X,
 						Y,
-						H,
-						W,
+						H*1.5f,
+						W*1.5f,
 						*TInfo,
 						0.f,
 						0.f,
@@ -431,6 +432,7 @@ void DrawGL::DrawFromEffectElement(EffectElement* EffectEl, EffectSyncMode SyncM
 						ParticleColor,
 						false
 						);
+					SetEffectMode(true);
 				
 				}
 				ParticleColor->R = CurrentParticle->R;
