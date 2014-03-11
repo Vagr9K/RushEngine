@@ -1,11 +1,13 @@
 #include "DrawGL.h"
 #include <string>
+#include "../AdvFeatures/Misc.h"
+
 void Ortho(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
 {
 #ifdef __WINDOWS__
 	glOrtho(left, right, bottom, top, zNear, zFar);
 #elif __ANDROID__
-	glOthof(left, right, bottom, top, zNear, zFar);
+	glOrthof(left, right, bottom, top, zNear, zFar);
 #endif
 }
 
@@ -43,7 +45,7 @@ bool DrawGL::GLErrorTest (string FuntionName)
 		GLenum Error = glGetError();
 		if (Error != GL_NO_ERROR)
 		{
-			EventEngine->SystemEvents->GraphicsError("OpenGL error in function " + FuntionName + " : " + std::to_string(static_cast<long long>(static_cast<int>(Error))));
+			EventEngine->SystemEvents->GraphicsError("OpenGL error in function " + FuntionName + " : " + ToString(Error));
 			return false;
 		}
 		return true;

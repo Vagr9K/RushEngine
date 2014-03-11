@@ -1,7 +1,7 @@
 
 #include "Background.h"
 
-void BackgroundBASE::CleanBackground (void * Obj)
+void BackgroundBASE::CleanBackground (BackgroundElement * Obj)
         {
 		delete Obj;
 		Obj = NULL;
@@ -79,10 +79,7 @@ void BackgroundBASE::AddToDatabase ()
 	}
 void BackgroundBASE::DeleteFromDatabase ()
         {
-		if (ObjElement == NULL)
-		{
-			throw "ObjElement is not initialized.";
-		}
+		
 		DatabaseManager->AddToDelete(ObjElement);
 		ObjElementInDB = false;
 	}
@@ -107,13 +104,12 @@ void BackgroundBASE::DeleteObjElement ()
 	}
 void BackgroundBASE::AddImage (IMG * Image)
         {
-		if (Image == NULL)
-			throw "IMG pointer is NULL.";
+	
 		if (ObjElement == NULL)
 		{
 
 			EventingEnginePtr->SystemEvents->ObjectsError("ObjElement is NULL");
-			throw "ObjElement is NULL";
+		
 		}
 		if (ObjElement->Image != NULL)
 		{
@@ -126,12 +122,12 @@ void BackgroundBASE::AddText (TXT * Text)
         {
 		if (Text == NULL)
 		{
-			throw "TXT pointer is NULL.";
+			
 			EventingEnginePtr->SystemEvents->ObjectsError("TXT pointer is NULL.");
 		}
 		if (ObjElement == NULL)
 		{
-			throw "ObjElement is NULL";
+			
 			EventingEnginePtr->SystemEvents->ObjectsError("ObjElement is NULL");
 		}
 		if (ObjElement->Text != NULL)
@@ -149,7 +145,7 @@ void BackgroundBASE::DeleteImage ()
         {
 		if (ObjElement->Image == NULL)
 		{
-			throw "IMG pointer is NULL.";
+			
 			EventingEnginePtr->SystemEvents->ObjectsError("IMG pointer is NULL.");
 		}
 		else
@@ -163,7 +159,7 @@ void BackgroundBASE::DeleteText ()
         {
 		if (ObjElement->Text == NULL)
 		{
-			throw "TXT pointer is NULL.";
+			
 			EventingEnginePtr->SystemEvents->ObjectsError("TXT pointer is NULL.");
 		}
 		delete ObjElement->Text;

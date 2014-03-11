@@ -163,5 +163,8 @@
     <ClInclude Include="Eventing\GlobalVars.h">
       <Filter>Source Files\Eventing</Filter>
     </ClInclude>
+    <ClInclude Include="AdvFeatures\Misc.h">
+      <Filter>Source Files\AdvFeatures</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

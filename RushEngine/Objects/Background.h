@@ -12,7 +12,7 @@ protected:
 protected:
 	EventingEngine * EventingEnginePtr;
 
-  void CleanBackground (void * Obj);
+  void CleanBackground (BackgroundElement * Obj);
   void NULLifyAll ();
   void InitOldCpp ();
   void InitObjElement ();

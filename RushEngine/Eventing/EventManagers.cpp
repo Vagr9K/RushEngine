@@ -1,22 +1,23 @@
 #include "EventManagers.h"
+#include "../AdvFeatures/Misc.h"
 
 void SystemEventing::LogData (string Type, string Data, bool Throw)
         {
-
+#ifdef __WINDOWS__
 		time_t TmNow = time(0);
 		struct tm TimeNow;
 		localtime_s(&TimeNow, &TmNow);
 		string DataToWrite = "\n";
 		DataToWrite += "Date : ";
-		DataToWrite += to_string(TimeNow.tm_mday);
+		DataToWrite += ToString(TimeNow.tm_mday);
 		DataToWrite += "/";
-		DataToWrite += to_string(TimeNow.tm_mon + 1);
+		DataToWrite += ToString(TimeNow.tm_mon + 1);
 		DataToWrite += "/";
-		DataToWrite += to_string(TimeNow.tm_year + 1900);
+		DataToWrite += ToString(TimeNow.tm_year + 1900);
 		DataToWrite += " ";
-		DataToWrite += to_string(TimeNow.tm_hour);
+		DataToWrite += ToString(TimeNow.tm_hour);
 		DataToWrite += ":";
-		DataToWrite += to_string(TimeNow.tm_min);
+		DataToWrite += ToString(TimeNow.tm_min);
 		DataToWrite += "\n";
 		DataToWrite += "Data Type : ";
 		DataToWrite += Type;
@@ -28,12 +29,7 @@ void SystemEventing::LogData (string Type, string Data, bool Throw)
 		ofstream Log("logs.txt", std::ios_base::app | std::ios_base::out);
 		Log << DataToWrite;
 		Log.close();
-		/*
-		if (Throw == true)
-		{
-		throw Data;
-		}
-		*/
+#endif
 	}
 void SystemEventing::GraphicsError (string Error)
         {

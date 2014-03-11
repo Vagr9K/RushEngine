@@ -9,7 +9,6 @@ using namespace std;
 #include <SDL_opengl.h>
 #elif __ANDROID__
 #include <SDL_opengles.h>
-//typedef glOrtho(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar) glOrthof(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
 #endif
 #include "../Objects/Objects.h"
 #include "Components.h"

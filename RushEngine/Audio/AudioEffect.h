@@ -53,7 +53,6 @@ public:
 		if (Element == NULL)
 		{
 			string Error = string(Mix_GetError());
-			throw Error;
 		}
 		this->Time = Time;
 		WasNotPlaying = true;

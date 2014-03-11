@@ -42,8 +42,8 @@ int CamX = 0;
 int CamY = 0;
 SDL_Event* Ev;
 
-int StartTime = GetTickCount();
-int Now = GetTickCount();
+int StartTime = SDL_GetTicks();
+int Now = SDL_GetTicks();
 int Delta = 0;
 
 ObjectSyncMode SYNCMODE = IMAGE;
@@ -303,12 +303,12 @@ void RenderGraphics()
 	double Diff = Tester->getLastDiff();
 	if (true)
 	{
-		string NewTitle = "FPS : " + to_string(FPS) + " HZ.";
+		string NewTitle = "FPS : " + ToString(FPS) + " HZ.";
 		mainEngine.Graphics->DrawerGL->AddToBuffer(100, 50, 30, 200, NewFont, NewTitle, BLENDED, *NewColor, *NewColorBG);
 		
 	}
 	mainEngine.Eventing->Input->Mouse->Refresh();
-	string Pos = to_string(mainEngine.Eventing->Input->Mouse->Status.X) + " : " + to_string(mainEngine.Eventing->Input->Mouse->Status.Y);
+	string Pos = ToString(mainEngine.Eventing->Input->Mouse->Status.X) + " : " + ToString(mainEngine.Eventing->Input->Mouse->Status.Y);
 	mainEngine.Graphics->DrawerGL->AddToBuffer(100, 100, 30, 200, NewFont, Pos, BLENDED, *NewColor, *NewColorBG);
 
 	mainEngine.Graphics->DrawerGL->AddToBuffer(100, 400, 30, 200, NewFont, PointerToEngine, BLENDED, *NewColor, *NewColorBG);

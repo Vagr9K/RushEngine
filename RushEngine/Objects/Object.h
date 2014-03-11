@@ -14,7 +14,7 @@ protected:
   bool ObjElementInDB;
 public:
 protected:
-  void CleanObject (void * Obj);
+  void CleanObject (ObjectElement * Obj);
   void NULLifyAll ();
   void InitOldCpp ();
   void InitObjElement ();

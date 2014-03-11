@@ -128,6 +128,7 @@
     <ClInclude Include="AdvFeatures\Background.h" />
     <ClInclude Include="AdvFeatures\Effect.h" />
     <ClInclude Include="AdvFeatures\Interface.h" />
+    <ClInclude Include="AdvFeatures\Misc.h" />
     <ClInclude Include="AdvFeatures\Object.h" />
     <ClInclude Include="AdvFeatures\RuntimeInfo.h" />
     <ClInclude Include="AdvFeatures\Tests.h" />

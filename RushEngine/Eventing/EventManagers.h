@@ -10,10 +10,7 @@ using namespace std;
 
 #include "SDL.h"
 #include "EventComponents.h"
-
-#if __cplusplus <= 199711L
-#define to_string(Number) to_string(static_cast<long long>(Number))
-#endif
+#include "../AdvFeatures/Misc.h"
 
 
 class SystemEventing : public Events

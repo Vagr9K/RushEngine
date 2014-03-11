@@ -1,6 +1,6 @@
 #include "Object.h"
 
-void ObjectBASE::CleanObject (void * Obj)
+void ObjectBASE::CleanObject (ObjectElement * Obj)
         {
 		delete Obj;
 		Obj = NULL;
@@ -194,9 +194,7 @@ void ObjectBASE::CreateBody (b2BodyDef * BodyDefinition)
         {
 		if (BodyDefinition == NULL)
 		{
-			
 			EventingEnginePtr->SystemEvents->ObjectsError("Body definition not initialized.");
-			throw "Body definition not initialized.";
 		}
 		Body = ObjWorld->CreateBody(BodyDefinition);
 	}
@@ -204,9 +202,7 @@ void ObjectBASE::DestroyBody ()
         {
 		if (Body == NULL)
 		{
-			
 			EventingEnginePtr->SystemEvents->ObjectsError("Body not initialized.");
-			throw "Body not initialized.";
 		}
 		ObjWorld->DestroyBody(Body);
 		Body = NULL;
@@ -217,13 +213,11 @@ void ObjectBASE::CreateFixture (b2FixtureDef * FixtureDefinition)
 		{
 			
 			EventingEnginePtr->SystemEvents->ObjectsError("Body not initialized.");
-			throw "Body not initialized.";
 		}
 		if (FixtureDefinition == NULL)
 		{
 			
 			EventingEnginePtr->SystemEvents->ObjectsError("Fixture definition not initialized.");
-			throw "Fixture definition not initialized.";
 		}
 		Fixture = Body->CreateFixture(FixtureDefinition);
 
@@ -233,7 +227,6 @@ void ObjectBASE::DestroyFixture ()
 
 		if (Fixture == NULL)
 		{
-			throw "Fixture not initialized.";
 			EventingEnginePtr->SystemEvents->ObjectsError("Fixture not initialized.");
 		}
 		Body->DestroyFixture(Fixture);
@@ -251,10 +244,7 @@ void ObjectBASE::AddToDatabase ()
 	}
 void ObjectBASE::DeleteFromDatabase ()
         {
-		if (ObjElement == NULL)
-		{
-			throw "ObjElement is not initialized.";
-		}
+		
 		DatabaseManager->AddToDelete(ObjElement);
 		ObjElementInDB = false;
 	}
@@ -279,13 +269,11 @@ void ObjectBASE::DeleteObjElement ()
 	}
 void ObjectBASE::AddImage (IMG * Image)
         {
-		if (Image == NULL)
-			throw "IMG pointer is NULL.";
+
 		if (ObjElement == NULL)
 		{
 			
 			EventingEnginePtr->SystemEvents->ObjectsError("ObjElement is NULL");
-			throw "ObjElement is NULL";
 		}
 		if (ObjElement->Image != NULL)
 		{
@@ -298,12 +286,10 @@ void ObjectBASE::AddText (TXT * Text)
         {
 		if (Text == NULL)
 		{
-			throw "TXT pointer is NULL.";
 			EventingEnginePtr->SystemEvents->ObjectsError("TXT pointer is NULL.");
 		}
 		if (ObjElement == NULL)
 		{
-			throw "ObjElement is NULL";
 			EventingEnginePtr->SystemEvents->ObjectsError("ObjElement is NULL");
 		}
 		if (ObjElement->Text != NULL)
@@ -321,7 +307,6 @@ void ObjectBASE::DeleteImage ()
         {
 		if (ObjElement->Image == NULL)
 		{
-			throw "IMG pointer is NULL.";
 			EventingEnginePtr->SystemEvents->ObjectsError("IMG pointer is NULL.");
 		}
 		else
@@ -335,7 +320,6 @@ void ObjectBASE::DeleteText ()
         {
 		if (ObjElement->Text == NULL)
 		{
-			throw "TXT pointer is NULL.";
 			EventingEnginePtr->SystemEvents->ObjectsError("TXT pointer is NULL.");
 		}
 		delete ObjElement->Text;

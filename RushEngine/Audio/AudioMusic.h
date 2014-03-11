@@ -17,7 +17,6 @@ public:
 		if (Element == NULL)
 		{
 			string Error = string(Mix_GetError());
-			throw Error;
 		}
 		WasNotPlaying = true;
 		Volume = 64;
