@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#ifdef __WINDOWS__
+
 MouseStatus::MouseStatus ()
         {
 		Motion = false;
@@ -75,24 +77,6 @@ KeyboardInput::~KeyboardInput()
 	
 }
 
-InputController::InputController(GlobalEventManager * MainClass)
-        {
-		this->MainClass = MainClass;
-		Mouse = new MouseInput(MainClass);
-		Keyboard = new KeyboardInput(MainClass);
-
-	}
-void InputController::Update ()
-        {
-		MainClass->Update();
-	}
-
-InputController::~InputController()
-{
-	delete Mouse;
-	delete Keyboard;
-}
-
 void MouseInput::RequestUpdate()
 {
 	MainClass->Update();
@@ -107,3 +91,28 @@ void KeyboardInput::GetKeyStatusFK()
 	KeysStatus = SDL_GetKeyboardState(&KeyArrayLenght);
 
 }
+#endif
+
+InputController::InputController(GlobalEventManager * MainClass)
+        {
+		this->MainClass = MainClass;
+		#ifdef __WINDOWS__
+		Mouse = new MouseInput(MainClass);
+		Keyboard = new KeyboardInput(MainClass);
+		#endif
+
+	}
+void InputController::Update ()
+        {
+		MainClass->Update();
+	}
+
+InputController::~InputController()
+{
+	#ifdef __WINDOWS__
+	delete Mouse;
+	delete Keyboard;
+	#endif
+}
+
+

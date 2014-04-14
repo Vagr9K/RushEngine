@@ -21,6 +21,7 @@ public:
   void OPSLog (string OPS);
   void ObjectsError (string Error);
   void AudioError(string Error);
+  void EngineError(string Error);
 };
 class GlobalEventManager
 {

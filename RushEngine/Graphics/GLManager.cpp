@@ -20,6 +20,10 @@ int GraphicsManager::GetNearestPowerOfTwo(int OldNumber)
 
 TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
         {
+        if(Surface == NULL)
+        {
+        	EventEngine->SystemEvents->GraphicsError("NULL Surface passed.");
+        }
 		bool TwoError = false;
 		bool CleanSurface = false;
 		GLuint Texture;

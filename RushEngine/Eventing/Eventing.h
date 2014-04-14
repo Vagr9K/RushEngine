@@ -10,7 +10,9 @@ class EventingEngine : public GlobalEventManager
 {
 public:
   SystemEventing * SystemEvents;
+ 
   InputController * Input;
+
   GlobalVars* GlobalVariables;
   EventingEngine ();
   ~EventingEngine();

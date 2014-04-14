@@ -55,17 +55,19 @@ bool DrawGL::InitOpenGL ()
 		ContextGL = SDL_GL_CreateContext(mainWindow);
 		
 		SDL_GL_MakeCurrent(mainWindow, ContextGL);
-
+		
 		SDL_GL_SetSwapInterval(1);
-
+		
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
 
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-
+#ifdef __ANDROID__
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+#endif
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
-
+		
 
 		glClearColor(0, 0, 0, 0);
 #ifdef __WINDOWS__
@@ -73,9 +75,14 @@ bool DrawGL::InitOpenGL ()
 #else 
 		glClearDepthx(1.f);
 #endif
+#ifdef __WINDOWS__
 		glDisable(GL_DEPTH_TEST);
+#elif defined(__ANDROID__)
+		glEnable(GL_DEPTH_TEST);
+#endif
 		glEnable(GL_TEXTURE_2D);
 		glShadeModel(GL_SMOOTH);
+		
 		glViewport(0, 0, WinWidth, WinHeight);
 
 		glMatrixMode(GL_PROJECTION);
@@ -85,14 +92,14 @@ bool DrawGL::InitOpenGL ()
 		glMatrixMode(GL_MODELVIEW);
 
 		glLoadIdentity();
-
+		
 		glEnable(GL_BLEND);
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 		glClear(GL_COLOR_BUFFER_BIT);
-
+		
 		return GLErrorTest("InitOpenGL()");
 
 	}

@@ -26,6 +26,7 @@ bool InterfaceBASE::CheckScreenZone (float x, float y, float h, float w, int Mou
 	}
 void InterfaceBASE::StateTest ()
         {
+        	#ifdef __WINDOWS__
 	bool NoNULL = false;
 		EventSystem->Input->Mouse->Refresh();
 		if (CheckHover())
@@ -42,6 +43,7 @@ void InterfaceBASE::StateTest ()
 		{
 			OnNULL();
 		}
+		#endif
 	}
 InterfaceBASE::InterfaceBASE (ObjDBManager <InterfaceElement> * ManagerDB, EventingEngine * EventSystem)
         {
@@ -76,7 +78,7 @@ void InterfaceBASE::Refresh ()
 
 bool InterfaceBASE::CheckHover()
 {
-
+	#ifdef __WINDOWS__
 	int MouseX = EventSystem->Input->Mouse->Status.X;
 	int MouseY = EventSystem->Input->Mouse->Status.Y;
 	if (InterElement->ImageExists)
@@ -89,10 +91,12 @@ bool InterfaceBASE::CheckHover()
 		if (CheckScreenZone(InterElement->Text->x, InterElement->Text->y, InterElement->Text->h, InterElement->Text->w, MouseX, MouseY))
 			return true;
 	}
+	#endif
 	return false;
 }
 bool InterfaceBASE::CheckClick()
 {
+	#ifdef __WINDOWS__
 	if (CheckHover())
 	{
 		if (EventSystem->Input->Mouse->Status.Motion == false)
@@ -102,6 +106,7 @@ bool InterfaceBASE::CheckClick()
 		}
 
 	}
+	#endif
 	return false;
 }
 void InterfaceBASE::OnHover()

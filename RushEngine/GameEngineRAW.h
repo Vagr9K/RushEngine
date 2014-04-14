@@ -8,7 +8,6 @@
 #include "AdvFeatures/RuntimeInfo.h"
 
 
-
 RuntimeInfo RushEngineInfo;
 
 class GameEngine
@@ -90,11 +89,11 @@ public:
 
 	GameEngine()
 	{ 
-		
+		int SDLInitStatus = SDL_Init(SDL_INIT_EVERYTHING);
 		Eventing = new EventingEngine();
-		if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+		if (SDLInitStatus != 0)
 		{
-			Eventing->SystemEvents->GraphicsError(SDL_GetError());
+			Eventing->SystemEvents->EngineError(SDL_GetError());
 		}
 		Audio = new AudioEngine(Eventing);
 		RushEngineInfo.GamePointer = this;
@@ -118,7 +117,7 @@ public:
 		Graphics = new GraphicsEngine;
 		if (Objects == NULL)
 		{
-			Eventing->SystemEvents->GraphicsError("Objects engine is not initialized.");
+			Eventing->SystemEvents->ObjectsError("Objects engine is not initialized.");
 		}
 		Graphics->Init(Width, Height, Title, Eventing, Objects);
 

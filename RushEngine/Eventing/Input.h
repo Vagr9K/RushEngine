@@ -1,6 +1,8 @@
 #include "SDL.h"
 #include "EventManagers.h"
 
+#ifdef __WINDOWS__
+
 class MouseStatus
 {
 public:
@@ -41,16 +43,21 @@ public:
   ~KeyboardInput();
   string GetKeyName (SDL_Keycode Key);
 };
+
+#endif
 class InputController
 {
   GlobalEventManager * MainClass;
 public:
+  InputController (GlobalEventManager * MainClass);
+  void Update ();
+  ~InputController();
+  #ifdef __WINDOWS__
   MouseInput * Mouse;
   KeyboardInput * Keyboard;
-  InputController (GlobalEventManager * MainClass);
-  ~InputController();
-  void Update ();
   friend class MouseInput;
   friend class KeyboardInput;
+
+  #endif
 };
 

@@ -30,6 +30,7 @@ void SystemEventing::LogData (string Type, string Data, bool Throw)
 		Log << DataToWrite;
 		Log.close();
 #endif
+		SDL_Log(("RushEngine Error: " +Type+" "+Data).c_str());
 	}
 void SystemEventing::GraphicsError (string Error)
         {
@@ -47,6 +48,11 @@ void SystemEventing::ObjectsError (string Error)
 void SystemEventing::AudioError(string Error)
 {
 	LogData("Audio error", Error, true);
+}
+
+void SystemEventing::EngineError(string Error)
+{
+	LogData("Engine error", Error, true);
 }
 
 void GlobalEventManager::Update()
