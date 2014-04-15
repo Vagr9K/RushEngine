@@ -23,7 +23,11 @@ public:
 	}
 	bool Start(int ChanellNumber)
 	{
-		int Flags = MIX_INIT_FLAC | MIX_INIT_OGG | MIX_INIT_MP3;
+#ifdef __ANDROID__
+		int Flags = MIX_INIT_OGG;
+#elif defined(__WINDOWS__)
+		int Flags = MIX_INIT_OGG | MIX_INIT_FLAC | MIX_INIT_MP3;
+#endif
 		int Status = Mix_Init(Flags);
 
 		if ((Status&Flags) != Flags)

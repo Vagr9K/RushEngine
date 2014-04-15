@@ -90,6 +90,7 @@ TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 		else if (Colors == 3)
 		{
 			IMGFormat = GL_RGB;
+			EventEngine->SystemEvents->GraphicsError("Warning: Image format not supported at function GenerateTexture().");
 		}
 		else
 		{
@@ -101,7 +102,7 @@ TextureInfo GraphicsManager::GenerateTexture (SDL_Surface * Surface)
 		glBindTexture(GL_TEXTURE_2D, Texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, Colors, TextureW, TextureH, 0, IMGFormat, GL_UNSIGNED_BYTE, Surface->pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TextureW, TextureH, 0, GL_RGBA, GL_UNSIGNED_BYTE, Surface->pixels);
 
 		if (glGetError() != GL_NO_ERROR)
 		{   if (TwoError)

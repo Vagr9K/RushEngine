@@ -54,8 +54,16 @@ public:
 private:
 	bool SystemInit()
 	{
+		string Arg1 = "RushEngine";
+		char** argv = new char*[1];
+		argv[0] = new char[Arg1.length()+1];
+#ifdef __ANDROID__
+		strcpy(argv[0], Arg1.c_str());
+#elif defined(__WINDOWS__)
+		strcpy_s(argv[0], Arg1.length() + 1, Arg1.c_str());
+#endif
 		SDLTest_CommonState* InitState;
-		InitState = SDLTest_CommonCreateState(NULL, SDL_INIT_VIDEO);
+		InitState = SDLTest_CommonCreateState(argv, SDL_INIT_VIDEO);
 		if (!InitState)
 		{
 			EventEngine->SystemEvents->GraphicsError("Cannot create initialization state.");
@@ -162,23 +170,17 @@ public:
 			EventEngine->SystemEvents->GraphicsError("GraphicsEngine class is not initialized properly.");
 			return false;
 		}
-		/*
-#ifdef __ANDROID__
-		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WinData->Width, WinData->Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS);
-#else
-		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WinData->Width, WinData->Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-#endif
-		if (mainWindow == NULL)
-		{
-			EventEngine->SystemEvents->GraphicsError(SDL_GetError());
-			return false;
-		}
-		*/
+		
 		
 		if (!SystemInit())
 		{
 			EventEngine->SystemEvents->GraphicsError("Graphics system initialization failed.");
 		}
+		
+		this->ManagerGR = new GraphicsManager(EventEngine, ObjEngine, WinData);
+		
+		InitGL();
+
 		if (TTF_Init() < 0)
 		{
 			EventEngine->SystemEvents->GraphicsError(TTF_GetError());
@@ -191,10 +193,6 @@ public:
 			EventEngine->SystemEvents->GraphicsError(IMG_GetError());
 			return false;
 		}
-
-		this->ManagerGR = new GraphicsManager(EventEngine, ObjEngine, WinData);
-		
-		InitGL();
 
 		IsStarted = true;
 		return true;

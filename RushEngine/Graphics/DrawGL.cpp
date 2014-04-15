@@ -52,30 +52,33 @@ bool DrawGL::GLErrorTest (string FuntionName)
 	}
 bool DrawGL::InitOpenGL ()
         {
+
 		ContextGL = SDL_GL_CreateContext(mainWindow);
-		
-		SDL_GL_MakeCurrent(mainWindow, ContextGL);
-		
+		if(!ContextGL)
+		{
+			EventEngine->SystemEvents->GraphicsError("InitOpenGL(SDL_GL_CreateContext) : " + ToString(SDL_GetError()));
+		}
+		int Status = SDL_GL_MakeCurrent(mainWindow, ContextGL);
+		if(Status)
+		{
+			EventEngine->SystemEvents->GraphicsError("InitOpenGL(SDL_GL_MakeCurrent) : " + ToString(SDL_GetError()));
+		}
 		SDL_GL_SetSwapInterval(1);
-		/*
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+		
+		glViewport(0, 0, WinWidth, WinHeight);
 
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-#ifdef __ANDROID__
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-#endif
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		glMatrixMode(GL_PROJECTION);
 
-		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
-		*/
+		glLoadIdentity();
 
-		glClearColor(0, 0, 0, 0);
-#ifdef __WINDOWS__
-		glClearDepth(1.f);
-#else 
-		glClearDepthx(1.f);
-#endif
-#ifdef __WINDOWS__
+		Ortho(0, (GLfloat)WinWidth, (GLfloat)WinHeight, 0, -1.f, 1.f);
+
+		glMatrixMode(GL_MODELVIEW);
+
+		glLoadIdentity();
+
+
+		#ifdef __WINDOWS__
 		glDisable(GL_DEPTH_TEST);
 #elif defined(__ANDROID__)
 		glEnable(GL_DEPTH_TEST);
@@ -83,22 +86,24 @@ bool DrawGL::InitOpenGL ()
 		glEnable(GL_TEXTURE_2D);
 		glShadeModel(GL_SMOOTH);
 		
-		glViewport(0, 0, WinWidth, WinHeight);
-
-		glMatrixMode(GL_PROJECTION);
-
-		Ortho(0, (GLfloat)WinWidth, (GLfloat)WinHeight, 0, -1.f, 1.f);
-
-		glMatrixMode(GL_MODELVIEW);
-
-		glLoadIdentity();
-		
 		glEnable(GL_BLEND);
-
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-		glClear(GL_COLOR_BUFFER_BIT);
+	
+
+
+#ifdef __WINDOWS__
+		glClearDepth(1.f);
+#else 
+	//	glClearDepthx(1.f);
+#endif
+#ifdef __WINDOWS__
+		glDisable(GL_DEPTH_TEST);
+#elif defined(__ANDROID__)
+		glEnable(GL_DEPTH_TEST);
+#endif
+		
 		
 		return GLErrorTest("InitOpenGL()");
 
@@ -147,6 +152,7 @@ void DrawGL::SetEffectMode(bool Status)
 }
 void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, TextureInfo TextureData,GLfloat AngleX, GLfloat AngleY, GLfloat AngleZ, bool NoDelta, RGBColor* TextureColor, bool BindAll)
         {
+        	glLoadIdentity();
         	float KX = TextureData.KxKy.KX;
         	float KY = TextureData.KxKy.KY;
         	GLuint TextureID = TextureData.TextureID;
@@ -225,7 +231,8 @@ void DrawGL::AddToBufferFROMTEXTURE(GLfloat X, GLfloat Y, GLfloat H, GLfloat W, 
 			glVertexPointer(3, GL_FLOAT, 0, &Trg2Sz);
 			glTexCoordPointer(2, GL_FLOAT, 0, &Trg2Crd);
 			glDrawArrays(GL_TRIANGLES, 0, 3);
-			glLoadIdentity();
+			
+#define _DEBUG
 #ifdef _DEBUG
 			GLErrorTest("AddToBufferFROMTEXTURE()");
 #endif
@@ -257,7 +264,8 @@ DrawGL::DrawGL (GraphicsManager * ManagerGR, SDL_Window * mainWindow, EventingEn
 		this->WinWidth = ManagerGR->WindowData->Width;
 		this->ZeroHeight = ManagerGR->WindowData->ZeroHeight;
 		this->ZeroWidth = ManagerGR->WindowData->ZeroWidth;
-		if (InitOpenGL() == false)
+		bool Status = InitOpenGL();
+		if (Status == false)
 		{
 			EventEngine->SystemEvents->GraphicsError("OpenGL initialization error in function DrawGL().");
 		}
@@ -283,6 +291,7 @@ void DrawGL::StartBuffer ()
 	{
 		AllowDraw = CheckDrawAllowance();
 		CheckScreenState();
+		glClearColor(0.0, 0.0, 0.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
@@ -877,6 +886,7 @@ void DrawGL::SyncAll(bool AutoPushBuffer /* = false */)
 
 void DrawGL::RefreshData(int NewWidth, int NewHeight)
 {
+	
 	
 	if (NewWidth == 0)
 	{
