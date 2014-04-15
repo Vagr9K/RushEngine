@@ -87,7 +87,7 @@ public:
 		SyncInfo();
 	}
 
-	GameEngine()
+	GameEngine(bool InitAudio = true)
 	{ 
 		int SDLInitStatus = SDL_Init(SDL_INIT_EVERYTHING);
 		Eventing = new EventingEngine();
@@ -95,7 +95,10 @@ public:
 		{
 			Eventing->SystemEvents->EngineError(SDL_GetError());
 		}
-		Audio = new AudioEngine(Eventing);
+		if (InitAudio)
+		{
+			Audio = new AudioEngine(Eventing);
+		}
 		RushEngineInfo.GamePointer = this;
 		RushEngineInfo.Eventing = Eventing;
 
