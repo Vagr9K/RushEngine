@@ -115,6 +115,7 @@
     <ClCompile Include="Graphics\DrawGL.cpp" />
     <ClCompile Include="Graphics\GLManager.cpp" />
     <ClCompile Include="Graphics\GraphicsManager.cpp" />
+    <ClCompile Include="Graphics\SDL_test_common.c" />
     <ClCompile Include="Graphics\TextManager.cpp" />
     <ClCompile Include="Objects\Background.cpp" />
     <ClCompile Include="Objects\Effects.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GraphicsManager.h" />
     <ClInclude Include="GameEngineRAW.h" />
+    <ClInclude Include="Graphics\SDL_test_common.h" />
     <ClInclude Include="Objects\Background.h" />
     <ClInclude Include="Objects\Effects.h" />
     <ClInclude Include="Objects\Interface.h" />

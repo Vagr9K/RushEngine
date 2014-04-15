@@ -8,12 +8,13 @@
 #include <SDL_main.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
-
+#include "./SDL_test_common.h"
 using namespace std;
 
 #include "../Objects/Objects.h"
 
 #include "DrawGL.h"
+
 
 class GraphicsEngine
 {
@@ -28,7 +29,7 @@ private:
 	EventingEngine* EventEngine;
 	ObjectsEngine* ObjEngine;
 	GraphicsManager* ManagerGR;
-
+	SDLTest_CommonState* SystemState;
 	bool GLInited;
 private:
 	void InitOldCpp()
@@ -51,6 +52,52 @@ private:
 public:
 	DrawGL* DrawerGL;
 private:
+	bool SystemInit()
+	{
+		SDLTest_CommonState* InitState;
+		InitState = SDLTest_CommonCreateState(NULL, SDL_INIT_VIDEO);
+		if (!InitState)
+		{
+			EventEngine->SystemEvents->GraphicsError("Cannot create initialization state.");
+			return false;
+		}
+#ifdef __WINDOWS__
+		InitState->window_flags |= SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+#elif defined(__ANDROID__)
+		InitState->window_flags |= SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_BORDERLESS;
+		InitState->gl_profile_mask = SDL_GL_CONTEXT_PROFILE_ES;
+#endif
+
+		InitState->gl_major_version = 1;
+		InitState->gl_minor_version = 1;
+		InitState->gl_depth_size = 24;
+		InitState->window_w = WinData->Width;
+		InitState->window_h = WinData->Height;
+		InitState->window_title = Title.c_str();
+
+		if (!SDLTest_CommonInit(InitState))
+		{
+			EventEngine->SystemEvents->GraphicsError("Cannot init initialization state.");
+			return false;
+		}
+		SystemState = InitState;
+		mainWindow = InitState->windows[0];
+		if (mainWindow == NULL)
+		{
+			EventEngine->SystemEvents->GraphicsError("NULL window pointer.");
+			return false;
+		}
+
+		return true;
+
+	}
+
+	bool SystemDeInit()
+	{
+		SDLTest_CommonQuit(SystemState);
+		return true;
+	}
+	
 	void InitGL()
 	{
 		if (GLInited == false)
@@ -115,7 +162,7 @@ public:
 			EventEngine->SystemEvents->GraphicsError("GraphicsEngine class is not initialized properly.");
 			return false;
 		}
-
+		/*
 #ifdef __ANDROID__
 		mainWindow = SDL_CreateWindow(Title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WinData->Width, WinData->Height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS);
 #else
@@ -125,6 +172,12 @@ public:
 		{
 			EventEngine->SystemEvents->GraphicsError(SDL_GetError());
 			return false;
+		}
+		*/
+		
+		if (!SystemInit())
+		{
+			EventEngine->SystemEvents->GraphicsError("Graphics system initialization failed.");
 		}
 		if (TTF_Init() < 0)
 		{
@@ -174,7 +227,7 @@ public:
 		SDL_DestroyWindow(mainWindow);
 		IMG_Quit();
 		TTF_Quit();
-		SDL_Quit();
+		SystemDeInit();
 
 		if (GLInited == true)
 		{

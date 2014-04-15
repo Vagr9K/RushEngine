@@ -77,6 +77,9 @@
     <ClCompile Include="Physics\Physics.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\SDL_test_common.c">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngineRAW.h">
@@ -165,6 +168,9 @@
     </ClInclude>
     <ClInclude Include="AdvFeatures\Misc.h">
       <Filter>Source Files\AdvFeatures</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\SDL_test_common.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
