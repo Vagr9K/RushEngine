@@ -8,4 +8,4 @@ int main(int argc, char* argv[])
 
 	return 0; //In case of success.
 }
-/*No changes to this file must be made!*/
+/*No changes to this file can be made!*/
