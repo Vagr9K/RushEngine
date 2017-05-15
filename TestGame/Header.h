@@ -111,14 +111,14 @@ public:
 	Button(ObjDBManager<InterfaceElement>* ManagerDB, EventingEngine* EventSystem) 
 		:Interface(ManagerDB, EventSystem)
 	{
-		Path1 = "Button1.png";
-		Path2 = "Button2.png";
+		Path1 = "Resources/Button1.png";
+		Path2 = "Resources/Button2.png";
 		
 	}
 	virtual void Init()
 	{
 		InterElement->ImageExists = true; 
-		InterElement->Image = new IMG(50.f, 150.f, 64.f, 64.f, 12.f, "Button1.png");
+		InterElement->Image = new IMG(50.f, 150.f, 64.f, 64.f, 12.f, "Resources/Button1.png");
 	}
 	virtual void OnHover()
 	{
@@ -276,7 +276,7 @@ public:
 		this->X = ZeroX;
 		this->Y = ZeroY;
 	}
-	FlareEffect(int LayerID, int ParticleCount, float PixelMeter = 1.0f, int RenderPS = 1) : Effect(LayerID, ParticleCount, "Effects/Flare.png")
+	FlareEffect(int LayerID, int ParticleCount, float PixelMeter = 1.0f, int RenderPS = 1) : Effect(LayerID, ParticleCount, "Resources/Effects/Flare.png")
 	{
 		this->PixelMeter = PixelMeter;
 		this->RenderPS = RenderPS;
@@ -433,7 +433,7 @@ public:
 		this->Y = ZeroY;
 	}
 	SmokeEffect(int LayerID, int ParticleCount, float PixelMeter = 1.0f, int RenderPS = 1)
-		: Effect(LayerID, ParticleCount, "Effects/Smoke.png")
+		: Effect(LayerID, ParticleCount, "Resources/Effects/Smoke.png")
 	{
 		this->PixelMeter = PixelMeter;
 		this->RenderPS = RenderPS;

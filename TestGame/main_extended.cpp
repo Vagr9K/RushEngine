@@ -120,7 +120,7 @@ void Init()
 
 	Tester = new FPSTest;
 
-	NewFont = new TextFont("font.ttf");
+	NewFont = new TextFont("Resources/font.ttf");
 	NewFont->PointSize = 30;
 	NewColor->a = 0;
 	NewColor->b = 255;
@@ -143,8 +143,8 @@ void Init()
 	mainEngine.Graphics->Start();
 	WinData = mainEngine.Graphics->getWindowData();
 	mainEngine.Graphics->SetTextMaximumTime(K + 2);
-	mainEngine.Graphics->DrawerGL->CacheImage("Ball.png");
-	mainEngine.Graphics->DrawerGL->CacheImage("Wall.png");
+	mainEngine.Graphics->DrawerGL->CacheImage("Resources/Ball.png");
+	mainEngine.Graphics->DrawerGL->CacheImage("Resources/Wall.png");
 	mainEngine.Graphics->DrawerGL->setFrameRate(120);
 
 	mainEngine.Physics->AddWorld(&World);
@@ -174,10 +174,10 @@ void Init()
 	mainEngine.getObjects()->getInterfaceManager(0)->PushChanges();
 
 
-	Music = new AudioMusic("Music.wav");
+	Music = new AudioMusic("Resources/Music.wav");
 	Music->Play(0);
 
-	Eff = new AudioEffect("Effect.wav", 6.1);
+	Eff = new AudioEffect("Resources/Effect.wav", 6.1);
 
 	STDShape = new b2CircleShape;
 	STDShape->m_p.Set(0.0f, 0.0f);
@@ -202,7 +202,7 @@ void Init()
 		Balls.at(i) = new Object(0, true, true);
 		Balls.at(i)->CreateBody(BodyDefinitionBall);
 		Balls.at(i)->CreateFixture(FixtureDefBall);
-		Balls.at(i)->SetImageSource("Ball.png");
+		Balls.at(i)->SetImageSource("Resources/Ball.png");
 		Balls.at(i)->ForceLocalFactor = true;
 		Balls.at(i)->SyncFactor = K;
 		Balls.at(i)->SetTextFont(NewFont);
@@ -219,7 +219,7 @@ void Init()
 	for (int j = 0; j < WallCount; j++)
 	{
 		Walls.at(j) = new Object(&World, mainEngine.getObjects()->getObjectManager(0), mainEngine.Eventing, true, true);
-		Walls.at(j)->SetImageSource("Wall.png");
+		Walls.at(j)->SetImageSource("Resources/Wall.png");
 		Walls.at(j)->SyncFactor = K;
 		Walls.at(j)->ForceLocalFactor = true;
 	}
@@ -247,7 +247,7 @@ void Init()
 	IMG* Wood = new IMG;
 	Wood->h = 1000;
 	Wood->w = 1100;
-	Wood->Source = "Wood.png";
+	Wood->Source = "Resources/Wood.png";
 	Wood->x = 500;
 	Wood->y = 450;
 	Wood->Angle = 0.f;

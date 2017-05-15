@@ -47,8 +47,8 @@ void Init()
 	mainEngine->InitObjects(0, 0, 1, 0);
 	mainEngine->InitGraphics(WWIDTH, WHEIGHT, "Test #004.");
 	mainEngine->Graphics->Start();
-	mainEngine->Graphics->DrawerGL->CacheImage("Ball.png");
-	mainEngine->Graphics->DrawerGL->CacheImage("Wall.png");
+	mainEngine->Graphics->DrawerGL->CacheImage("Resources/Ball.png");
+	mainEngine->Graphics->DrawerGL->CacheImage("Resources/Wall.png");
 	mainEngine->Graphics->DrawerGL->setFrameRate(120);
 
 	mainEngine->Physics->AddWorld(&World);
@@ -76,7 +76,7 @@ void Init()
 		Balls.at(i) = new Object(0, true, true);
 		Balls.at(i)->CreateBody(BodyDefinitionBall);
 		Balls.at(i)->CreateFixture(FixtureDefBall);
-		Balls.at(i)->SetImageSource("Ball.png");
+		Balls.at(i)->SetImageSource("Resources/Ball.png");
 		Balls.at(i)->ForceLocalFactor = true;
 		Balls.at(i)->SyncFactor = K;
 
@@ -88,7 +88,7 @@ void Init()
 	for (int j = 0; j < WallCount; j++)
 	{
 		Walls.at(j) = new Object(&World, mainEngine->getObjects()->getObjectManager(0), mainEngine->Eventing, true, true);
-		Walls.at(j)->SetImageSource("Wall.png");
+		Walls.at(j)->SetImageSource("Resources/Wall.png");
 		Walls.at(j)->SyncFactor = K;
 		Walls.at(j)->ForceLocalFactor = true;
 	}
