@@ -16,7 +16,7 @@ MIKMOD_LIBRARY_PATH := external/libmikmod-3.1.12
 
 # Enable this if you want to support loading MP3 music via SMPEG
 # The library path should be a relative path to this directory.
-SUPPORT_MP3_SMPEG := true
+SUPPORT_MP3_SMPEG := false
 SMPEG_LIBRARY_PATH := external/smpeg2-2.0.0
 
 # Enable this if you want to support loading OGG Vorbis music via Tremor
@@ -89,7 +89,7 @@ endif
 
 ifeq ($(SUPPORT_OGG),true)
     LOCAL_C_INCLUDES += $(LOCAL_PATH)/$(OGG_LIBRARY_PATH)/include $(LOCAL_PATH)/$(VORBIS_LIBRARY_PATH)
-    LOCAL_CFLAGS += -DOGG_MUSIC -DOGG_USE_TREMOR -D_ARM_ASSEM_
+    LOCAL_CFLAGS += -DOGG_MUSIC -DOGG_USE_TREMOR
     LOCAL_SRC_FILES += \
         $(VORBIS_LIBRARY_PATH)/mdct.c \
         $(VORBIS_LIBRARY_PATH)/block.c \

@@ -8,6 +8,7 @@ FREETYPE_LIBRARY_PATH := external/freetype-2.4.12
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)
 
+
 LOCAL_SRC_FILES := SDL_ttf.c \
 
 ifneq ($(FREETYPE_LIBRARY_PATH),)

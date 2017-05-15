@@ -254,7 +254,6 @@
     <ClCompile Include="..\fluidsynth.c" />
     <ClCompile Include="..\load_aiff.c" />
     <ClCompile Include="..\load_flac.c" />
-    <ClCompile Include="..\load_mp3.c" />
     <ClCompile Include="..\load_ogg.c" />
     <ClCompile Include="..\load_voc.c" />
     <ClCompile Include="..\mixer.c" />
@@ -278,7 +277,6 @@
     <ClInclude Include="..\fluidsynth.h" />
     <ClInclude Include="..\load_aiff.h" />
     <ClInclude Include="..\load_flac.h" />
-    <ClInclude Include="..\load_mp3.h" />
     <ClInclude Include="..\load_ogg.h" />
     <ClInclude Include="..\load_voc.h" />
     <ClInclude Include="..\music_cmd.h" />
@@ -299,11 +297,11 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="native_midi\native_midi_VS2012.vcxproj">
+    <ProjectReference Include="native_midi\native_midi_VS2010.vcxproj">
       <Project>{ebda67ca-4a23-4f22-bfbc-b8dbe0580d4f}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="timidity\timidity_VS2012.vcxproj">
+    <ProjectReference Include="timidity\timidity_VS2010.vcxproj">
       <Project>{b162b6f1-e876-4d5f-a1f6-e3a6dc2f4a2c}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>

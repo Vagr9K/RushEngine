@@ -1555,11 +1555,6 @@ AC_HELP_STRING([--enable-video-x11-xinput], [enable X11 XInput extension for man
             	],[
 int event_type = XI_TouchBegin;
 XITouchClassInfo *t;
-Status 
-XIAllowTouchEvents(Display *a,int b,unsigned int c,Window d,int f)
-{
-    return (Status)0;
-}
             	],[
             	have_xinput2_multitouch=yes
             	AC_DEFINE(SDL_VIDEO_DRIVER_X11_XINPUT2_SUPPORTS_MULTITOUCH)
@@ -2860,7 +2855,12 @@ AC_HELP_STRING([--enable-render-d3d], [enable the Direct3D render driver [[defau
             have_loadso=yes
         fi
         # Set up the system libraries we need
-        EXTRA_LDFLAGS="$EXTRA_LDFLAGS -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lversion -luuid -XCClinker -static-libgcc"
+        if test -f /lib/w32api/libuuid.a; then
+            LIBUUID=/lib/w32api/libuuid.a
+        else
+            LIBUUID=-luuid
+        fi
+        EXTRA_LDFLAGS="$EXTRA_LDFLAGS -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lversion $LIBUUID -XCClinker -static-libgcc"
         # The Windows platform requires special setup
         VERSION_SOURCES="$srcdir/src/main/windows/*.rc"
         SDLMAIN_SOURCES="$srcdir/src/main/windows/*.c"
